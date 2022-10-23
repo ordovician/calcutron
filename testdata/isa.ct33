@@ -1,0 +1,27 @@
+instructions:
+    ADD  x9, x8, x7
+
+    SUB  x9, x8, x7
+    SUBI x9, x8, 7
+
+    LSH  x9, x8, 7
+    RSH  x9, x8, 7
+
+    BRZ  x9, pseudo
+    BGT  x9, pseudo
+
+    LD x9, data
+    ST x9, data
+
+    HLT
+
+pseudo:
+    INP x9
+    OUT x9
+    MOV x9, x8
+    CLR x9
+    DEC x9
+    BRA pseudo
+    
+data:
+    DAT 9876

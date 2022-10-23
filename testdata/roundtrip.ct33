@@ -1,0 +1,6 @@
+00: ADD  x9, x8, x7
+01: SUB  x9, x8, x7
+02: SUBI x9, x8, 7
+03: LSH  x9, x8, 7
+04: RSH  x9, x8, 7
+05: HLT

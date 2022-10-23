@@ -1,0 +1,12 @@
+loop:
+    INP x1
+    INP x2
+    CLR x3
+    
+multiply:
+    ADD x3, x1
+    DEC x2
+    BGT x2, multiply
+    OUT x3
+    
+    BRA loop

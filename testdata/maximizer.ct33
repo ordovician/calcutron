@@ -1,0 +1,13 @@
+loop:
+    INP x1
+    INP x2
+    SUB x3, x1, x2
+    BGT x3, first
+
+second:
+    OUT x2
+    BRA loop
+    
+first:
+    OUT x1
+    BRA loop

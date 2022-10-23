@@ -1,0 +1,5 @@
+loop:
+    INP x1
+    ADD x1, x1
+    OUT x1
+    BRA loop
