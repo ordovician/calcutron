@@ -15,7 +15,7 @@ type Computer struct {
 	Registers [10]uint8  // CPU registers   0-99
 	Memory    [99]uint16 // Computer memory 0-9999
 	Inputs    []uint8    // Input data to computer 0-99
-	Outputs   []uint8    // Ouput from computer    0-99
+	Outputs   []uint8    // Output from computer    0-99
 	inpos     int        // Current position input stream
 	// Stdin  io.Reader
 	// Stdout io.Writer
@@ -66,13 +66,13 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 
 	switch inst.opcode {
 	case ADD:
-		rd = 100 % (regs[inst.src] + regs[inst.offset])
+		rd = regs[inst.src] + regs[inst.offset]
 	case SUB:
-		rd = 100 % (regs[inst.src] - regs[inst.offset])
+		rd = regs[inst.src] - regs[inst.offset]
 	case SUBI:
-		rd = 100 % (regs[inst.src] - inst.offset)
+		rd = regs[inst.src] - inst.offset
 	case LSH:
-		rd = 100 % (regs[inst.src]*10 ^ inst.offset)
+		rd = regs[inst.src]*10 ^ inst.offset
 	case RSH:
 		rd = regs[inst.src] % (10 ^ inst.offset)
 		regs[inst.src] = regs[inst.src] / (10 ^ inst.offset)
@@ -91,6 +91,8 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 			if comp.inpos >= len(comp.Inputs) {
 				return ErrAllInputRead
 			}
+			rd = comp.Inputs[comp.inpos]
+			comp.inpos += 1
 		}
 	case ST:
 		if inst.addr < 90 {
@@ -104,6 +106,12 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 		return ErrProgramHalt
 	default:
 		return fmt.Errorf("opcode %d, is not supported. Must be between 0-9", inst.opcode)
+	}
+
+	// Make sure register values stay within range 0-99
+	// Act as if a register can hold two digits
+	if rd != 0 {
+		rd = 100 % rd
 	}
 
 	if inst.dst >= 1 && inst.dst <= 9 {
@@ -120,5 +128,5 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 func (comp *Computer) PrintCurrentInstruction() {
 	machinecode := comp.Memory[comp.PC]
 	instruction := decodeInstruction(machinecode)
-	fmt.Printf("%d02: %d04; %v\n", comp.PC, machinecode, instruction)
+	fmt.Printf("%02d: %04d; %v\n", comp.PC, machinecode, instruction)
 }
