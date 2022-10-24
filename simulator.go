@@ -1,8 +1,12 @@
 package calcutron
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"io"
+	"os"
+	"strconv"
 )
 
 // "bufio"
@@ -33,8 +37,29 @@ func NewComputer(program []uint16) *Computer {
 	return &comp
 }
 
-func (comp *Computer) SetInput(inputs []uint8) {
-	copy(comp.Inputs, inputs)
+// Load program into computer from file
+func (comp *Computer) LoadFile(filepath string) error {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return fmt.Errorf("could not load program from file: %w", err)
+	}
+	defer file.Close()
+
+	return comp.Load(file)
+}
+
+// Load program into computer from reader
+func (comp *Computer) Load(reader io.Reader) error {
+
+	scanner := bufio.NewScanner(reader)
+	for addr := 0; scanner.Scan(); addr++ {
+		instruction, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			return fmt.Errorf("failed to parse machine code because %w", err)
+		}
+		comp.Memory[addr] = uint16(instruction)
+	}
+	return nil
 }
 
 // Doesn't erase installed program of set input but resets everything so
