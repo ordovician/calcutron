@@ -22,6 +22,33 @@ type Computer struct {
 	// Stderr io.Writer
 }
 
+func NewComputer(program []uint16) *Computer {
+	if len(program) > 99 {
+		panic("programs cannot be longer than 99 instructions")
+	}
+
+	var comp Computer
+	copy(comp.Memory[0:], program)
+
+	return &comp
+}
+
+func (comp *Computer) SetInput(inputs []uint8) {
+	copy(comp.Inputs, inputs)
+}
+
+// Doesn't erase installed program of set input but resets everything so
+// program can be run over again and give same result
+func (comp *Computer) Reset() {
+	comp.PC = 0
+	comp.inpos = 0
+	comp.Outputs = []uint8{}
+	for i := range comp.Registers {
+		comp.Registers[i] = 0
+	}
+}
+
+// Execute instruction at current address. Where the program counter (PC) is.
 func (comp *Computer) Step() error {
 	pc := comp.PC
 	ir := comp.Memory[pc]
@@ -38,6 +65,7 @@ func (comp *Computer) Step() error {
 	return nil
 }
 
+// Execute N instructions
 func (comp *Computer) RunSteps(nsteps int) error {
 	for i := 0; i < nsteps; i++ {
 		comp.PrintCurrentInstruction()
@@ -49,6 +77,8 @@ func (comp *Computer) RunSteps(nsteps int) error {
 	return nil
 }
 
+// Execute given instruction without altering the program counter (PC)
+// unless running a branch instruction which performs a branch
 func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 	if instruction > 9999 {
 		return fmt.Errorf("instruction %d not within valid range 0000 - 9999", instruction)
