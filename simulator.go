@@ -2,11 +2,13 @@ package calcutron
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // "bufio"
@@ -21,9 +23,6 @@ type Computer struct {
 	Inputs    []uint8    // Input data to computer 0-99
 	Outputs   []uint8    // Output from computer    0-99
 	inpos     int        // Current position input stream
-	// Stdin  io.Reader
-	// Stdout io.Writer
-	// Stderr io.Writer
 }
 
 func NewComputer(program []uint16) *Computer {
@@ -53,11 +52,47 @@ func (comp *Computer) Load(reader io.Reader) error {
 
 	scanner := bufio.NewScanner(reader)
 	for addr := 0; scanner.Scan(); addr++ {
-		instruction, err := strconv.Atoi(scanner.Text())
+		// Ignore comments
+		line := scanner.Text()
+		if i := strings.Index(line, "//"); i >= 0 {
+			line = line[0:i]
+		}
+
+		instruction, err := strconv.Atoi(line)
 		if err != nil {
 			return fmt.Errorf("failed to parse machine code because %w", err)
 		}
+
 		comp.Memory[addr] = uint16(instruction)
+	}
+	return nil
+}
+
+// Load data input to program from file
+func (comp *Computer) LoadInputsFile(filepath string) error {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return fmt.Errorf("could not inputs from file: %w", err)
+	}
+	defer file.Close()
+
+	return comp.LoadInputs(file)
+}
+
+// Load data input to program from reader
+func (comp *Computer) LoadInputs(reader io.Reader) error {
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		return fmt.Errorf("unable to read input data because %w", err)
+	}
+
+	strings.Fields(string(bytes))
+	for _, word := range strings.Fields(string(bytes)) {
+		input, err := strconv.Atoi(word)
+		if err != nil {
+			return fmt.Errorf("failed to parse machine code because %w", err)
+		}
+		comp.Inputs = append(comp.Inputs, uint8(input))
 	}
 	return nil
 }
@@ -109,13 +144,13 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 		return fmt.Errorf("instruction %d not within valid range 0000 - 9999", instruction)
 	}
 
-	regs := comp.Registers
+	regs := comp.Registers[0:]
 
 	inst := decodeInstruction(instruction)
 
 	var rd uint8
 
-	if inst.dst >= 1 && inst.dst <= 9 {
+	if inst.dst <= 9 {
 		rd = regs[inst.dst]
 	}
 
@@ -141,7 +176,7 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 		}
 	case LD:
 		if inst.addr < 90 {
-			rd = uint8(comp.Memory[inst.addr+1])
+			rd = uint8(comp.Memory[inst.addr])
 		} else if inst.addr == 90 {
 			if comp.inpos >= len(comp.Inputs) {
 				return ErrAllInputRead
@@ -166,9 +201,10 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 	// Make sure register values stay within range 0-99
 	// Act as if a register can hold two digits
 	if rd != 0 {
-		rd = 100 % rd
+		rd = rd % 100
 	}
 
+	// Cannot write to register 0, so it is excluded
 	if inst.dst >= 1 && inst.dst <= 9 {
 		regs[inst.dst] = rd
 	}
@@ -184,4 +220,29 @@ func (comp *Computer) PrintCurrentInstruction() {
 	machinecode := comp.Memory[comp.PC]
 	instruction := decodeInstruction(machinecode)
 	fmt.Printf("%02d: %04d; %v\n", comp.PC, machinecode, instruction)
+}
+
+func (comp *Computer) String() string {
+	buffer := bytes.NewBufferString("")
+
+	fmt.Fprintln(buffer, "PC:", comp.PC)
+	for i, reg := range comp.Registers {
+		fmt.Fprintf(buffer, "x%d: %d, ", i, reg)
+	}
+	fmt.Fprintln(buffer)
+
+	fmt.Fprintf(buffer, "Inputs:  ")
+	Join(buffer, comp.Inputs, ", ")
+	fmt.Fprintln(buffer)
+
+	fmt.Fprintf(buffer, "Outputs: ")
+	Join(buffer, comp.Outputs, ", ")
+	fmt.Fprintln(buffer)
+
+	// for _, output := range comp.Outputs {
+	// 	fmt.Fprintf(buffer, "%d, ", output)
+	// }
+	// fmt.Fprintln(buffer)
+
+	return buffer.String()
 }

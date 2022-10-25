@@ -2,7 +2,7 @@ package calcutron
 
 import "fmt"
 
-type Instruction struct {
+type MachineInstruction struct {
 	opcode Opcode
 	dst    uint8
 	addr   uint8
@@ -11,10 +11,10 @@ type Instruction struct {
 }
 
 // Split a number from 0-9999 into its individual parts
-func decodeInstruction(instruction uint16) *Instruction {
+func decodeInstruction(instruction uint16) *MachineInstruction {
 	operands := instruction % 1000
 	addr := uint8(operands % 100)
-	return &Instruction{
+	return &MachineInstruction{
 		opcode: Opcode(instruction / 1000),
 		dst:    uint8(operands / 100),
 		addr:   addr,
@@ -24,7 +24,7 @@ func decodeInstruction(instruction uint16) *Instruction {
 }
 
 // Disassembles instruction
-func (inst *Instruction) String() string {
+func (inst *MachineInstruction) String() string {
 	switch inst.opcode {
 	case ADD, SUB:
 		return fmt.Sprintf("%-4v x%d, x%d, x%d", inst.opcode, inst.dst, inst.src, inst.offset)

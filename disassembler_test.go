@@ -2,13 +2,14 @@ package calcutron
 
 import (
 	"fmt"
+	"testing"
 )
 
 func ExampleInstruction_String() {
 	instructions := []uint16{1234, 8213, 9999, 1010, 0000}
 
 	for _, inst := range instructions {
-		var instruction *Instruction = decodeInstruction(inst)
+		var instruction *MachineInstruction = decodeInstruction(inst)
 		fmt.Println(instruction)
 	}
 
@@ -24,7 +25,7 @@ func Example_decodeInstruction() {
 	instructions := []uint16{1234, 8213, 9999, 0000, 1010}
 
 	for _, inst := range instructions {
-		var instruction *Instruction = decodeInstruction(inst)
+		var instruction *MachineInstruction = decodeInstruction(inst)
 
 		fmt.Println("Decoding instruction: ", inst)
 		fmt.Println("  Opcode: ", instruction.opcode)
@@ -65,4 +66,27 @@ func Example_decodeInstruction() {
 	//   Source:  1
 	//   Address: 10
 	//   Offset:  0
+}
+
+func TestLoadInstruction(t *testing.T) {
+	var comp Computer
+	comp.Inputs = []uint8{2, 3, 8, 4}
+
+	comp.ExecuteInstruction(8190) // LD   x1, 90
+	comp.ExecuteInstruction(8290) // LD   x2, 90
+
+	if comp.Registers[1] != comp.Inputs[0] {
+		t.Errorf("Register x1 value %d not equal expected value %d", comp.Registers[1], comp.Inputs[0])
+	}
+
+	if comp.Registers[2] != comp.Inputs[1] {
+		t.Errorf("Register x1 value %d not equal expected value %d", comp.Registers[1], comp.Inputs[1])
+	}
+
+	comp.ExecuteInstruction(1112) // ADD  x1, x1, x2
+
+	expected := comp.Inputs[0] + comp.Inputs[1]
+	if comp.Registers[1] != expected {
+		t.Errorf("Register x1 value %d not equal expected value %d", comp.Registers[1], expected)
+	}
 }

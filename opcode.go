@@ -1,5 +1,7 @@
 package calcutron
 
+import "strings"
+
 // NOTE: If you are missing the stringer command, you can install it
 // $ go install golang.org/x/tools/cmd/stringer@latest
 
@@ -31,3 +33,19 @@ const (
 	CLR  // CLearR
 	MOV  // MOVe from one reg to another
 )
+
+var opcodes = [...]Opcode{HLT, ADD, SUB, SUBI, LSH, RSH, BRZ, BGT, LD, ST, INP, OUT, DEC, INC, ADDI, BRA, CLR, MOV}
+
+// Turns text string into Opcode
+func ParseOpcode(s string) Opcode {
+	s = strings.ToUpper(s)
+
+	// inefficient to loop but the list is of limited size so it should
+	// be acceptable
+	for _, opcode := range opcodes {
+		if opcode.String() == s {
+			return opcode
+		}
+	}
+	return HLT
+}
