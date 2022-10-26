@@ -126,7 +126,7 @@ func (inst *ParsedInstruction) MachineInstruction() (uint16, error) {
 			return 0, fmt.Errorf("constant %d is too many digits. Instruction %v only allows single digit constants", constant, opcode)
 		}
 		machinecode += inst.FirstSourceReg() + complement(constant, 10)
-	case LD, ST, BRZ, BGT:
+	case LD, ST, BRZ, BGT, BRA:
 		if constant < 0 {
 			return 0, fmt.Errorf("cannot use negative address %d with %v instruction", constant, opcode)
 		}
