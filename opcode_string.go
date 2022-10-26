@@ -26,11 +26,12 @@ func _() {
 	_ = x[BRA-15]
 	_ = x[CLR-16]
 	_ = x[MOV-17]
+	_ = x[DAT-18]
 }
 
-const _Opcode_name = "HLTADDSUBSUBILSHRSHBRZBGTLDSTINPOUTDECINCADDIBRACLRMOV"
+const _Opcode_name = "HLTADDSUBSUBILSHRSHBRZBGTLDSTINPOUTDECINCADDIBRACLRMOVDAT"
 
-var _Opcode_index = [...]uint8{0, 3, 6, 9, 13, 16, 19, 22, 25, 27, 29, 32, 35, 38, 41, 45, 48, 51, 54}
+var _Opcode_index = [...]uint8{0, 3, 6, 9, 13, 16, 19, 22, 25, 27, 29, 32, 35, 38, 41, 45, 48, 51, 54, 57}
 
 func (i Opcode) String() string {
 	if i >= Opcode(len(_Opcode_index)-1) {

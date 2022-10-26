@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"unicode"
+
+	"golang.org/x/exp/constraints"
 )
 
 // SplitAt returns a bufio.SplitFunc closure, splitting at a substring
@@ -47,12 +50,30 @@ func Join[T any](writer io.Writer, elements []T, sep string) {
 // Calculate complement of x
 // to calculate 10s complement of x, you would call complement(x, 10)
 // this would return a value between 0 and 9
-func complement(x, max int8) uint8 {
+func complement(x, max int8) uint16 {
 	if x < 0 {
-		return uint8(max + x)
+		return uint16(max + x)
 	} else if x == 0 {
 		return 0
 	} else {
-		return uint8(x % max)
+		return uint16(x % max)
+	}
+}
+
+// Check if all runes in string are digits
+func AllDigits(s string) bool {
+	for _, ch := range s {
+		if !unicode.IsDigit(ch) {
+			return false
+		}
+	}
+	return true
+}
+
+func Abs[T constraints.Integer](x T) T {
+	if x < 0 {
+		return -x
+	} else {
+		return x
 	}
 }

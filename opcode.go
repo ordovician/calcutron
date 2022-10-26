@@ -1,6 +1,9 @@
 package calcutron
 
-import "strings"
+import (
+	"log"
+	"strings"
+)
 
 // NOTE: If you are missing the stringer command, you can install it
 // $ go install golang.org/x/tools/cmd/stringer@latest
@@ -32,9 +35,12 @@ const (
 	BRA  // BRAnch
 	CLR  // CLearR
 	MOV  // MOVe from one reg to another
+
+	// not really instruction
+	DAT
 )
 
-var opcodes = [...]Opcode{HLT, ADD, SUB, SUBI, LSH, RSH, BRZ, BGT, LD, ST, INP, OUT, DEC, INC, ADDI, BRA, CLR, MOV}
+var opcodes = [...]Opcode{HLT, ADD, SUB, SUBI, LSH, RSH, BRZ, BGT, LD, ST, INP, OUT, DEC, INC, ADDI, BRA, CLR, MOV, DAT}
 
 // Turns text string into Opcode
 func ParseOpcode(s string) Opcode {
@@ -48,4 +54,57 @@ func ParseOpcode(s string) Opcode {
 		}
 	}
 	return HLT
+}
+
+// Create machine code representation of an instruction with given opcode
+// This method also deals with pseudo opcodes
+func (opcode Opcode) Machinecode() uint16 {
+	switch opcode {
+	case HLT:
+		return 0
+	case ADD:
+		return 1000
+	case SUB:
+		return 2000
+	case SUBI:
+		return 3000
+	case LSH:
+		return 4000
+	case RSH:
+		return 5000
+	case BRZ:
+		return 6000
+	case BGT:
+		return 7000
+	case LD:
+		return 8000
+	case ST:
+		return 9000
+
+	// pseudo instructions
+	case INP:
+		return 8090
+	case OUT:
+		return 9091
+	case DEC:
+		return 3001
+	case INC:
+		return 3009
+	case ADDI:
+		return 3010 // so we can just subtract offset to get negative number
+	case BRA:
+		return 6000
+	case MOV:
+		return 1000
+	case CLR:
+		return 1000
+
+	// non-instuction
+	case DAT:
+		return 0
+	default:
+		break
+	}
+	log.Panicf("unknown opcode %v encountered", opcode)
+	return 0
 }
