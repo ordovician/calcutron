@@ -10,7 +10,7 @@ import (
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stdout, "Usage of assemble:\n")
+		fmt.Fprintf(os.Stdout, "Usage of disassemble:\n")
 		flag.PrintDefaults()
 	}
 
@@ -25,9 +25,9 @@ func main() {
 	flag.Parse()
 
 	filepath := flag.Arg(0)
-	err := AssembleFile(filepath)
+	err := DisassembleFile(filepath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to assemble %s: %v", filepath, err)
+		fmt.Fprintf(os.Stderr, "Unable to disassemble %s: %v", filepath, err)
 	}
 
 }
