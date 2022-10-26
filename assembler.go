@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -172,7 +173,8 @@ func readSymTable(reader io.Reader) map[string]uint8 {
 	return labels
 }
 
-func assembleLine(labels map[string]uint8, line string) (int16, error) {
+// Assemble single line of code
+func AssembleLine(labels map[string]uint8, line string) (int16, error) {
 	code := strings.Trim(line, " \t")
 	i := len(code)
 	if j := strings.Index(code, "//"); j >= 0 {
@@ -203,4 +205,37 @@ func assembleLine(labels map[string]uint8, line string) (int16, error) {
 	machincode, err := instruction.MachineInstruction()
 
 	return int16(machincode), err
+}
+
+// Assemble data from input
+func Assemble(reader io.ReadSeeker) error {
+	labels := readSymTable(reader)
+
+	reader.Seek(0, io.SeekStart)
+
+	scanner := bufio.NewScanner(reader)
+
+	for lineno := 1; scanner.Scan(); lineno++ {
+		machinecode, err := AssembleLine(labels, scanner.Text())
+		if err != nil {
+			return err
+		}
+
+		if machinecode > 0 {
+			fmt.Printf("%04d\n", machinecode)
+		}
+	}
+
+	return nil
+}
+
+// Assemble file and write output to stdout
+func AssembleFile(filepath string) error {
+	file, err := os.Open(filepath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	return Assemble(file)
 }

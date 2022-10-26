@@ -2,6 +2,7 @@ package calcutron
 
 import (
 	"fmt"
+	"os"
 	"testing"
 )
 
@@ -27,7 +28,7 @@ func Example_assembleLine() {
 	}
 
 	for _, line := range lines {
-		machinecode, _ := assembleLine(labels, line)
+		machinecode, _ := AssembleLine(labels, line)
 		fmt.Println(machinecode, line)
 	}
 
@@ -43,4 +44,22 @@ func Example_assembleLine() {
 	// 1300 CLR x3
 	// 3221 DEC x2
 	// 1908 MOV x9, x8
+}
+
+func Example_readSymTable() {
+	file, _ := os.Open("testdata/labels-nocode.ct33")
+	defer file.Close()
+
+	labels := readSymTable(file)
+
+	for key := range labels {
+		fmt.Println(key)
+	}
+
+	// Unordered Output:
+	// epsilon
+	// alpha
+	// beta
+	// gamma
+	// delta
 }
