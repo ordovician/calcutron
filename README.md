@@ -26,5 +26,5 @@ That led to an early implementation in the Julia programming language. To explor
 Remaking the whole thing in Go is both to get a sense of how Go compares with Zig but also because I believe Go is very well suited for this kind of project. I want to be able to easily distribute binaries that can run any macOS, Linux and Windows and that is possible with the good Go cross-compile support.
 
 # Current Status
-The Go variant of this project has just gotten started so there is currently nothing to run. If you want a version to run, then the most complete version is currently Zacktron-33.
+The Go implementation is currently not as complete as the Zacktron-33 variant written in Zig. We lack a debugger and don't have colorized output. However the Go version may actually be more robust with more comperhensive error messages when anything goes wrong.
 
