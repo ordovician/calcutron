@@ -25,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	filepath := flag.Arg(0)
-	err := AssembleFile(filepath)
+	err := AssembleFile(filepath, os.Stdout)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to assemble %s: %v", filepath, err)
 	}

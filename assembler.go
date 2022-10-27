@@ -24,10 +24,9 @@ func (inst *ParsedInstruction) ParseOperands(labels map[string]uint8, operands [
 		operand = strings.TrimSpace(operand)
 		if addr, ok := labels[operand]; ok {
 			inst.constant = int8(addr)
-		} else if AllDigits(operand) {
-			constant, err := strconv.Atoi(operand)
-			if err != nil {
-				return fmt.Errorf("unable to parse constant %s because %w", operand, err)
+		} else if constant, err := strconv.Atoi(operand); err == nil {
+			if constant < -99 || constant > 99 {
+				return fmt.Errorf("constant %d is outside valid range -99 to 99", constant)
 			}
 			inst.constant = int8(constant)
 		} else if len(operand) > 0 && operand[0] == 'x' {
@@ -143,8 +142,8 @@ func (inst *ParsedInstruction) MachineInstruction() (uint16, error) {
 		log.Panicf("%v is an unknown opcode", opcode)
 	}
 
-	if machinecode > 9999 || machinecode < 0 {
-		log.Panicf("%d isn't a valid machine code instructin as it cannot be longer than 4 digits", machinecode)
+	if machinecode > 9999 {
+		log.Panicf("%d isn't a valid machine code instruction as it cannot be longer than 4 digits", machinecode)
 	}
 	return uint16(machinecode), nil
 }
@@ -153,7 +152,8 @@ func (inst *ParsedInstruction) MachineInstruction() (uint16, error) {
 func readSymTable(reader io.Reader) map[string]uint8 {
 	scanner := bufio.NewScanner(reader)
 	labels := make(map[string]uint8)
-	for address := 0; scanner.Scan(); address++ {
+	address := 0
+	for scanner.Scan() {
 		line := strings.Trim(scanner.Text(), " \t")
 		n := len(line)
 
@@ -169,6 +169,7 @@ func readSymTable(reader io.Reader) map[string]uint8 {
 				continue
 			}
 		}
+		address++
 	}
 	return labels
 }
@@ -191,7 +192,12 @@ func AssembleLine(labels map[string]uint8, line string) (int16, error) {
 		i = n
 	}
 	mnemonic := code[0:i]
-	var operands []string = strings.SplitN(code[i:], ",", 3)
+	var operands []string
+
+	if len(code[i:]) > 0 {
+		operands = strings.SplitN(code[i:], ",", 3)
+	}
+
 	opcode := ParseOpcode(mnemonic)
 	instruction := ParsedInstruction{
 		opcode: opcode,
@@ -207,8 +213,19 @@ func AssembleLine(labels map[string]uint8, line string) (int16, error) {
 	return int16(machincode), err
 }
 
-// Assemble data from input
-func Assemble(reader io.ReadSeeker) error {
+// controls output of Assemble function
+type AssemblyOptions struct {
+	LineNo     bool // show line number
+	SourceCode bool // show source code
+	Address    bool // show address of machine code instruction
+}
+
+func Assemble(reader io.ReadSeeker, writer io.Writer) error {
+	return AssembleWithOptions(reader, writer, AssemblyOptions{})
+}
+
+// Assembler reads assembly code from reader and writes machine code to writer
+func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options AssemblyOptions) error {
 	labels := readSymTable(reader)
 
 	reader.Seek(0, io.SeekStart)
@@ -216,26 +233,40 @@ func Assemble(reader io.ReadSeeker) error {
 	scanner := bufio.NewScanner(reader)
 
 	for lineno := 1; scanner.Scan(); lineno++ {
-		machinecode, err := AssembleLine(labels, scanner.Text())
+		line := strings.Trim(scanner.Text(), " \t")
+		machinecode, err := AssembleLine(labels, line)
 		if err != nil {
 			return err
 		}
 
-		if machinecode > 0 {
-			fmt.Printf("%04d\n", machinecode)
+		if machinecode >= 0 {
+			if options.LineNo {
+				fmt.Fprintf(writer, "%2d: ", lineno)
+			}
+
+			fmt.Fprintf(writer, "%04d", machinecode)
+
+			if options.SourceCode {
+				fmt.Fprintf(writer, " %s", line)
+			}
+			fmt.Fprintln(writer)
 		}
 	}
 
 	return nil
 }
 
-// Assemble file and write output to stdout
-func AssembleFile(filepath string) error {
+func AssembleFile(filepath string, writer io.Writer) error {
+	return AssembleFileWithOptions(filepath, writer, AssemblyOptions{})
+}
+
+// AssembleFile reads assembly code from file at path filepath and write machinecode to writer
+func AssembleFileWithOptions(filepath string, writer io.Writer, options AssemblyOptions) error {
 	file, err := os.Open(filepath)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	return Assemble(file)
+	return AssembleWithOptions(file, writer, options)
 }

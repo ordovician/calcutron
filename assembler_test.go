@@ -1,13 +1,38 @@
 package calcutron
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"path"
+	"strconv"
+	"strings"
 	"testing"
 )
 
-func TestAssembleLine(t *testing.T) {
+func TestAssembleHalt(t *testing.T) {
+	labels := make(map[string]uint8)
 
+	machinecode, err := AssembleLine(labels, "HLT")
+	if err != nil {
+		panic(err)
+	}
+	if machinecode != 0 {
+		t.Errorf("HLT should assemble to 0000, but we got %d", machinecode)
+	}
+}
+
+func TestAssembleDAT(t *testing.T) {
+	labels := make(map[string]uint8)
+	var data int8 = -10
+	line := fmt.Sprintf("DAT %d", data)
+	machinecode, err := AssembleLine(labels, line)
+	if err != nil {
+		panic(err)
+	}
+	if machinecode != int16(complement(data, 100)) {
+		t.Errorf("%s should assemble to %d, but we got %d", line, data, machinecode)
+	}
 }
 
 func Example_assembleLine() {
@@ -52,14 +77,97 @@ func Example_readSymTable() {
 
 	labels := readSymTable(file)
 
-	for key := range labels {
-		fmt.Println(key)
+	for key, value := range labels {
+		fmt.Println(value, key)
 	}
 
 	// Unordered Output:
-	// epsilon
-	// alpha
-	// beta
-	// gamma
-	// delta
+	// 0 epsilon
+	// 0 alpha
+	// 0 beta
+	// 0 gamma
+	// 0 delta
+}
+
+// this is a regression test
+func TestRoundTrip(t *testing.T) {
+	entries, _ := os.ReadDir("testdata")
+
+	for _, entry := range entries {
+		filename := entry.Name()
+		// skip files without assembly code, such as machine code files
+		if !strings.HasSuffix(filename, ".ct33") {
+			continue
+		}
+
+		sourcecodepath := path.Join("testdata", filename)
+		binarypath := strings.Replace(sourcecodepath, ".ct33", ".machine", 1)
+
+		expected, err := os.ReadFile(binarypath)
+		if err != nil {
+			continue // Not all .ct33 files have .machine files, so we skip those cases
+			//t.Errorf("%s: unable to read machine code file: %v", filename, err)
+		}
+
+		buffer := &bytes.Buffer{}
+		err = AssembleFile(sourcecodepath, buffer)
+		if err != nil {
+			panic(err)
+		}
+		got := buffer.String()
+
+		expectedLines := strings.Split(string(expected), "\n")
+		gottenLines := strings.Split(got, "\n")
+
+		for i, expected := range expectedLines {
+			if i >= len(gottenLines) {
+				t.Errorf("%s: Expected %d lines but got %d lines", filename, len(expectedLines), len(gottenLines))
+				break
+			}
+
+			got := gottenLines[i]
+			if expected != got {
+				t.Errorf("%s %d: Expected '%s' got '%s'", filename, i, expected, got)
+				mexpected, _ := strconv.Atoi(expected)
+				mgot, _ := strconv.Atoi(got)
+				t.Errorf("%s => %s and %s => %s", expected, decodeInstruction(uint16(mexpected)), got, decodeInstruction(uint16(mgot)))
+			}
+		}
+
+	}
+}
+
+// Testing the assembly of a single file
+// primary interest is debug specific files which fail to compile
+func TestSingleFileAssembly(t *testing.T) {
+	err := AssembleFileWithOptions("testdata/isa.ct33", os.Stdout, AssemblyOptions{SourceCode: true})
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExampleAssembleFile() {
+	err := AssembleFileWithOptions("testdata/isa.ct33", os.Stdout, AssemblyOptions{SourceCode: true})
+	if err != nil {
+		panic(err)
+	}
+
+	// Output:
+	// 1987 ADD  x9, x8, x7
+	// 2987 SUB  x9, x8, x7
+	// 3987 SUBI x9, x8, 7
+	// 4987 LSH  x9, x8, 7
+	// 5987 RSH  x9, x8, 7
+	// 6910 BRZ  x9, pseudo
+	// 7910 BGT  x9, pseudo
+	// 8916 LD x9, data
+	// 9916 ST x9, data
+	// 0000 HLT
+	// 8990 INP x9
+	// 9991 OUT x9
+	// 1908 MOV x9, x8
+	// 1900 CLR x9
+	// 3991 DEC x9
+	// 6010 BRA pseudo
+	// 0098 DAT 98
 }
