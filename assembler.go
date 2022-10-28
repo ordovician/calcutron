@@ -213,25 +213,19 @@ func AssembleLine(labels map[string]uint8, line string) (int16, error) {
 	return int16(machincode), err
 }
 
-// controls output of Assemble function
-type AssemblyOptions struct {
-	LineNo     bool // show line number
-	SourceCode bool // show source code
-	Address    bool // show address of machine code instruction
-}
-
 func Assemble(reader io.ReadSeeker, writer io.Writer) error {
-	return AssembleWithOptions(reader, writer, AssemblyOptions{})
+	return AssembleWithOptions(reader, writer, AssemblyFlag(0))
 }
 
 // Assembler reads assembly code from reader and writes machine code to writer
-func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options AssemblyOptions) error {
+func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options AssemblyFlag) error {
 	labels := readSymTable(reader)
 
 	reader.Seek(0, io.SeekStart)
 
 	scanner := bufio.NewScanner(reader)
 
+	address := 0
 	for lineno := 1; scanner.Scan(); lineno++ {
 		line := strings.Trim(scanner.Text(), " \t")
 		machinecode, err := AssembleLine(labels, line)
@@ -240,16 +234,26 @@ func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options Assembl
 		}
 
 		if machinecode >= 0 {
-			if options.LineNo {
-				fmt.Fprintf(writer, "%2d: ", lineno)
+			if options.Has(ADDRESS) {
+				fmt.Fprintf(writer, "%02d: ", address)
 			}
 
 			fmt.Fprintf(writer, "%04d", machinecode)
 
-			if options.SourceCode {
-				fmt.Fprintf(writer, " %s", line)
+			if options.Has(SOURCE_CODE) {
+				if options.Has(LINE_NO) {
+					fmt.Fprintf(writer, "; %-18s", line)
+				} else {
+					fmt.Fprintf(writer, "; %s", line)
+				}
 			}
+
+			if options.Has(LINE_NO) {
+				fmt.Fprintf(writer, "// Line %2d ", lineno)
+			}
+
 			fmt.Fprintln(writer)
+			address++
 		}
 	}
 
@@ -257,11 +261,11 @@ func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options Assembl
 }
 
 func AssembleFile(filepath string, writer io.Writer) error {
-	return AssembleFileWithOptions(filepath, writer, AssemblyOptions{})
+	return AssembleFileWithOptions(filepath, writer, AssemblyFlag(0))
 }
 
 // AssembleFile reads assembly code from file at path filepath and write machinecode to writer
-func AssembleFileWithOptions(filepath string, writer io.Writer, options AssemblyOptions) error {
+func AssembleFileWithOptions(filepath string, writer io.Writer, options AssemblyFlag) error {
 	file, err := os.Open(filepath)
 	if err != nil {
 		return err

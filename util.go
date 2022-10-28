@@ -77,3 +77,25 @@ func Abs[T constraints.Integer](x T) T {
 		return x
 	}
 }
+
+type AssemblyFlag uint8
+
+// controls output of Assemble function
+const (
+	LINE_NO     AssemblyFlag = 1 << iota // show line number
+	SOURCE_CODE                          // show source code
+	ADDRESS                              // show address of machine code instruction
+	COLOR                                // Colorize output
+)
+
+// Set bit for flag
+func (flag AssemblyFlag) Set(b AssemblyFlag) AssemblyFlag { return b | flag }
+
+// Clear bit for flag
+func (flag AssemblyFlag) Clear(b AssemblyFlag) AssemblyFlag { return b &^ flag }
+
+// Toggle bit for flat
+func (flag AssemblyFlag) Toggle(b AssemblyFlag) AssemblyFlag { return b ^ flag }
+
+// Check if bit is set
+func (flag AssemblyFlag) Has(b AssemblyFlag) bool { return b&flag != 0 }

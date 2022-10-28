@@ -140,34 +140,34 @@ func TestRoundTrip(t *testing.T) {
 // Testing the assembly of a single file
 // primary interest is debug specific files which fail to compile
 func TestSingleFileAssembly(t *testing.T) {
-	err := AssembleFileWithOptions("testdata/isa.ct33", os.Stdout, AssemblyOptions{SourceCode: true})
+	err := AssembleFileWithOptions("testdata/isa.ct33", os.Stdout, SOURCE_CODE)
 	if err != nil {
 		panic(err)
 	}
 }
 
 func ExampleAssembleFile() {
-	err := AssembleFileWithOptions("testdata/isa.ct33", os.Stdout, AssemblyOptions{SourceCode: true})
+	err := AssembleFileWithOptions("testdata/isa.ct33", os.Stdout, SOURCE_CODE)
 	if err != nil {
 		panic(err)
 	}
 
 	// Output:
-	// 1987 ADD  x9, x8, x7
-	// 2987 SUB  x9, x8, x7
-	// 3987 SUBI x9, x8, 7
-	// 4987 LSH  x9, x8, 7
-	// 5987 RSH  x9, x8, 7
-	// 6910 BRZ  x9, pseudo
-	// 7910 BGT  x9, pseudo
-	// 8916 LD x9, data
-	// 9916 ST x9, data
-	// 0000 HLT
-	// 8990 INP x9
-	// 9991 OUT x9
-	// 1908 MOV x9, x8
-	// 1900 CLR x9
-	// 3991 DEC x9
-	// 6010 BRA pseudo
-	// 0098 DAT 98
+	// 1987; ADD  x9, x8, x7
+	// 2987; SUB  x9, x8, x7
+	// 3987; SUBI x9, x8, 7
+	// 4987; LSH  x9, x8, 7
+	// 5987; RSH  x9, x8, 7
+	// 6910; BRZ  x9, pseudo
+	// 7910; BGT  x9, pseudo
+	// 8916; LD x9, data
+	// 9916; ST x9, data
+	// 0000; HLT
+	// 8990; INP x9
+	// 9991; OUT x9
+	// 1908; MOV x9, x8
+	// 1900; CLR x9
+	// 3991; DEC x9
+	// 6010; BRA pseudo
+	// 0098; DAT 98
 }
