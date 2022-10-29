@@ -17,6 +17,32 @@ type ParsedInstruction struct {
 	constant int8
 }
 
+func DisassembleInstruction(machinecode uint16) *ParsedInstruction {
+	var inst ParsedInstruction
+	opcode := Opcode(machinecode / 1000)
+
+	operands := machinecode % 1000
+	addr := int8(operands % 100)
+
+	regs := []uint8{uint8(operands / 100)}
+
+	switch opcode {
+	case LD, ST, BRZ, BGT, BRA:
+		inst.constant = addr
+	case SUBI, LSH, RSH:
+		inst.constant = addr % 10
+		regs = append(regs, uint8(addr/10))
+	case ADD, SUB:
+		regs = append(regs, uint8(addr/10))
+		regs = append(regs, uint8(addr%10))
+	}
+
+	inst.opcode = opcode
+	inst.regs = regs
+
+	return &inst
+}
+
 func (inst *ParsedInstruction) ParseOperands(labels map[string]uint8, operands []string) error {
 	registers := make([]uint8, 0)
 

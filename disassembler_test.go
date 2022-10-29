@@ -90,3 +90,17 @@ func TestLoadInstruction(t *testing.T) {
 		t.Errorf("Register x1 value %d not equal expected value %d", comp.Registers[1], expected)
 	}
 }
+
+// Make sure disassembly and assembly works roundtrip for a single instruction
+func TestDisassembleInstruction(t *testing.T) {
+	for machinecode := 1000; machinecode <= 9999; machinecode++ {
+		inst := DisassembleInstruction(uint16(machinecode))
+		got, err := inst.MachineInstruction()
+		if err != nil {
+			t.Errorf("Unable to encode machinecode instruction: %v", err)
+		}
+		if got != uint16(machinecode) {
+			t.Errorf("Expected %d got %d", machinecode, got)
+		}
+	}
+}
