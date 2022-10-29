@@ -11,14 +11,14 @@ import (
 )
 
 // Based on parsing mnemonic and operands of an instruction
-type ParsedInstruction struct {
+type Instruction struct {
 	opcode   Opcode
 	regs     []uint8
 	constant int8
 }
 
-func DisassembleInstruction(machinecode uint16) *ParsedInstruction {
-	var inst ParsedInstruction
+func DisassembleInstruction(machinecode uint16) *Instruction {
+	var inst Instruction
 	opcode := Opcode(machinecode / 1000)
 
 	operands := machinecode % 1000
@@ -43,7 +43,7 @@ func DisassembleInstruction(machinecode uint16) *ParsedInstruction {
 	return &inst
 }
 
-func (inst *ParsedInstruction) ParseOperands(labels map[string]uint8, operands []string) error {
+func (inst *Instruction) ParseOperands(labels map[string]uint8, operands []string) error {
 	registers := make([]uint8, 0)
 
 	for _, operand := range operands {
@@ -75,11 +75,11 @@ func (inst *ParsedInstruction) ParseOperands(labels map[string]uint8, operands [
 // if there is no destination register we'll return 0 as that will have
 // no affect on how machine code instruction is made
 // It will be in range 0 - 900
-func (inst *ParsedInstruction) DestRegCode() uint16 {
+func (inst *Instruction) DestRegCode() uint16 {
 	return 100 * uint16(inst.DestReg())
 }
 
-func (inst *ParsedInstruction) DestReg() uint8 {
+func (inst *Instruction) DestReg() uint8 {
 	if len(inst.regs) == 0 {
 		return 0
 	}
@@ -88,11 +88,11 @@ func (inst *ParsedInstruction) DestReg() uint8 {
 
 // Get the Rs1 source registers machine code
 // It will be in range 0 - 90
-func (inst *ParsedInstruction) FirstSourceRegCode() uint16 {
+func (inst *Instruction) FirstSourceRegCode() uint16 {
 	return uint16(10 * inst.FirstSourceReg())
 }
 
-func (inst *ParsedInstruction) FirstSourceReg() uint8 {
+func (inst *Instruction) FirstSourceReg() uint8 {
 	regs := inst.regs
 	var machinecode uint8
 
@@ -123,11 +123,11 @@ func (inst *ParsedInstruction) FirstSourceReg() uint8 {
 
 // Get the Rs2 source registers machine code
 // It will be in range 0 - 9
-func (inst *ParsedInstruction) SecondSourceRegCode() uint16 {
+func (inst *Instruction) SecondSourceRegCode() uint16 {
 	return uint16(inst.SecondSourceReg())
 }
 
-func (inst *ParsedInstruction) SecondSourceReg() uint8 {
+func (inst *Instruction) SecondSourceReg() uint8 {
 	regs := inst.regs
 	switch inst.opcode {
 	case ADD, SUB:
@@ -146,11 +146,11 @@ func (inst *ParsedInstruction) SecondSourceReg() uint8 {
 	return 0
 }
 
-func (inst *ParsedInstruction) Constant() uint8 {
+func (inst *Instruction) Constant() uint8 {
 	return uint8(inst.constant)
 }
 
-func (inst *ParsedInstruction) Machinecode() (uint16, error) {
+func (inst *Instruction) Machinecode() (uint16, error) {
 	opcode := inst.opcode
 	constant := inst.constant
 
@@ -240,7 +240,7 @@ func AssembleLine(labels map[string]uint8, line string) (int16, error) {
 	}
 
 	opcode := ParseOpcode(mnemonic)
-	instruction := ParsedInstruction{
+	instruction := Instruction{
 		opcode: opcode,
 	}
 
