@@ -75,59 +75,70 @@ func (inst *ParsedInstruction) ParseOperands(labels map[string]uint8, operands [
 // if there is no destination register we'll return 0 as that will have
 // no affect on how machine code instruction is made
 // It will be in range 0 - 900
-func (inst *ParsedInstruction) DestReg() uint16 {
+func (inst *ParsedInstruction) DestRegCode() uint16 {
+	return 100 * uint16(inst.DestReg())
+}
+
+func (inst *ParsedInstruction) DestReg() uint8 {
 	if len(inst.regs) == 0 {
 		return 0
 	}
-	return 100 * uint16(inst.regs[0])
+	return inst.regs[0]
 }
 
 // Get the Rs1 source registers machine code
 // It will be in range 0 - 90
-func (inst *ParsedInstruction) FirstSourceReg() uint16 {
+func (inst *ParsedInstruction) FirstSourceRegCode() uint16 {
+	return uint16(10 * inst.FirstSourceReg())
+}
+
+func (inst *ParsedInstruction) FirstSourceReg() uint8 {
 	regs := inst.regs
-	var machinecode uint16
+	var machinecode uint8
 
 	switch inst.opcode {
 	case ADD, SUB:
 		switch len(regs) {
 		case 3:
-			machinecode = uint16(regs[1])
+			machinecode = regs[1]
 		case 2:
-			machinecode = uint16(regs[0])
+			machinecode = regs[0]
 		}
 	case SUBI, LSH, RSH:
 		switch len(regs) {
 		case 2:
-			machinecode = uint16(regs[1])
+			machinecode = regs[1]
 		case 1:
-			machinecode = uint16(regs[0])
+			machinecode = regs[0]
 		}
 	case DEC, INC:
-		machinecode = uint16(regs[0])
+		machinecode = regs[0]
 	case MOV:
 		machinecode = 0
 	default:
 		log.Panicf("mnemonic %v has no rs1 operand", inst.opcode)
 	}
-
-	return 10 * machinecode
+	return machinecode
 }
 
 // Get the Rs2 source registers machine code
 // It will be in range 0 - 9
-func (inst *ParsedInstruction) SecondSourceReg() uint16 {
+func (inst *ParsedInstruction) SecondSourceRegCode() uint16 {
+	return uint16(inst.SecondSourceReg())
+}
+
+func (inst *ParsedInstruction) SecondSourceReg() uint8 {
 	regs := inst.regs
 	switch inst.opcode {
 	case ADD, SUB:
 		switch len(regs) {
 		case 3:
-			return uint16(regs[2])
+			return regs[2]
 		case 2:
-			return uint16(regs[1])
+			return regs[1]
 		}
 	case MOV:
-		return uint16(regs[1])
+		return regs[1]
 	default:
 		log.Panicf("mnemonic %v has no rs1 operand", inst.opcode)
 	}
@@ -139,22 +150,22 @@ func (inst *ParsedInstruction) Constant() uint8 {
 	return uint8(inst.constant)
 }
 
-func (inst *ParsedInstruction) MachineInstruction() (uint16, error) {
+func (inst *ParsedInstruction) Machinecode() (uint16, error) {
 	opcode := inst.opcode
 	constant := inst.constant
 
 	// For instructions without destination register a zero will be returned
 	// Some instructions aren't real instructions such as DAT, and will thus return zero
-	var machinecode uint16 = opcode.Machinecode() + inst.DestReg()
+	var machinecode uint16 = opcode.Machinecode() + inst.DestRegCode()
 
 	switch opcode {
 	case ADD, SUB:
-		machinecode += inst.FirstSourceReg() + inst.SecondSourceReg()
+		machinecode += inst.FirstSourceRegCode() + inst.SecondSourceRegCode()
 	case SUBI, LSH, RSH:
 		if Abs(constant) > 9 {
 			return 0, fmt.Errorf("constant %d is too many digits. Instruction %v only allows single digit constants", constant, opcode)
 		}
-		machinecode += inst.FirstSourceReg() + complement(constant, 10)
+		machinecode += inst.FirstSourceRegCode() + complement(constant, 10)
 	case LD, ST, BRZ, BGT, BRA:
 		if constant < 0 {
 			return 0, fmt.Errorf("cannot use negative address %d with %v instruction", constant, opcode)
@@ -163,9 +174,9 @@ func (inst *ParsedInstruction) MachineInstruction() (uint16, error) {
 	case DAT:
 		machinecode += complement(constant, 100)
 	case DEC:
-		machinecode += inst.FirstSourceReg()
+		machinecode += inst.FirstSourceRegCode()
 	case MOV:
-		machinecode += inst.SecondSourceReg()
+		machinecode += inst.SecondSourceRegCode()
 	case HLT, INP, OUT, CLR:
 		break
 	default:
@@ -238,7 +249,7 @@ func AssembleLine(labels map[string]uint8, line string) (int16, error) {
 		return 0, err
 	}
 
-	machincode, err := instruction.MachineInstruction()
+	machincode, err := instruction.Machinecode()
 
 	return int16(machincode), err
 }

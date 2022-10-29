@@ -95,7 +95,7 @@ func TestLoadInstruction(t *testing.T) {
 func TestDisassembleInstruction(t *testing.T) {
 	for machinecode := 1000; machinecode <= 9999; machinecode++ {
 		inst := DisassembleInstruction(uint16(machinecode))
-		got, err := inst.MachineInstruction()
+		got, err := inst.Machinecode()
 		if err != nil {
 			t.Errorf("Unable to encode machinecode instruction: %v", err)
 		}
