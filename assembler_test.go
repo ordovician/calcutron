@@ -130,7 +130,7 @@ func TestRoundTrip(t *testing.T) {
 				t.Errorf("%s %d: Expected '%s' got '%s'", filename, i, expected, got)
 				mexpected, _ := strconv.Atoi(expected)
 				mgot, _ := strconv.Atoi(got)
-				t.Errorf("%s => %s and %s => %s", expected, decodeInstruction(uint16(mexpected)), got, decodeInstruction(uint16(mgot)))
+				t.Errorf("%s => %s and %s => %s", expected, DisassembleInstruction(uint16(mexpected)), got, DisassembleInstruction(uint16(mgot)))
 			}
 		}
 

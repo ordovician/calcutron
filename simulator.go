@@ -220,7 +220,7 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 //	02: 1432; ADD  x4, x3, x2
 func (comp *Computer) PrintCurrentInstruction() {
 	machinecode := comp.Memory[comp.PC]
-	instruction := decodeInstruction(machinecode)
+	instruction := DisassembleInstruction(machinecode)
 	fmt.Printf("%02d: %04d; %v\n", comp.PC, machinecode, instruction)
 }
 
