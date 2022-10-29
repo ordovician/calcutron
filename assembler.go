@@ -135,6 +135,10 @@ func (inst *ParsedInstruction) SecondSourceReg() uint16 {
 	return 0
 }
 
+func (inst *ParsedInstruction) Constant() uint8 {
+	return uint8(inst.constant)
+}
+
 func (inst *ParsedInstruction) MachineInstruction() (uint16, error) {
 	opcode := inst.opcode
 	constant := inst.constant

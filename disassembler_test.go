@@ -102,5 +102,6 @@ func TestDisassembleInstruction(t *testing.T) {
 		if got != uint16(machinecode) {
 			t.Errorf("Expected %d got %d", machinecode, got)
 		}
+
 	}
 }

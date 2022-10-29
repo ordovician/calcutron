@@ -146,38 +146,40 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 
 	regs := comp.Registers[0:]
 
-	inst := decodeInstruction(instruction)
+	//inst := decodeInstruction(instruction)
+
+	pinst := DisassembleInstruction(instruction)
 
 	var rd uint8
 
-	if inst.dst <= 9 {
-		rd = regs[inst.dst]
+	if pinst.DestReg() <= 9 {
+		rd = regs[pinst.DestReg()]
 	}
 
-	switch inst.opcode {
+	switch pinst.opcode {
 	case ADD:
-		rd = regs[inst.src] + regs[inst.offset]
+		rd = regs[pinst.FirstSourceReg()] + regs[pinst.SecondSourceReg()]
 	case SUB:
-		rd = regs[inst.src] - regs[inst.offset]
+		rd = regs[pinst.FirstSourceReg()] - regs[pinst.SecondSourceReg()]
 	case SUBI:
-		rd = regs[inst.src] - inst.offset
+		rd = regs[pinst.FirstSourceReg()] - pinst.Constant()
 	case LSH:
-		rd = regs[inst.src]*10 ^ inst.offset
+		rd = regs[pinst.FirstSourceReg()] * (10 ^ pinst.Constant())
 	case RSH:
-		rd = regs[inst.src] % (10 ^ inst.offset)
-		regs[inst.src] = regs[inst.src] / (10 ^ inst.offset)
+		rd = regs[pinst.FirstSourceReg()] % (10 ^ pinst.Constant())
+		regs[pinst.FirstSourceReg()] = regs[pinst.FirstSourceReg()] / (10 ^ pinst.Constant())
 	case BRZ:
 		if rd == 0 {
-			comp.PC = inst.addr
+			comp.PC = pinst.Constant()
 		}
 	case BGT:
 		if rd > 0 {
-			comp.PC = inst.addr
+			comp.PC = pinst.Constant()
 		}
 	case LD:
-		if inst.addr < 90 {
-			rd = uint8(comp.Memory[inst.addr])
-		} else if inst.addr == 90 {
+		if pinst.Constant() < 90 {
+			rd = uint8(comp.Memory[pinst.Constant()])
+		} else if pinst.Constant() == 90 {
 			if comp.inpos >= len(comp.Inputs) {
 				return ErrAllInputRead
 			}
@@ -185,17 +187,17 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 			comp.inpos += 1
 		}
 	case ST:
-		if inst.addr < 90 {
-			comp.Memory[inst.addr+1] = uint16(rd)
-		} else if inst.addr == 91 {
+		if pinst.Constant() < 90 {
+			comp.Memory[pinst.Constant()] = uint16(rd)
+		} else if pinst.Constant() == 91 {
 			comp.Outputs = append(comp.Outputs, rd)
 		} else {
-			return fmt.Errorf("writing to address %d is not supported in this version", inst.addr)
+			return fmt.Errorf("writing to address %d is not supported in this version", pinst.Constant())
 		}
 	case HLT:
 		return ErrProgramHalt
 	default:
-		return fmt.Errorf("opcode %d, is not supported. Must be between 0-9", inst.opcode)
+		return fmt.Errorf("opcode %d, is not supported. Must be between 0-9", pinst.opcode)
 	}
 
 	// Make sure register values stay within range 0-99
@@ -205,8 +207,8 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 	}
 
 	// Cannot write to register 0, so it is excluded
-	if inst.dst >= 1 && inst.dst <= 9 {
-		regs[inst.dst] = rd
+	if pinst.DestReg() >= 1 && pinst.DestReg() <= 9 {
+		regs[pinst.DestReg()] = rd
 	}
 
 	return nil
