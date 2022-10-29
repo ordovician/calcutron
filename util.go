@@ -82,10 +82,11 @@ type AssemblyFlag uint8
 
 // controls output of Assemble function
 const (
-	LINE_NO     AssemblyFlag = 1 << iota // show line number
-	SOURCE_CODE                          // show source code
-	ADDRESS                              // show address of machine code instruction
-	COLOR                                // Colorize output
+	MACHINE_CODE AssemblyFlag = 1 << iota
+	LINE_NO                   // show line number
+	SOURCE_CODE               // show source code
+	ADDRESS                   // show address of machine code instruction
+	COLOR                     // Colorize output
 )
 
 // Set bit for flag
@@ -99,3 +100,32 @@ func (flag AssemblyFlag) Toggle(b AssemblyFlag) AssemblyFlag { return b ^ flag }
 
 // Check if bit is set
 func (flag AssemblyFlag) Has(b AssemblyFlag) bool { return b&flag != 0 }
+
+type SourceCodeLine struct {
+	address     int
+	machinecode int16
+	sourcecode  string
+	lineno      int
+}
+
+func PrintInstruction(writer io.Writer, line SourceCodeLine, options AssemblyFlag) {
+	if options.Has(ADDRESS) {
+		fmt.Fprintf(writer, "%02d: ", line.address)
+	}
+
+	fmt.Fprintf(writer, "%04d", line.machinecode)
+
+	if options.Has(SOURCE_CODE) {
+		if options.Has(LINE_NO) {
+			fmt.Fprintf(writer, "; %-18s", line.sourcecode)
+		} else {
+			fmt.Fprintf(writer, "; %s", line.sourcecode)
+		}
+	}
+
+	if options.Has(LINE_NO) {
+		fmt.Fprintf(writer, "// Line %2d ", line.lineno)
+	}
+
+	fmt.Fprintln(writer)
+}

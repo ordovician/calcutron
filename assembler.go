@@ -225,35 +225,20 @@ func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options Assembl
 
 	scanner := bufio.NewScanner(reader)
 
-	address := 0
-	for lineno := 1; scanner.Scan(); lineno++ {
-		line := strings.Trim(scanner.Text(), " \t")
-		machinecode, err := AssembleLine(labels, line)
+	var line SourceCodeLine
+	line.address = 0
+	for line.lineno = 1; scanner.Scan(); line.lineno++ {
+
+		line.sourcecode = strings.Trim(scanner.Text(), " \t")
+		var err error
+		line.machinecode, err = AssembleLine(labels, line.sourcecode)
 		if err != nil {
 			return err
 		}
 
-		if machinecode >= 0 {
-			if options.Has(ADDRESS) {
-				fmt.Fprintf(writer, "%02d: ", address)
-			}
-
-			fmt.Fprintf(writer, "%04d", machinecode)
-
-			if options.Has(SOURCE_CODE) {
-				if options.Has(LINE_NO) {
-					fmt.Fprintf(writer, "; %-18s", line)
-				} else {
-					fmt.Fprintf(writer, "; %s", line)
-				}
-			}
-
-			if options.Has(LINE_NO) {
-				fmt.Fprintf(writer, "// Line %2d ", lineno)
-			}
-
-			fmt.Fprintln(writer)
-			address++
+		if line.machinecode >= 0 {
+			PrintInstruction(writer, line, options|MACHINE_CODE)
+			line.address++
 		}
 	}
 
@@ -261,7 +246,7 @@ func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options Assembl
 }
 
 func AssembleFile(filepath string, writer io.Writer) error {
-	return AssembleFileWithOptions(filepath, writer, AssemblyFlag(0))
+	return AssembleFileWithOptions(filepath, writer, MACHINE_CODE)
 }
 
 // AssembleFile reads assembly code from file at path filepath and write machinecode to writer
