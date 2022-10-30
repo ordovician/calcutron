@@ -196,10 +196,11 @@ func (line *SourceCodeLine) printWithColor(writer io.Writer, options AssemblyFla
 	if options.Has(SOURCE_CODE) {
 		var buffer bytes.Buffer
 		line.instruction.PrintColoredSourceCode(&buffer)
+		gray.Fprint(writer, ";")
 		if options.Has(LINE_NO) {
-			fmt.Fprintf(writer, "; %-18s", buffer.String())
+			fmt.Fprintf(writer, " %-30s", buffer.String())
 		} else {
-			fmt.Fprintf(writer, "; %s", buffer.String())
+			fmt.Fprintf(writer, " %s", buffer.String())
 		}
 	}
 

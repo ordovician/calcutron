@@ -51,6 +51,7 @@ func (inst *Instruction) ParseOperands(labels map[string]uint8, operands []strin
 		operand = strings.TrimSpace(operand)
 		if addr, ok := labels[operand]; ok {
 			inst.constant = int8(addr)
+			inst.label = operand
 		} else if constant, err := strconv.Atoi(operand); err == nil {
 			if constant < -99 || constant > 99 {
 				return fmt.Errorf("constant %d is outside valid range -99 to 99", constant)
@@ -209,10 +210,13 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 	case SUBI, LSH, RSH:
 		fmt.Fprintf(writer, ", %d", constant)
 	case LD, ST, BRZ, BGT, BRA:
+		if len(inst.regs) > 0 {
+			fmt.Fprintf(writer, ", ")
+		}
 		if inst.label == "" {
-			fmt.Fprintf(writer, ", %d", constant)
+			fmt.Fprintf(writer, "%d", constant)
 		} else {
-			fmt.Fprintf(writer, ", %s", inst.label)
+			fmt.Fprintf(writer, "%s", inst.label)
 		}
 	default:
 		break
@@ -220,13 +224,14 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 }
 
 func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
-	cyan := color.New(color.FgCyan, color.Bold)
-	pink := color.New(color.FgHiRed)
+	mnemonicColor := color.New(color.FgCyan, color.Bold)
+	numberColor := color.New(color.FgHiRed)
+	labelColor := color.New(color.FgHiGreen, color.Bold)
 
 	opcode := inst.opcode
 	constant := inst.Constant()
 
-	cyan.Fprintf(writer, "%-4v", opcode)
+	mnemonicColor.Fprintf(writer, "%-4v", opcode)
 
 	for i, r := range inst.regs {
 		if i > 0 {
@@ -238,13 +243,15 @@ func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
 	switch opcode {
 	case SUBI, LSH, RSH:
 		fmt.Fprintf(writer, ", ")
-		pink.Fprintf(writer, "%d", constant)
+		numberColor.Fprintf(writer, "%d", constant)
 	case LD, ST, BRZ, BGT, BRA:
-		if inst.label == "" {
+		if len(inst.regs) > 0 {
 			fmt.Fprintf(writer, ", ")
-			pink.Fprintf(writer, "%d", constant)
+		}
+		if inst.label == "" {
+			numberColor.Fprintf(writer, "%d", constant)
 		} else {
-			fmt.Fprintf(writer, ", %s", inst.label)
+			labelColor.Fprintf(writer, "%s", inst.label)
 		}
 	default:
 		break
