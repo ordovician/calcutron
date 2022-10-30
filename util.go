@@ -108,33 +108,3 @@ func (flag AssemblyFlag) Toggle(b AssemblyFlag) AssemblyFlag { return flag ^ b }
 
 // Check if bit is set
 func (flag AssemblyFlag) Has(b AssemblyFlag) bool { return flag&b != 0 }
-
-type SourceCodeLine struct {
-	address     int
-	machinecode int16
-	sourcecode  string
-	lineno      int
-}
-
-func PrintInstruction(writer io.Writer, line SourceCodeLine, options AssemblyFlag) {
-
-	if options.Has(ADDRESS) {
-		fmt.Fprintf(writer, "%02d: ", line.address)
-	}
-
-	fmt.Fprintf(writer, "%04d", line.machinecode)
-
-	if options.Has(SOURCE_CODE) {
-		if options.Has(LINE_NO) {
-			fmt.Fprintf(writer, "; %-18s", line.sourcecode)
-		} else {
-			fmt.Fprintf(writer, "; %s", line.sourcecode)
-		}
-	}
-
-	if options.Has(LINE_NO) {
-		fmt.Fprintf(writer, " // Line %2d ", line.lineno)
-	}
-
-	fmt.Fprintln(writer)
-}

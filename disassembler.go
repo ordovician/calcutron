@@ -14,25 +14,30 @@ func Disassemble(reader io.Reader) error {
 }
 
 // Disassemble machinecode read from reader
-func DisassembleWithOptions(reader io.Reader, option AssemblyFlag) error {
+func DisassembleWithOptions(reader io.Reader, options AssemblyFlag) error {
 	scanner := bufio.NewScanner(reader)
 
 	var line SourceCodeLine
 	line.address = 0
 	for line.lineno = 1; scanner.Scan(); line.lineno++ {
-		line.sourcecode = scanner.Text()
-		machinecode, err := strconv.Atoi(line.sourcecode)
-		line.machinecode = int16(machinecode)
+		machinecode, err := strconv.Atoi(scanner.Text())
 		if err != nil {
 			return fmt.Errorf("%d: unable to disassemble because: %w", line.lineno, err)
 		}
-		if line.machinecode < 0 {
+		if machinecode < 0 {
 			log.Panicf("%d: something went from in parsing code. Machine code instruction should never be less than 0", line.lineno)
 		}
 
 		instruction := DisassembleInstruction(uint16(machinecode))
 
-		fmt.Printf("%02d: %04d; %v\n", line.lineno-1, line.machinecode, instruction)
+		if instruction != nil {
+			line.instruction = instruction
+			err := line.Print(os.Stdout, options|SOURCE_CODE)
+			if err != nil {
+				return err
+			}
+			line.address++
+		}
 	}
 
 	return nil

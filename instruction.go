@@ -2,9 +2,12 @@ package calcutron
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 // Based on parsing mnemonic and operands of an instruction
@@ -12,6 +15,7 @@ type Instruction struct {
 	opcode   Opcode
 	regs     []uint8
 	constant int8
+	label    string // redundant, but helps with source code visualization
 }
 
 func DisassembleInstruction(machinecode uint16) *Instruction {
@@ -186,12 +190,74 @@ func (inst *Instruction) Machinecode() (uint16, error) {
 	return uint16(machinecode), nil
 }
 
+// Used to print something that look like the original source code which
+// was parsed to produce the Instruction object
+func (inst *Instruction) PrintSourceCode(writer io.Writer) {
+	opcode := inst.opcode
+	constant := inst.Constant()
+
+	fmt.Fprintf(writer, "%-4v", opcode)
+
+	for i, r := range inst.regs {
+		if i > 0 {
+			fmt.Fprintf(writer, ", ")
+		}
+		fmt.Fprintf(writer, "x%v", r)
+	}
+
+	switch opcode {
+	case SUBI, LSH, RSH:
+		fmt.Fprintf(writer, ", %d", constant)
+	case LD, ST, BRZ, BGT, BRA:
+		if inst.label == "" {
+			fmt.Fprintf(writer, ", %d", constant)
+		} else {
+			fmt.Fprintf(writer, ", %s", inst.label)
+		}
+	default:
+		break
+	}
+}
+
+func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
+	cyan := color.New(color.FgCyan, color.Bold)
+	pink := color.New(color.FgHiRed)
+
+	opcode := inst.opcode
+	constant := inst.Constant()
+
+	cyan.Fprintf(writer, "%-4v", opcode)
+
+	for i, r := range inst.regs {
+		if i > 0 {
+			fmt.Fprintf(writer, ", ")
+		}
+		fmt.Fprintf(writer, "x%v", r)
+	}
+
+	switch opcode {
+	case SUBI, LSH, RSH:
+		fmt.Fprintf(writer, ", ")
+		pink.Fprintf(writer, "%d", constant)
+	case LD, ST, BRZ, BGT, BRA:
+		if inst.label == "" {
+			fmt.Fprintf(writer, ", ")
+			pink.Fprintf(writer, "%d", constant)
+		} else {
+			fmt.Fprintf(writer, ", %s", inst.label)
+		}
+	default:
+		break
+	}
+}
+
+// What a disassembled instruction looks like in text form without colors
 func (inst *Instruction) String() string {
 	opcode := inst.opcode
 	dst := inst.DestReg()
 	constant := inst.Constant()
 
-	switch inst.opcode {
+	switch opcode {
 	case ADD, SUB:
 		return fmt.Sprintf("%-4v x%d, x%d, x%d", opcode, dst, inst.FirstSourceReg(), inst.SecondSourceReg())
 	case SUBI, LSH, RSH:
