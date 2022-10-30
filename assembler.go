@@ -164,7 +164,7 @@ func (line *SourceCodeLine) printWithoutColor(writer io.Writer, options Assembly
 		line.instruction.PrintSourceCode(&buffer)
 
 		if options.Has(LINE_NO) {
-			fmt.Fprintf(writer, "; %-18s", buffer.String())
+			fmt.Fprintf(writer, "; %-25s", buffer.String())
 		} else {
 
 			fmt.Fprintf(writer, "; %s", buffer.String())
@@ -187,20 +187,26 @@ func (line *SourceCodeLine) printWithColor(writer io.Writer, options AssemblyFla
 		yellow.Fprintf(writer, "%02d: ", line.address)
 	}
 
-	machinecode, err := line.Machinecode()
-	if err != nil {
-		return err
+	if options.Has(MACHINE_CODE) {
+		machinecode, err := line.Machinecode()
+		if err != nil {
+			return err
+		}
+		gray.Fprintf(writer, "%04d", machinecode)
 	}
-	gray.Fprintf(writer, "%04d", machinecode)
 
 	if options.Has(SOURCE_CODE) {
 		var buffer bytes.Buffer
 		line.instruction.PrintColoredSourceCode(&buffer)
-		gray.Fprint(writer, ";")
+
+		if options.Has(MACHINE_CODE) {
+			gray.Fprint(writer, "; ")
+		}
+
 		if options.Has(LINE_NO) {
-			fmt.Fprintf(writer, " %-30s", buffer.String())
+			fmt.Fprintf(writer, "%-25s", buffer.String())
 		} else {
-			fmt.Fprintf(writer, " %s", buffer.String())
+			fmt.Fprintf(writer, "%s", buffer.String())
 		}
 	}
 

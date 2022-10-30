@@ -231,7 +231,7 @@ func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
 	opcode := inst.opcode
 	constant := inst.Constant()
 
-	mnemonicColor.Fprintf(writer, "%-4v", opcode)
+	mnemonicColor.Fprintf(writer, "%-5v", opcode)
 
 	for i, r := range inst.regs {
 		if i > 0 {
