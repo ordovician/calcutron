@@ -14,18 +14,34 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	// var (
-	// 	maxsteps int
-	// 	inputs   string
-	// )
+	var (
+		AddressOn     bool
+		LineNoOn      bool
+		MachinecodeOn bool
+		SourceCodeOn  bool
+	)
 
-	// flag.IntVar(&maxsteps, "maxsteps", 1000, "Max number of instruction to execute")
-	// flag.StringVar(&inputs, "inputs", "", "Input numbers for program to read")
+	flag.BoolVar(&AddressOn, "address", false, "show address of each instruction")
+	flag.BoolVar(&LineNoOn, "lineno", false, "show source code line number of each instruction")
+	flag.BoolVar(&MachinecodeOn, "machinecode", true, "show address of each instruction")
+	flag.BoolVar(&SourceCodeOn, "sourcecode", false, "show address of each instruction")
 
 	flag.Parse()
 
+	if len(flag.Args()) < 1 {
+		flag.Usage()
+		os.Exit(-1)
+	}
+
 	filepath := flag.Arg(0)
-	err := AssembleFile(filepath, os.Stdout)
+
+	var options AssemblyFlag
+	options = options.TurnOn(ADDRESS, AddressOn)
+	options = options.TurnOn(LINE_NO, LineNoOn)
+	options = options.TurnOn(MACHINE_CODE, MachinecodeOn)
+	options = options.TurnOn(SOURCE_CODE, SourceCodeOn)
+
+	err := AssembleFileWithOptions(filepath, os.Stdout, options)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to assemble %s: %v", filepath, err)
 	}

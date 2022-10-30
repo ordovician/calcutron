@@ -90,16 +90,24 @@ const (
 )
 
 // Set bit for flag
-func (flag AssemblyFlag) Set(b AssemblyFlag) AssemblyFlag { return b | flag }
+func (flag AssemblyFlag) Set(b AssemblyFlag) AssemblyFlag { return flag | b }
+
+func (flag AssemblyFlag) TurnOn(b AssemblyFlag, on bool) AssemblyFlag {
+	if on {
+		return flag.Set(b)
+	} else {
+		return flag.Clear(b)
+	}
+}
 
 // Clear bit for flag
-func (flag AssemblyFlag) Clear(b AssemblyFlag) AssemblyFlag { return b &^ flag }
+func (flag AssemblyFlag) Clear(b AssemblyFlag) AssemblyFlag { return flag &^ b }
 
 // Toggle bit for flat
-func (flag AssemblyFlag) Toggle(b AssemblyFlag) AssemblyFlag { return b ^ flag }
+func (flag AssemblyFlag) Toggle(b AssemblyFlag) AssemblyFlag { return flag ^ b }
 
 // Check if bit is set
-func (flag AssemblyFlag) Has(b AssemblyFlag) bool { return b&flag != 0 }
+func (flag AssemblyFlag) Has(b AssemblyFlag) bool { return flag&b != 0 }
 
 type SourceCodeLine struct {
 	address     int
@@ -109,6 +117,7 @@ type SourceCodeLine struct {
 }
 
 func PrintInstruction(writer io.Writer, line SourceCodeLine, options AssemblyFlag) {
+
 	if options.Has(ADDRESS) {
 		fmt.Fprintf(writer, "%02d: ", line.address)
 	}
@@ -124,7 +133,7 @@ func PrintInstruction(writer io.Writer, line SourceCodeLine, options AssemblyFla
 	}
 
 	if options.Has(LINE_NO) {
-		fmt.Fprintf(writer, "// Line %2d ", line.lineno)
+		fmt.Fprintf(writer, " // Line %2d ", line.lineno)
 	}
 
 	fmt.Fprintln(writer)
