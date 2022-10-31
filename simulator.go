@@ -99,6 +99,11 @@ func (comp *Computer) LoadInputs(reader io.Reader) error {
 	return nil
 }
 
+func (comp *Computer) StringInputs(s string) error {
+	buffer := bytes.NewBufferString(s)
+	return comp.LoadInputs(buffer)
+}
+
 // Doesn't erase installed program of set input but resets everything so
 // program can be run over again and give same result
 func (comp *Computer) Reset() {

@@ -4,20 +4,30 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/chzyer/readline"
+	"github.com/fatih/color"
 	. "github.com/ordovician/calcutron"
 )
 
 type Completer struct {
 }
 
+var commands = [...]string{"help", "input", "output", "status", "quit", "set"}
+
 // Returns suggestions based on what user has written thus far
 func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length int) {
 	str := string(line)
 	n := len(line)
 	var matches [][]rune = make([][]rune, 0, 5)
+
+	for _, cmd := range commands {
+		if strings.HasPrefix(cmd, str) {
+			matches = append(matches, []rune(cmd[n:]))
+		}
+	}
 
 	for _, opstr := range AllOpcodeStrings {
 		if strings.HasPrefix(opstr, str) {
@@ -54,18 +64,24 @@ func main() {
 	// filepath := flag.Arg(0)
 
 	//err := AssembleFileWithOptions(filepath, os.Stdout, options)
+	var completer Completer
 
-	rl, err := readline.New("> ")
+	green := color.New(color.FgHiGreen, color.Bold).SprintFunc()
+
+	rl, err := readline.NewEx(&readline.Config{
+		Prompt:            green("caluctron> "),
+		HistoryFile:       "/tmp/readline.tmp",
+		AutoComplete:      &completer,
+		HistorySearchFold: true,
+	})
+
 	if err != nil {
 		panic(err)
 	}
 	defer rl.Close()
 
-	var completer Completer
-	rl.Config.AutoComplete = &completer
-
 	labels := make(map[string]uint8)
-	//var computer Computer
+	var computer Computer
 
 	for {
 		line, err := rl.Readline()
@@ -82,6 +98,41 @@ func main() {
 		}
 
 		if line[0] != '?' {
+			switch {
+			case strings.HasPrefix(line, "help"):
+				fmt.Println(strings.Join(commands[:], " "))
+				continue
+			case strings.HasPrefix(line, "input"):
+				computer.StringInputs(line[5:])
+				continue
+			case strings.HasPrefix(line, "output"):
+				Join(os.Stdout, computer.Outputs, " ")
+				continue
+			case strings.HasPrefix(line, "status"):
+				computer.Print(os.Stdout, options.Has(COLOR))
+				fmt.Println()
+				continue
+			case strings.HasPrefix(line, "quit"):
+				goto exit
+			case strings.HasPrefix(line, "set"):
+				// TODO: Figure out register and what value it is set to
+				args := strings.TrimSpace(line[3:])
+				if len(args) > 0 && args[0] == 'x' {
+
+					i, err := strconv.Atoi(args[1:])
+					if err != nil {
+						fmt.Fprintf(os.Stderr, "unable to parse index %s because %v", args[1:], err)
+					}
+					if i < 0 || i > 9 {
+						fmt.Fprintf(os.Stderr, "x0 to x9 are the only valid registers, not x%d\n", i)
+					}
+
+				}
+				continue
+			default:
+				break
+			}
+
 			instruction, err := AssembleLine(labels, line)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "failed to assemble instruction: %v\n", err)
@@ -104,10 +155,16 @@ func main() {
 					fmt.Fprintln(os.Stderr, err)
 				}
 			}
+
+			err = computer.ExecuteInstruction(machinecode)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "unable to execute instructon: %v", err)
+			}
+
 			fmt.Println()
 		}
 	}
-
+exit:
 	// if err != nil {
 	// 	fmt.Fprintf(os.Stderr, "Unable to debug %s: %v", filepath, err)
 	// }
