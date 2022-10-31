@@ -257,18 +257,18 @@ func (comp *Computer) Print(writer io.Writer, useColor bool) {
 		numberColor = color.New(color.FgHiRed).SprintFunc()
 	}
 
-	fmt.Fprintln(writer, "PC:", comp.PC)
+	fmt.Fprintln(writer, "PC:", numberColor(comp.PC))
 	for i, reg := range comp.Registers {
 		fmt.Fprintf(writer, "x%d: %s, ", i, numberColor(reg))
 	}
 	fmt.Fprintln(writer)
 
 	fmt.Fprintf(writer, "Inputs:  ")
-	Join(writer, comp.Inputs, ", ")
+	JoinFunc(writer, comp.Inputs, ", ", numberColor)
 	fmt.Fprintln(writer)
 
 	fmt.Fprintf(writer, "Outputs: ")
-	Join(writer, comp.Outputs, ", ")
+	JoinFunc(writer, comp.Outputs, ", ", numberColor)
 	fmt.Fprintln(writer)
 
 	// for _, output := range comp.Outputs {

@@ -15,7 +15,7 @@ import (
 type Completer struct {
 }
 
-var commands = [...]string{"help", "input", "output", "status", "quit", "set"}
+var commands = [...]string{"help", "input", "output", "status", "quit", "set", "next", "run"}
 
 // Returns suggestions based on what user has written thus far
 func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length int) {
@@ -61,12 +61,13 @@ func main() {
 		os.Exit(-1)
 	}
 
-	// filepath := flag.Arg(0)
+	filepath := flag.Arg(0)
 
 	//err := AssembleFileWithOptions(filepath, os.Stdout, options)
 	var completer Completer
 
 	green := color.New(color.FgHiGreen, color.Bold).SprintFunc()
+	numberColor := color.New(color.FgHiRed).SprintFunc()
 
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt:            green("caluctron> "),
@@ -82,6 +83,7 @@ func main() {
 
 	labels := make(map[string]uint8)
 	var computer Computer
+	computer.LoadFile(filepath)
 
 	for {
 		line, err := rl.Readline()
@@ -105,8 +107,9 @@ func main() {
 			case strings.HasPrefix(line, "input"):
 				computer.StringInputs(line[5:])
 				continue
-			case strings.HasPrefix(line, "output"):
-				Join(os.Stdout, computer.Outputs, " ")
+			case line == "output":
+				// TODO: Figure out why this doesn't work
+				JoinFunc(os.Stdout, computer.Outputs, " ", numberColor)
 				continue
 			case strings.HasPrefix(line, "status"):
 				computer.Print(os.Stdout, options.Has(COLOR))
@@ -128,6 +131,14 @@ func main() {
 					}
 
 				}
+				continue
+			case line == "next":
+				_ = computer.PrintCurrentInstruction(options)
+				computer.Step()
+				continue
+			case line == "run":
+				// TODO: Read in max number of step
+				computer.RunStepsWithOptions(40, options)
 				continue
 			default:
 				break
