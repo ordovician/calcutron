@@ -18,7 +18,7 @@ func DisassembleWithOptions(reader io.Reader, options AssemblyFlag) error {
 	scanner := bufio.NewScanner(reader)
 
 	var line SourceCodeLine
-	line.address = 0
+	line.Address = 0
 	for line.lineno = 1; scanner.Scan(); line.lineno++ {
 		machinecode, err := strconv.Atoi(scanner.Text())
 		if err != nil {
@@ -31,12 +31,12 @@ func DisassembleWithOptions(reader io.Reader, options AssemblyFlag) error {
 		instruction := DisassembleInstruction(uint16(machinecode))
 
 		if instruction != nil {
-			line.instruction = instruction
+			line.Instruction = instruction
 			err := line.Print(os.Stdout, options|SOURCE_CODE)
 			if err != nil {
 				return err
 			}
-			line.address++
+			line.Address++
 		}
 	}
 

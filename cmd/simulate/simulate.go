@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	. "github.com/ordovician/calcutron"
 )
 
@@ -22,7 +23,17 @@ func main() {
 	flag.IntVar(&maxsteps, "maxsteps", 1000, "Max number of instruction to execute")
 	flag.StringVar(&inputs, "inputs", "", "Input numbers for program to read")
 
-	flag.Parse()
+	var options AssemblyFlag
+	options = options.Set(MACHINE_CODE)
+	options = options.Set(SOURCE_CODE)
+	options = options.Set(ADDRESS)
+
+	ParseAssemblyOptions(&options)
+
+	if len(flag.Args()) < 1 {
+		flag.Usage()
+		os.Exit(-1)
+	}
 
 	filepath := flag.Arg(0)
 
@@ -31,7 +42,14 @@ func main() {
 
 	comp.LoadInputs(os.Stdin)
 
-	comp.RunSteps(maxsteps)
+	comp.RunStepsWithOptions(maxsteps, options)
 
-	fmt.Printf("\nCPU Status\n%v\n", &comp)
+	if options.Has(COLOR) {
+		white := color.New(color.FgWhite, color.Bold)
+		white.Printf("\nCPU Status\n")
+	} else {
+		fmt.Printf("\nCPU Status\n")
+	}
+	comp.Print(os.Stdout, options.Has(COLOR))
+	fmt.Println()
 }

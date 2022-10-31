@@ -40,7 +40,15 @@ const (
 	DAT
 )
 
-var opcodes = [...]Opcode{HLT, ADD, SUB, SUBI, LSH, RSH, BRZ, BGT, LD, ST, INP, OUT, DEC, INC, ADDI, BRA, CLR, MOV, DAT}
+var AllOpcodes = [...]Opcode{HLT, ADD, SUB, SUBI, LSH, RSH, BRZ, BGT, LD, ST, INP, OUT, DEC, INC, ADDI, BRA, CLR, MOV, DAT}
+var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
+
+// initialize opcode strings
+func init() {
+	for i, opcode := range AllOpcodes {
+		AllOpcodeStrings[i] = opcode.String()
+	}
+}
 
 // Turns text string into Opcode
 func ParseOpcode(s string) Opcode {
@@ -48,7 +56,7 @@ func ParseOpcode(s string) Opcode {
 
 	// inefficient to loop but the list is of limited size so it should
 	// be acceptable
-	for _, opcode := range opcodes {
+	for _, opcode := range AllOpcodes {
 		if opcode.String() == s {
 			return opcode
 		}

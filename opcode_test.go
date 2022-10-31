@@ -17,7 +17,7 @@ func TestParseOpcode(t *testing.T) {
 }
 
 func TestParseOpcodeAll(t *testing.T) {
-	for _, op := range opcodes {
+	for _, op := range AllOpcodes {
 		testOpcodeEqual(t, op.String(), op)
 	}
 }

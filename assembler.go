@@ -87,7 +87,7 @@ func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options Assembl
 	scanner := bufio.NewScanner(reader)
 
 	var line SourceCodeLine
-	line.address = 0
+	line.Address = 0
 	for line.lineno = 1; scanner.Scan(); line.lineno++ {
 		instruction, err := AssembleLine(labels, scanner.Text())
 		if err != nil {
@@ -95,12 +95,12 @@ func AssembleWithOptions(reader io.ReadSeeker, writer io.Writer, options Assembl
 		}
 
 		if instruction != nil {
-			line.instruction = instruction
+			line.Instruction = instruction
 			err := line.Print(writer, options|MACHINE_CODE)
 			if err != nil {
 				return err
 			}
-			line.address++
+			line.Address++
 		}
 	}
 
@@ -123,21 +123,21 @@ func AssembleFileWithOptions(filepath string, writer io.Writer, options Assembly
 }
 
 type SourceCodeLine struct {
-	address     int
-	instruction *Instruction
+	Address     int
+	Instruction *Instruction
 	lineno      int
 }
 
 func (line *SourceCodeLine) Machinecode() (uint16, error) {
-	return line.instruction.Machinecode()
+	return line.Instruction.Machinecode()
 }
 
 func (line *SourceCodeLine) Registers() []uint8 {
-	return line.instruction.regs
+	return line.Instruction.regs
 }
 
 func (line *SourceCodeLine) Constant() uint8 {
-	return line.instruction.Constant()
+	return line.Instruction.Constant()
 }
 
 func (line *SourceCodeLine) Print(writer io.Writer, options AssemblyFlag) error {
@@ -150,7 +150,7 @@ func (line *SourceCodeLine) Print(writer io.Writer, options AssemblyFlag) error 
 
 func (line *SourceCodeLine) printWithoutColor(writer io.Writer, options AssemblyFlag) error {
 	if options.Has(ADDRESS) {
-		fmt.Fprintf(writer, "%02d: ", line.address)
+		fmt.Fprintf(writer, "%02d: ", line.Address)
 	}
 
 	machinecode, err := line.Machinecode()
@@ -161,7 +161,7 @@ func (line *SourceCodeLine) printWithoutColor(writer io.Writer, options Assembly
 
 	if options.Has(SOURCE_CODE) {
 		var buffer bytes.Buffer
-		line.instruction.PrintSourceCode(&buffer)
+		line.Instruction.PrintSourceCode(&buffer)
 
 		if options.Has(LINE_NO) {
 			fmt.Fprintf(writer, "; %-25s", buffer.String())
@@ -184,7 +184,7 @@ func (line *SourceCodeLine) printWithColor(writer io.Writer, options AssemblyFla
 	yellow := color.New(color.FgYellow)
 
 	if options.Has(ADDRESS) {
-		yellow.Fprintf(writer, "%02d: ", line.address)
+		yellow.Fprintf(writer, "%02d: ", line.Address)
 	}
 
 	if options.Has(MACHINE_CODE) {
@@ -197,7 +197,7 @@ func (line *SourceCodeLine) printWithColor(writer io.Writer, options AssemblyFla
 
 	if options.Has(SOURCE_CODE) {
 		var buffer bytes.Buffer
-		line.instruction.PrintColoredSourceCode(&buffer)
+		line.Instruction.PrintColoredSourceCode(&buffer)
 
 		if options.Has(MACHINE_CODE) {
 			gray.Fprint(writer, "; ")

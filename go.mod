@@ -3,6 +3,7 @@ module github.com/ordovician/calcutron
 go 1.19
 
 require (
+	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/mattn/go-colorable v0.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

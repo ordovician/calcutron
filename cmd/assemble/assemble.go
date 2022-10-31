@@ -14,21 +14,10 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	var (
-		AddressOn     bool
-		LineNoOn      bool
-		MachinecodeOn bool
-		SourceCodeOn  bool
-		ColorOn       bool
-	)
+	var options AssemblyFlag
+	options = options.Set(MACHINE_CODE)
 
-	flag.BoolVar(&AddressOn, "address", false, "show address of each instruction")
-	flag.BoolVar(&LineNoOn, "lineno", false, "show source code line number of each instruction")
-	flag.BoolVar(&MachinecodeOn, "machinecode", true, "show address of each instruction")
-	flag.BoolVar(&SourceCodeOn, "sourcecode", false, "show address of each instruction")
-	flag.BoolVar(&ColorOn, "color", false, "colorize output")
-
-	flag.Parse()
+	ParseAssemblyOptions(&options)
 
 	if len(flag.Args()) < 1 {
 		flag.Usage()
@@ -36,13 +25,6 @@ func main() {
 	}
 
 	filepath := flag.Arg(0)
-
-	var options AssemblyFlag
-	options = options.TurnOn(ADDRESS, AddressOn)
-	options = options.TurnOn(LINE_NO, LineNoOn)
-	options = options.TurnOn(MACHINE_CODE, MachinecodeOn)
-	options = options.TurnOn(SOURCE_CODE, SourceCodeOn)
-	options = options.TurnOn(COLOR, ColorOn)
 
 	err := AssembleFileWithOptions(filepath, os.Stdout, options)
 	if err != nil {

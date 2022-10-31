@@ -10,31 +10,6 @@ import (
 	"testing"
 )
 
-func TestAssembleHalt(t *testing.T) {
-	labels := make(map[string]uint8)
-
-	machinecode, err := AssembleLine(labels, "HLT")
-	if err != nil {
-		panic(err)
-	}
-	if machinecode != 0 {
-		t.Errorf("HLT should assemble to 0000, but we got %d", machinecode)
-	}
-}
-
-func TestAssembleDAT(t *testing.T) {
-	labels := make(map[string]uint8)
-	var data int8 = -10
-	line := fmt.Sprintf("DAT %d", data)
-	machinecode, err := AssembleLine(labels, line)
-	if err != nil {
-		panic(err)
-	}
-	if machinecode != int16(complement(data, 100)) {
-		t.Errorf("%s should assemble to %d, but we got %d", line, data, machinecode)
-	}
-}
-
 func Example_assembleLine() {
 	labels := make(map[string]uint8)
 

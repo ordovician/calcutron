@@ -197,7 +197,7 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 	opcode := inst.opcode
 	constant := inst.Constant()
 
-	fmt.Fprintf(writer, "%-4v", opcode)
+	fmt.Fprintf(writer, "%-5v", opcode)
 
 	for i, r := range inst.regs {
 		if i > 0 {

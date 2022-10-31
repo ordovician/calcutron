@@ -9,6 +9,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 // "bufio"
@@ -127,9 +129,18 @@ func (comp *Computer) Step() error {
 
 // Execute N instructions
 func (comp *Computer) RunSteps(nsteps int) error {
+	return comp.RunStepsWithOptions(nsteps, MACHINE_CODE|SOURCE_CODE|ADDRESS)
+}
+
+func (comp *Computer) RunStepsWithOptions(nsteps int, options AssemblyFlag) error {
+	var err error
 	for i := 0; i < nsteps; i++ {
-		comp.PrintCurrentInstruction()
-		err := comp.Step()
+		err = comp.PrintCurrentInstruction(options)
+		if err != nil {
+			return fmt.Errorf("problems with visualizing next instruction: %w", err)
+		}
+
+		err = comp.Step()
 		if err != nil {
 			return fmt.Errorf("could not run program because %w", err)
 		}
@@ -218,33 +229,51 @@ func (comp *Computer) ExecuteInstruction(instruction uint16) error {
 // Example:
 //
 //	02: 1432; ADD  x4, x3, x2
-func (comp *Computer) PrintCurrentInstruction() {
+func (comp *Computer) PrintCurrentInstruction(options AssemblyFlag) error {
 	machinecode := comp.Memory[comp.PC]
 	instruction := DisassembleInstruction(machinecode)
-	fmt.Printf("%02d: %04d; %v\n", comp.PC, machinecode, instruction)
+
+	if instruction != nil {
+		line := SourceCodeLine{
+			Instruction: instruction,
+			Address:     int(comp.PC),
+		}
+		err := line.Print(os.Stdout, options|SOURCE_CODE)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-func (comp *Computer) String() string {
-	buffer := bytes.NewBufferString("")
-
-	fmt.Fprintln(buffer, "PC:", comp.PC)
-	for i, reg := range comp.Registers {
-		fmt.Fprintf(buffer, "x%d: %d, ", i, reg)
+func (comp *Computer) Print(writer io.Writer, useColor bool) {
+	numberColor := fmt.Sprint
+	if useColor {
+		numberColor = color.New(color.FgHiRed).SprintFunc()
 	}
-	fmt.Fprintln(buffer)
 
-	fmt.Fprintf(buffer, "Inputs:  ")
-	Join(buffer, comp.Inputs, ", ")
-	fmt.Fprintln(buffer)
+	fmt.Fprintln(writer, "PC:", comp.PC)
+	for i, reg := range comp.Registers {
+		fmt.Fprintf(writer, "x%d: %s, ", i, numberColor(reg))
+	}
+	fmt.Fprintln(writer)
 
-	fmt.Fprintf(buffer, "Outputs: ")
-	Join(buffer, comp.Outputs, ", ")
-	fmt.Fprintln(buffer)
+	fmt.Fprintf(writer, "Inputs:  ")
+	Join(writer, comp.Inputs, ", ")
+	fmt.Fprintln(writer)
+
+	fmt.Fprintf(writer, "Outputs: ")
+	Join(writer, comp.Outputs, ", ")
+	fmt.Fprintln(writer)
 
 	// for _, output := range comp.Outputs {
 	// 	fmt.Fprintf(buffer, "%d, ", output)
 	// }
 	// fmt.Fprintln(buffer)
+}
 
+func (comp *Computer) String() string {
+	buffer := bytes.NewBufferString("")
+	comp.Print(buffer, false)
 	return buffer.String()
 }
