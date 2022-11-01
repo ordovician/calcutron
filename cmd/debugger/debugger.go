@@ -13,15 +13,34 @@ import (
 )
 
 type Completer struct {
+	files []string // source code files
 }
 
-var commands = [...]string{"help", "input", "output", "status", "quit", "set", "next", "run"}
+var commands = [...]string{"help", "input", "output", "status", "quit", "set", "next", "run", "list"}
 
 // Returns suggestions based on what user has written thus far
 func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length int) {
 	str := string(line)
 	n := len(line)
 	var matches [][]rune = make([][]rune, 0, 5)
+
+	if strings.HasPrefix(str, "load") && len(str) > len("load") {
+		filearg := strings.TrimSpace(str[len("load"):])
+		if len(filearg) == 0 {
+			for _, file := range completer.files {
+				matches = append(matches, []rune(file))
+			}
+		}
+
+		for _, file := range completer.files {
+			if strings.HasPrefix(file, filearg) {
+				match := file[n-len("load")-1:]
+				matches = append(matches, []rune(match))
+			}
+		}
+	} else if strings.HasPrefix("load", str) {
+		matches = append(matches, []rune("load"[n:]))
+	}
 
 	for _, cmd := range commands {
 		if strings.HasPrefix(cmd, str) {
@@ -44,6 +63,19 @@ func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length i
 	return matches, n
 }
 
+func getSourceCodeFiles() []string {
+	files := make([]string, 0)
+	entries, _ := os.ReadDir(".")
+
+	for _, entry := range entries {
+		filename := entry.Name()
+		if strings.HasSuffix(filename, ".machine") {
+			files = append(files, filename)
+		}
+	}
+	return files
+}
+
 func main() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stdout, "Usage of debugger:\n")
@@ -52,6 +84,7 @@ func main() {
 
 	var options AssemblyFlag
 	options = options.Set(MACHINE_CODE)
+	options = options.Set(SOURCE_CODE)
 	options = options.Set(COLOR)
 
 	ParseAssemblyOptions(&options)
@@ -65,6 +98,7 @@ func main() {
 
 	//err := AssembleFileWithOptions(filepath, os.Stdout, options)
 	var completer Completer
+	completer.files = getSourceCodeFiles()
 
 	green := color.New(color.FgHiGreen, color.Bold).SprintFunc()
 	numberColor := color.New(color.FgHiRed).SprintFunc()
@@ -108,37 +142,77 @@ func main() {
 				computer.StringInputs(line[5:])
 				continue
 			case line == "output":
-				// TODO: Figure out why this doesn't work
-				JoinFunc(os.Stdout, computer.Outputs, " ", numberColor)
+				fmt.Print("Outputs: ")
+				JoinFunc(os.Stdout, computer.Outputs, ", ", numberColor)
+				fmt.Print("\n\n")
 				continue
 			case strings.HasPrefix(line, "status"):
 				computer.Print(os.Stdout, options.Has(COLOR))
 				fmt.Println()
 				continue
+			case strings.HasPrefix(line, "x"):
+				i, err := strconv.Atoi(line[1:])
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "unable to parse index %s because %v", line[1:], err)
+				}
+				if i < 0 || i > 9 {
+					fmt.Fprintf(os.Stderr, "x0 to x9 are the only valid registers, not x%d\n", i)
+				}
+				fmt.Println(numberColor(computer.Registers[i]))
+				continue
 			case strings.HasPrefix(line, "quit"):
 				goto exit
 			case strings.HasPrefix(line, "set"):
-				// TODO: Figure out register and what value it is set to
-				args := strings.TrimSpace(line[3:])
-				if len(args) > 0 && args[0] == 'x' {
-
-					i, err := strconv.Atoi(args[1:])
-					if err != nil {
-						fmt.Fprintf(os.Stderr, "unable to parse index %s because %v", args[1:], err)
-					}
-					if i < 0 || i > 9 {
-						fmt.Fprintf(os.Stderr, "x0 to x9 are the only valid registers, not x%d\n", i)
-					}
-
+				reg, value, err := ParseSetReg(line)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "%v\n", err)
 				}
+				computer.Registers[reg] = value
 				continue
 			case line == "next":
-				_ = computer.PrintCurrentInstruction(options)
+				_ = computer.PrintCurrentInstruction(options | ADDRESS)
+				machinecode := computer.Memory[computer.PC]
+				instruction := DisassembleInstruction(machinecode)
 				computer.Step()
+
+				if instruction != nil {
+
+				}
+
+				fmt.Println()
 				continue
 			case line == "run":
 				// TODO: Read in max number of step
-				computer.RunStepsWithOptions(40, options)
+				computer.RunStepsWithOptions(40, options|ADDRESS)
+				fmt.Println()
+				continue
+			case strings.HasPrefix(line, "load"):
+				filename := strings.TrimSpace(line[4:])
+				err := computer.LoadFile(filename)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "%v\n", err)
+				}
+				continue
+			case line == "list":
+				for i := 0; i < 90; i++ {
+					machinecode := computer.Memory[i]
+					// No need to disassemble numerous consecutive zeroes
+					if machinecode == 0 && i > 0 && computer.Memory[i-1] == 0 {
+						break
+					}
+					instruction := DisassembleInstruction(machinecode)
+					if instruction != nil {
+						codeline := SourceCodeLine{
+							Instruction: instruction,
+							Address:     i,
+						}
+						err := codeline.Print(os.Stdout, options|ADDRESS)
+						if err != nil {
+							fmt.Fprintf(os.Stderr, "%v\n", err)
+						}
+					}
+				}
+				fmt.Println()
 				continue
 			default:
 				break
@@ -161,7 +235,7 @@ func main() {
 					Instruction: instruction,
 					Address:     0,
 				}
-				err := line.Print(os.Stdout, options|SOURCE_CODE)
+				err := line.Print(os.Stdout, options)
 				if err != nil {
 					fmt.Fprintln(os.Stderr, err)
 				}

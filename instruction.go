@@ -197,7 +197,13 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 	opcode := inst.opcode
 	constant := inst.Constant()
 
-	fmt.Fprintf(writer, "%-5v", opcode)
+	// NOTE: Should not be needed but could not get my Example test to run otherwise
+	switch opcode {
+	case HLT:
+		fmt.Fprintf(writer, "%v", opcode)
+	default:
+		fmt.Fprintf(writer, "%-5v", opcode)
+	}
 
 	for i, r := range inst.regs {
 		if i > 0 {
@@ -218,6 +224,8 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 		} else {
 			fmt.Fprintf(writer, "%s", inst.label)
 		}
+	case DAT:
+		fmt.Fprintf(writer, "%d", inst.constant)
 	default:
 		break
 	}
@@ -253,6 +261,8 @@ func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
 		} else {
 			labelColor.Fprintf(writer, "%s", inst.label)
 		}
+	case DAT:
+		numberColor.Fprintf(writer, "%d", inst.constant)
 	default:
 		break
 	}

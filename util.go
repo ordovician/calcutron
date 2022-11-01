@@ -3,6 +3,7 @@ package calcutron
 import (
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -120,3 +121,42 @@ func (flag AssemblyFlag) Toggle(b AssemblyFlag) AssemblyFlag { return flag ^ b }
 
 // Check if bit is set
 func (flag AssemblyFlag) Has(b AssemblyFlag) bool { return flag&b != 0 }
+
+// Parse a string such as 'set x2 42'. It should return that index of register is 2
+// and value is 42
+func ParseSetReg(line string) (reg, value uint8, erro error) {
+	fields := strings.Fields(line)
+
+	if len(fields) != 3 {
+		erro = fmt.Errorf("expected command on form 'set x2 42' but got %s", line)
+		return
+	}
+
+	regstr := fields[1]
+
+	if !strings.HasPrefix(regstr, "x") {
+		erro = fmt.Errorf("registers must start with an 'x' you start it with '%c'", regstr[1])
+		return
+	}
+
+	i, err := strconv.Atoi(regstr[1:])
+	if err != nil {
+		erro = fmt.Errorf("unable to parse register index %s because %w", regstr[1:], err)
+		return
+	}
+	if i < 0 || i > 9 {
+		erro = fmt.Errorf("x0 to x9 are the only valid registers, not x%d", i)
+		return
+	}
+	reg = uint8(i)
+
+	valuestr := fields[2]
+	val, err := strconv.Atoi(valuestr)
+	if err != nil {
+		erro = fmt.Errorf("unable to parse register value %s because %w", valuestr, err)
+		return
+	}
+	value = uint8(val)
+
+	return
+}

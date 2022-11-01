@@ -2,6 +2,7 @@ package calcutron
 
 import (
 	"fmt"
+	"testing"
 )
 
 func ExampleAssemblyFlag_TurnOn() {
@@ -25,4 +26,15 @@ func ExampleAssemblyFlag_TurnOn() {
 
 	// Output:
 	// 1011
+}
+
+func TestParseSetReg(t *testing.T) {
+	reg, value, err := ParseSetReg("set x3 42")
+	if err != nil {
+		t.Errorf("Could not parse 'set x3 42' because %v", err)
+	}
+
+	if reg != 3 || value != 42 {
+		t.Errorf("Register index and value should be 3 and 42 respectively, but we got %d and %d", reg, value)
+	}
 }
