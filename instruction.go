@@ -25,7 +25,10 @@ func DisassembleInstruction(machinecode uint16) *Instruction {
 	operands := machinecode % 1000
 	addr := int8(operands % 100)
 
-	regs := []uint8{uint8(operands / 100)}
+	regs := make([]uint8, 0, 3)
+	if opcode != HLT {
+		regs = append(regs, uint8(operands/100))
+	}
 
 	switch opcode {
 	case LD, ST, BRZ, BGT, BRA:

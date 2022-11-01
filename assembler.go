@@ -153,21 +153,26 @@ func (line *SourceCodeLine) printWithoutColor(writer io.Writer, options Assembly
 		fmt.Fprintf(writer, "%02d: ", line.Address)
 	}
 
-	machinecode, err := line.Machinecode()
-	if err != nil {
-		return err
+	if options.Has(MACHINE_CODE) {
+		machinecode, err := line.Machinecode()
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(writer, "%04d", machinecode)
 	}
-	fmt.Fprintf(writer, "%04d", machinecode)
 
 	if options.Has(SOURCE_CODE) {
 		var buffer bytes.Buffer
 		line.Instruction.PrintSourceCode(&buffer)
 
-		if options.Has(LINE_NO) {
-			fmt.Fprintf(writer, "; %-25s", buffer.String())
-		} else {
+		if options.Has(MACHINE_CODE) {
+			fmt.Fprint(writer, "; ")
+		}
 
-			fmt.Fprintf(writer, "; %s", buffer.String())
+		if options.Has(LINE_NO) {
+			fmt.Fprintf(writer, "%-25s", buffer.String())
+		} else {
+			fmt.Fprintf(writer, "%s", buffer.String())
 		}
 	}
 
