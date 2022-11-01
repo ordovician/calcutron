@@ -15,11 +15,14 @@ var (
 
 // Called first in any package
 func init() {
-	file, err := os.OpenFile("logs.txt",
-		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// NOTE: Uncomment this code to do logging to file instead
+
+	// file, err := os.OpenFile("logs.txt",
+	// 	os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	file := os.Stdout
 
 	flags := log.Ldate | log.Ltime | log.Lshortfile
 
