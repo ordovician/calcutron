@@ -133,7 +133,7 @@ func (line *SourceCodeLine) Machinecode() (uint16, error) {
 }
 
 func (line *SourceCodeLine) Registers() []uint8 {
-	return line.Instruction.regs
+	return line.Instruction.Regs
 }
 
 func (line *SourceCodeLine) Constant() uint8 {
