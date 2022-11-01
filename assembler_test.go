@@ -160,7 +160,7 @@ func ExampleInstruction_PrintSourceCode() {
 	subi := SourceCodeLine{
 		Instruction: &Instruction{
 			opcode:   SUBI,
-			Regs:     []uint8{3, 4},
+			regs:     []uint8{3, 4},
 			constant: 8,
 		},
 	}

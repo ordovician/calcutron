@@ -101,7 +101,7 @@ func main() {
 	completer.files = getSourceCodeFiles()
 
 	green := color.New(color.FgHiGreen, color.Bold).SprintFunc()
-	numberColor := color.New(color.FgHiRed).SprintFunc()
+	numberColor := NumberColor.SprintFunc()
 
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt:            green("caluctron> "),
@@ -158,7 +158,8 @@ func main() {
 				if i < 0 || i > 9 {
 					fmt.Fprintf(os.Stderr, "x0 to x9 are the only valid registers, not x%d\n", i)
 				}
-				fmt.Println(numberColor(computer.Registers[i]))
+				fmt.Printf("x%d: ", i)
+				NumberColor.Printf("%02d\n\n", computer.Registers[i])
 				continue
 			case strings.HasPrefix(line, "quit"):
 				goto exit
@@ -175,10 +176,18 @@ func main() {
 				instruction := DisassembleInstruction(machinecode)
 				computer.Step()
 
+				// Look at impact on registers from running last instruction by printing values
+				// of register operands
 				if instruction != nil {
-
+					switch instruction.Opcode() {
+					case BRA, BRZ, BGT:
+						computer.PrintPC(os.Stdout, true)
+					case HLT:
+						break
+					default:
+						computer.PrintRegs(os.Stdout, true, instruction.UniqueRegisters()...)
+					}
 				}
-
 				fmt.Println()
 				continue
 			case line == "run":

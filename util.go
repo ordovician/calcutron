@@ -60,6 +60,18 @@ func JoinFunc[T any](writer io.Writer, elements []T, sep string, fn func(...any)
 	}
 }
 
+func RemoveDuplicates[T constraints.Ordered](sliceList []T) []T {
+	allKeys := make(map[T]bool)
+	list := []T{}
+	for _, item := range sliceList {
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			list = append(list, item)
+		}
+	}
+	return list
+}
+
 // Calculate complement of x
 // to calculate 10s complement of x, you would call complement(x, 10)
 // this would return a value between 0 and 9

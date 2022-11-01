@@ -14,6 +14,11 @@ import (
 )
 
 // "bufio"
+var NumberColor *color.Color
+
+func init() {
+	NumberColor = color.New(color.FgHiRed)
+}
 
 var ErrAllInputRead = errors.New("all inputs read")
 var ErrProgramHalt = errors.New("reach halt instruction")
@@ -251,16 +256,41 @@ func (comp *Computer) PrintCurrentInstruction(options AssemblyFlag) error {
 	return nil
 }
 
+func (comp *Computer) PrintRegs(writer io.Writer, useColor bool, indices ...uint8) {
+
+	for i, index := range indices {
+		if i > 0 {
+			fmt.Fprint(writer, ", ")
+		}
+		fmt.Fprintf(writer, "x%d: ", index)
+		if useColor {
+			NumberColor.Fprintf(writer, "%02d", comp.Registers[index])
+		} else {
+			fmt.Fprintf(writer, "%02d", comp.Registers[index])
+		}
+	}
+	fmt.Fprintln(writer)
+}
+
+func (comp *Computer) PrintPC(writer io.Writer, useColor bool) {
+	fmt.Fprint(writer, "PC: ")
+	if useColor {
+		NumberColor.Fprintf(writer, "%02d\n", comp.PC)
+	} else {
+		fmt.Fprintf(writer, "%02d\n", comp.PC)
+	}
+}
+
 func (comp *Computer) Print(writer io.Writer, useColor bool) {
 	numberColor := fmt.Sprint
 	if useColor {
-		numberColor = color.New(color.FgHiRed).SprintFunc()
+		numberColor = NumberColor.SprintFunc()
 	}
 
-	fmt.Fprintln(writer, "PC:", numberColor(comp.PC))
-	for i, reg := range comp.Registers {
-		fmt.Fprintf(writer, "x%d: %s, ", i, numberColor(reg))
-	}
+	comp.PrintPC(writer, useColor)
+	comp.PrintRegs(writer, useColor, 1, 4, 7)
+	comp.PrintRegs(writer, useColor, 2, 5, 8)
+	comp.PrintRegs(writer, useColor, 3, 6, 9)
 	fmt.Fprintln(writer)
 
 	fmt.Fprintf(writer, "Inputs:  ")
@@ -270,11 +300,6 @@ func (comp *Computer) Print(writer io.Writer, useColor bool) {
 	fmt.Fprintf(writer, "Outputs: ")
 	JoinFunc(writer, comp.Outputs, ", ", numberColor)
 	fmt.Fprintln(writer)
-
-	// for _, output := range comp.Outputs {
-	// 	fmt.Fprintf(buffer, "%d, ", output)
-	// }
-	// fmt.Fprintln(buffer)
 }
 
 func (comp *Computer) String() string {

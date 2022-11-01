@@ -13,7 +13,7 @@ import (
 // Based on parsing mnemonic and operands of an instruction
 type Instruction struct {
 	opcode   Opcode
-	Regs     []uint8
+	regs     []uint8
 	constant int8
 	label    string // redundant, but helps with source code visualization
 }
@@ -39,9 +39,17 @@ func DisassembleInstruction(machinecode uint16) *Instruction {
 	}
 
 	inst.opcode = opcode
-	inst.Regs = regs
+	inst.regs = regs
 
 	return &inst
+}
+
+func (inst *Instruction) Opcode() Opcode {
+	return inst.opcode
+}
+
+func (inst *Instruction) UniqueRegisters() []uint8 {
+	return RemoveDuplicates(inst.regs)
 }
 
 func (inst *Instruction) ParseOperands(labels map[string]uint8, operands []string) error {
@@ -68,7 +76,7 @@ func (inst *Instruction) ParseOperands(labels map[string]uint8, operands []strin
 			registers = append(registers, uint8(i))
 		}
 	}
-	inst.Regs = registers
+	inst.regs = registers
 
 	return nil
 }
@@ -82,10 +90,10 @@ func (inst *Instruction) DestRegCode() uint16 {
 }
 
 func (inst *Instruction) DestReg() uint8 {
-	if len(inst.Regs) == 0 {
+	if len(inst.regs) == 0 {
 		return 0
 	}
-	return inst.Regs[0]
+	return inst.regs[0]
 }
 
 // Get the Rs1 source registers machine code
@@ -95,7 +103,7 @@ func (inst *Instruction) FirstSourceRegCode() uint16 {
 }
 
 func (inst *Instruction) FirstSourceReg() uint8 {
-	regs := inst.Regs
+	regs := inst.regs
 	var machinecode uint8
 
 	switch inst.opcode {
@@ -130,7 +138,7 @@ func (inst *Instruction) SecondSourceRegCode() uint16 {
 }
 
 func (inst *Instruction) SecondSourceReg() uint8 {
-	regs := inst.Regs
+	regs := inst.regs
 	switch inst.opcode {
 	case ADD, SUB:
 		switch len(regs) {
@@ -205,7 +213,7 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 		fmt.Fprintf(writer, "%-5v", opcode)
 	}
 
-	for i, r := range inst.Regs {
+	for i, r := range inst.regs {
 		if i > 0 {
 			fmt.Fprintf(writer, ", ")
 		}
@@ -216,7 +224,7 @@ func (inst *Instruction) PrintSourceCode(writer io.Writer) {
 	case SUBI, LSH, RSH:
 		fmt.Fprintf(writer, ", %d", constant)
 	case LD, ST, BRZ, BGT, BRA:
-		if len(inst.Regs) > 0 {
+		if len(inst.regs) > 0 {
 			fmt.Fprintf(writer, ", ")
 		}
 		if inst.label == "" {
@@ -241,7 +249,7 @@ func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
 
 	mnemonicColor.Fprintf(writer, "%-5v", opcode)
 
-	for i, r := range inst.Regs {
+	for i, r := range inst.regs {
 		if i > 0 {
 			fmt.Fprintf(writer, ", ")
 		}
@@ -253,7 +261,7 @@ func (inst *Instruction) PrintColoredSourceCode(writer io.Writer) {
 		fmt.Fprintf(writer, ", ")
 		numberColor.Fprintf(writer, "%d", constant)
 	case LD, ST, BRZ, BGT, BRA:
-		if len(inst.Regs) > 0 {
+		if len(inst.regs) > 0 {
 			fmt.Fprintf(writer, ", ")
 		}
 		if inst.label == "" {
