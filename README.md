@@ -26,5 +26,9 @@ That led to an early implementation in the Julia programming language. To explor
 Remaking the whole thing in Go is both to get a sense of how Go compares with Zig but also because I believe Go is very well suited for this kind of project. I want to be able to easily distribute binaries that can run any macOS, Linux and Windows and that is possible with the good Go cross-compile support.
 
 # Current Status
-The Go implementation is currently not as complete as the Zacktron-33 variant written in Zig. We lack a debugger and don't have colorized output. However the Go version may actually be more robust with more comperhensive error messages when anything goes wrong.
+We got all the programs I desired to: assembler, disassembler, simulator and debugger. All the core stuff I would want to test and teach about assembly programming works. Yet one could say all of these programs are still a bit buggy or unpolished. Handling negative numbers is not working great. The example programs however don't require any negative number usage.
+
+There are still cases where the error messages and feedback to the user could be a lot better.
+
+Currently registers work with 2 digit decimal numbers, but I have been thinking that the more sensible choice is 4 digit decimal numbers because that is the size of each memory location.
 
