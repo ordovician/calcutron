@@ -1,3 +1,9 @@
+// WARNING: A lot of the code in this file is absolutely horrible. Don't use it
+// as an inspiration for how to do anything. My focus was on hacking together something
+// that would work with all desired features.
+// The next step will be a major refactoring and cleanup process.
+// Most likely I will create a struct with methods to represent each command, rather
+// than maintaining a huge switch-case structure.
 package main
 
 import (

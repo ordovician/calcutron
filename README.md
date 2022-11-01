@@ -32,3 +32,26 @@ There are still cases where the error messages and feedback to the user could be
 
 Currently registers work with 2 digit decimal numbers, but I have been thinking that the more sensible choice is 4 digit decimal numbers because that is the size of each memory location.
 
+
+# Refactoring Ideas
+The whole project is built to a large degree like a prototype. There was no thoughtful upfront design. However because this is the third iteration of the assembler there has been some evolution of ideas. However, as complexity has grown I have noticed a few key problems.
+
+There are switch-case statement on instuctions such as ADD, SUB and LD a large number of places. It means that adding or modifying and instruction requires making code changes in numerous locations. That is not an ideal solution.
+
+Ideally each instruction should be self contained and know how to do the following:
+
+- Disassemble machine code into assembly code
+- Assemble source code into machine code
+- Execute instruction on virtual CPU
+- Visualize instruction with colors or without
+- Know what info is most relevant to show after instruction is run in debugger. E.g. ADD and SUB benefit from showing registers, while a branch benefit from showing the program counter (PC).
+
+Several instructions are strongly related which means having a single type representing each instruction may not make sense.  Instead one can bundle instructions such as ADD and SUB because they both work in 3 registers. While SUBI, LSH, RSH and ADDI can be bundled as they all use a constant (immediate value) as 3rd operand.
+
+Likewises LD, ST, BRZ, BGT and BRA all take a register and address as operands which make them suitable to be used in a bundle.
+
+A similar idea can be used for commands within the debugger. Each command needs to have support for the following:
+
+- Handle command completion
+- Execute when selected. Will likely require access to CPU/Computer object
+- Help info. Explanation to user of what the command actually does.
