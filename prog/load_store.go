@@ -1,7 +1,29 @@
 package prog
 
-type LoadInstruction struct {
+type LoadStoreInstruction struct {
 	BaseInstruction
+}
+
+// We want register assignments for  load and store to work as follows:
+// Rd, Ra -> Rd, x0, Ra
+// which is different from how arithmetic operations work
+func (inst *LoadStoreInstruction) AssignRegisters() {
+	if inst.err != nil {
+		return
+	}
+	inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
+	switch len(inst.parsedRegIndicies) {
+	case 2:
+		inst.regIndicies[Ra] = 0
+		inst.regIndicies[Rb] = inst.parsedRegIndicies[1]
+	case 3:
+		inst.regIndicies[Ra] = inst.parsedRegIndicies[1]
+		inst.regIndicies[Rb] = inst.parsedRegIndicies[2]
+	}
+}
+
+type LoadInstruction struct {
+	LoadStoreInstruction
 }
 
 func (inst *LoadInstruction) Run(comp Machine) bool {
@@ -32,7 +54,7 @@ func (inst *MoveInstruction) Run(comp Machine) bool {
 }
 
 type StoreInstruction struct {
-	BaseInstruction
+	LoadStoreInstruction
 }
 
 func (inst *StoreInstruction) Run(comp Machine) bool {

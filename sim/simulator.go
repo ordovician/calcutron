@@ -281,7 +281,7 @@ func (comp *Computer) PrintInputs(writer io.Writer) {
 	fmt.Fprintf(writer, "Inputs:  ")
 	// using gray and pink to separate consumed and non-consumed input data
 	utils.JoinFunc(writer, comp.inputs[:comp.inpos], ", ", grayColor)
-	if comp.inpos > 0 {
+	if comp.inpos > 0 && comp.inpos < len(comp.inputs) {
 		fmt.Fprintf(writer, ", ")
 	}
 	utils.JoinFunc(writer, comp.inputs[comp.inpos:], ", ", numberColor)

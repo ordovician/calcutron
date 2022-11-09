@@ -143,8 +143,8 @@ func (inst *BaseInstruction) ParseOperands(labels SymbolTable, operands []string
 // Register assignment will differ between instructions
 // The most common register assigment works as follows:
 //
-//		Rd, Ra -> Rd, Rd, Ra
-//	 Rd, k -> Rd, Rd, k
+//	Rd, Ra -> Rd, Rd, Ra
+//	Rd, k -> Rd, Rd, k
 func (inst *BaseInstruction) AssignRegisters() {
 	if inst.err != nil {
 		return

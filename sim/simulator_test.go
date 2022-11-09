@@ -110,9 +110,10 @@ func Example_maximizer() {
 	comp.Print(os.Stdout)
 	// Output:
 	// PC: 03
-	// x1: 08, x4: 00, x7: 06
-	// x2: 04, x5: 00, x8: 08
-	// x3: 00, x6: 00, x9: -1
+	//
+	// x1: 0008, x4: 0000, x7: 0006
+	// x2: 0004, x5: 0000, x8: 0008
+	// x3: 0000, x6: 0000, x9: 9999
 	//
 	// Inputs:  2, 3, 8, 4
 	// Outputs: 3, 8
@@ -130,9 +131,10 @@ func Example_doubler() {
 	comp.Print(os.Stdout)
 	// Output:
 	// PC: 01
-	// x1: 04, x4: 00, x7: 00
-	// x2: 00, x5: 00, x8: 00
-	// x3: 08, x6: 00, x9: -1
+	//
+	// x1: 0004, x4: 0000, x7: 0000
+	// x2: 0000, x5: 0000, x8: 0000
+	// x3: 0008, x6: 0000, x9: 9999
 	//
 	// Inputs:  2, 3, 8, 4
 	// Outputs: 4, 6, 16, 8
@@ -150,9 +152,10 @@ func Example_simpleMult() {
 	comp.Print(os.Stdout)
 	// Output:
 	// PC: 02
-	// x1: 08, x4: 00, x7: 00
-	// x2: 00, x5: 00, x8: 05
-	// x3: 32, x6: 00, x9: -1
+	//
+	// x1: 0008, x4: 0000, x7: 0000
+	// x2: 0000, x5: 0000, x8: 0005
+	// x3: 0032, x6: 0000, x9: 9999
 	//
 	// Inputs:  2, 3, 8, 4
 	// Outputs: 6, 32
