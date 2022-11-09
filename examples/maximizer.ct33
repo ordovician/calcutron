@@ -1,13 +1,17 @@
+    MOVE  x9, tape
+    MOVE  x8, first
+    MOVE  x7, second
 loop:
-    INP x1
-    INP x2
-    SUB x3, x1, x2
-    BGT x3, first
+    LOAD  x1, x0, x9
+    LOAD  x2, x0, x9
+    BGT   x8, x1, x2
 
 second:
-    OUT x2
-    BRA loop
+    STORE x2, x0, x9
+    RJUMP x0, loop
     
 first:
-    OUT x1
-    BRA loop
+    STORE x1, x0, x9
+    RJUMP x0, loop
+    HALT
+

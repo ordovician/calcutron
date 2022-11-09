@@ -1,12 +1,15 @@
+    MOVE x9, tape
+    MOVE x8, multiply
 loop:
-    INP x1
-    INP x2
-    CLR x3
+    LOAD  x1, x0, x9
+    LOAD  x2, x0, x9
+    CLEAR x3
     
 multiply:
-    ADD x3, x1
-    DEC x2
-    BGT x2, multiply
-    OUT x3
+    ADD   x3, x1
+    DEC   x2
+    BGT   x8, x2, x0
+    STORE x3, x0, x9
     
-    BRA loop
+    RJUMP x0, loop
+    HALT

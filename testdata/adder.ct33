@@ -1,6 +1,7 @@
+    MOVE  x9, tape
 loop:
-    INP x1
-    INP x2
-    ADD x1, x2
-    OUT x1
-    BRA loop
+    LOAD  x1, x9
+    LOAD  x2, x9
+    ADD   x1, x2
+    STORE x1, x9
+    RJUMP x0, loop
