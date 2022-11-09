@@ -3,14 +3,14 @@
     MOVE  x8, second
     MOVE  x9, added
 
-    LOAD  x1, x0, x7
-    LOAD  x2, x0, x8
+    LOAD  x1, x7
+    LOAD  x2, x8
     ADD   x3, x1, x2
     STORE x3, x0, x9
     SHIFT x5, x2, 2
-    STORE x2, x0, x6
+    STORE x2, x6
     INC   x6
-    STORE x5, x0, x6
+    STORE x5, x6
     HALT
 
 shifted:
