@@ -5,4 +5,4 @@ nextdigit:
     OUT  x2
     BGT  x1, x0, nextdigit
     JUMP loop
-    HALT
+    HLT

@@ -21,5 +21,5 @@ start:
     STOR x2, x6, 0
     INC  x6
     STOR x5, x6, 0
-    HALT
+    HLT
 

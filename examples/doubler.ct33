@@ -3,4 +3,4 @@ loop:
     ADD  x3, x1, x1
     STOR x3, x9
     JUMP loop
-    HALT
+    HLT

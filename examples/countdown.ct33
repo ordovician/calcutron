@@ -5,4 +5,4 @@ decrement:
     DEC  x1     // count down by one
     BGT  x1, x0, decrement
     JUMP loop
-    HALT
+    HLT

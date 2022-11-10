@@ -14,7 +14,7 @@ instructions:
     BEQ  x9, x8, pseudo
     BGT  x9, x8, pseudo
 
-    HALT
+    HLT
 
 pseudo:
     IN    x9

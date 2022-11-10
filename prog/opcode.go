@@ -14,7 +14,7 @@ import (
 type Opcode uint8
 
 const (
-	JUMP Opcode = iota // HALT execution
+	JUMP Opcode = iota // Jump to address
 	ADD                // Add registers
 	ADDI               // Add Immediate
 	SUB                // Subtract registers

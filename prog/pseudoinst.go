@@ -151,7 +151,7 @@ type HaltInstruction struct {
 
 func (inst *HaltInstruction) ParseOperands(labels SymbolTable, operands []string, offset uint) {
 	if len(operands) != 0 {
-		inst.err = fmt.Errorf("HALT should not have any operands")
+		inst.err = fmt.Errorf("HLT should not have any operands")
 	}
 }
 

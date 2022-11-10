@@ -10,5 +10,5 @@ second:
 first:
     OUT  x1
     JUMP loop
-    HALT
+    HLT
 

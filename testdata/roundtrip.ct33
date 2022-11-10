@@ -3,4 +3,4 @@
 02 SUBI  x9, x8, 7
 03 SHIFT x9, x8,  4 
 04 SHIFT x9, x8, -4
-05 HALT
+05 HLT

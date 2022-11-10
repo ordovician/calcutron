@@ -4,4 +4,4 @@ loop:
     ADD  x3, x1, x2
     OUT  x3
     JUMP loop
-    HALT
+    HLT

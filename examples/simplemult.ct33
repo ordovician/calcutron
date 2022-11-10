@@ -10,4 +10,4 @@ multiply:
     OUT x3
     
     JUMP loop
-    HALT
+    HLT
