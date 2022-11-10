@@ -15,7 +15,12 @@ func (inst *LongImmInstruction) AssignRegisters() {
 	if inst.err != nil {
 		return
 	}
-	inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
+	n := inst.parsedRegIndicies[0]
+	if n == 1 {
+		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
+	} else {
+		inst.err = fmt.Errorf("instruction expects 1 register operand but you gave %d", n)
+	}
 }
 
 func (inst *LongImmInstruction) DecodeOperands(operands uint) {
@@ -59,8 +64,13 @@ func (inst *ShortImmInstruction) AssignRegisters() {
 	if inst.err != nil {
 		return
 	}
-	inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
-	inst.regIndicies[Ra] = inst.parsedRegIndicies[1]
+	n := len(inst.parsedRegIndicies)
+	if n == 2 {
+		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
+		inst.regIndicies[Ra] = inst.parsedRegIndicies[1]
+	} else {
+		inst.err = fmt.Errorf("two register operands were expected but you specified %d register operands", n)
+	}
 }
 
 func (inst *ShortImmInstruction) printSourceCode(writer io.Writer) {

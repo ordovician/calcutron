@@ -6,6 +6,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/fatih/color"
 	"github.com/ordovician/calcutron/asm"
 	"github.com/ordovician/calcutron/dbg"
 	"github.com/ordovician/calcutron/disasm"
@@ -74,6 +75,8 @@ func runCode(ctx *cli.Context) error {
 }
 
 func debug(ctx *cli.Context) error {
+	errorColor := color.New(color.FgRed)
+
 	var comp sim.Computer
 	args := ctx.Args()
 	if args.Len() > 0 {
@@ -88,6 +91,8 @@ func debug(ctx *cli.Context) error {
 	for {
 		line, err := rl.Readline()
 		if err != nil { // io.EOF
+			errorColor.Fprintf(os.Stderr, "Error: ")
+			fmt.Fprintf(os.Stderr, "%v\n\n", err)
 			break
 		}
 
@@ -95,9 +100,12 @@ func debug(ctx *cli.Context) error {
 			continue
 		}
 
-		dbg.RunCommand(os.Stdout, line, &comp)
+		err = dbg.RunCommand(os.Stdout, line, &comp)
+		if err != nil {
+			errorColor.Fprintf(os.Stderr, "Error: ")
+			fmt.Fprintf(os.Stderr, "%v\n\n", err)
+		}
 	}
-	// exit:
 
 	return nil
 }

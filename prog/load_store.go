@@ -1,5 +1,7 @@
 package prog
 
+import "fmt"
+
 type LoadStoreInstruction struct {
 	ShortImmInstruction
 }
@@ -11,13 +13,17 @@ func (inst *LoadStoreInstruction) AssignRegisters() {
 	if inst.err != nil {
 		return
 	}
-	inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
-	switch len(inst.parsedRegIndicies) {
+	n := len(inst.parsedRegIndicies)
+	switch n {
 	case 1:
 		inst.regIndicies[Ra] = 0
 	case 2:
 		inst.regIndicies[Ra] = inst.parsedRegIndicies[1]
+	default:
+		inst.err = fmt.Errorf("load and store instruction require 1 or 2 register operands not %d", n)
+		return
 	}
+	inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
 }
 
 type LoadInstruction struct {

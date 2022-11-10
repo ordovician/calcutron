@@ -63,11 +63,15 @@ func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length i
 	return matches, n
 }
 
-func RunCommand(writer io.Writer, line string, comp *sim.Computer) {
+func RunCommand(writer io.Writer, line string, comp *sim.Computer) error {
 	args := strings.Fields(line)
 	cmd := Lookup(args[0])
-	cmd.Action(writer, comp, args[1:])
+	err := cmd.Action(writer, comp, args[1:])
+	if err != nil {
+		return err
+	}
 	fmt.Fprintln(writer)
+	return nil
 }
 
 func getSourceCodeFiles() []string {

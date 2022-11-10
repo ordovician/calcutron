@@ -83,7 +83,7 @@ func (inst *CopyInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 2 {
-		inst.err = fmt.Errorf("MOVE instructions takes 2 register operands not %d", n)
+		inst.err = fmt.Errorf("move instructions takes 2 register operands not %d", n)
 	} else {
 		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
 		inst.regIndicies[Ra] = inst.parsedRegIndicies[1]
@@ -101,7 +101,7 @@ func (inst *ClearInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 1 {
-		inst.err = fmt.Errorf("CLEAR instructions takes 1 register operands not %d", n)
+		inst.err = fmt.Errorf("the clear instruction takes 1 register operands not %d", n)
 	} else {
 		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
 		inst.regIndicies[Ra] = 0
@@ -119,7 +119,7 @@ func (inst *CallInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 0 {
-		inst.err = fmt.Errorf("CALL instructions takes 0 register operands not %d", n)
+		inst.err = fmt.Errorf("the call instruction takes 0 register operands not %d", n)
 	} else {
 		inst.regIndicies[Rd] = 9
 		inst.regIndicies[Ra] = 0
@@ -137,7 +137,7 @@ func (inst *NoOperationInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 0 {
-		inst.err = fmt.Errorf("NOP instructions takes 0 register operands not %d", n)
+		inst.err = fmt.Errorf("A NOP instructions takes 0 register operands not %d", n)
 	} else {
 		inst.regIndicies[Rd] = 0
 		inst.regIndicies[Ra] = 0
@@ -165,7 +165,7 @@ func (inst *InputInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 1 {
-		inst.err = fmt.Errorf("IN instructions takes 1 register operand not %d", n)
+		inst.err = fmt.Errorf("the input instruction takes 1 register operand not %d", n)
 	} else {
 		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
 		inst.regIndicies[Ra] = 0
@@ -183,7 +183,7 @@ func (inst *OutputInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 1 {
-		inst.err = fmt.Errorf("OUT instructions takes 1 register operand not %d", n)
+		inst.err = fmt.Errorf("the out instruction takes 1 register operand not %d", n)
 	} else {
 		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
 		inst.regIndicies[Ra] = 0

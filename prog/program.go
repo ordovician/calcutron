@@ -35,19 +35,23 @@ func (prog *Program) PrintWithOptions(writer io.Writer, options *PrintOptions) {
 	channel := make(chan AddressInstruction)
 
 	var group sync.WaitGroup
-	group.Add(1)
+	group.Add(2)
 	go func() {
-		go ctx.Print(writer, channel)
+		ctx.Print(writer, channel)
 		group.Done()
 	}()
 
-	for addr, inst := range prog.Instructions {
-		channel <- AddressInstruction{
-			Addr: uint(addr),
-			Inst: inst,
+	go func() {
+		for addr, inst := range prog.Instructions {
+			channel <- AddressInstruction{
+				Addr: uint(addr),
+				Inst: inst,
+			}
 		}
-	}
-	close(channel)
+		close(channel)
+		group.Done()
+	}()
+
 	group.Wait()
 }
 

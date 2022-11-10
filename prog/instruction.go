@@ -159,13 +159,16 @@ func (inst *BaseInstruction) AssignRegisters() {
 		return
 	}
 	inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
-	switch len(inst.parsedRegIndicies) {
+	n := len(inst.parsedRegIndicies)
+	switch n {
 	case 2:
 		inst.regIndicies[Ra] = inst.parsedRegIndicies[0]
 		inst.regIndicies[Rb] = inst.parsedRegIndicies[1]
 	case 3:
 		inst.regIndicies[Ra] = inst.parsedRegIndicies[1]
 		inst.regIndicies[Rb] = inst.parsedRegIndicies[2]
+	default:
+		inst.err = fmt.Errorf("instruction expects 2 or 3 register operands but you gave %d", n)
 	}
 }
 
