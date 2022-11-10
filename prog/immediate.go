@@ -64,6 +64,11 @@ func (inst *ShortImmInstruction) AssignRegisters() {
 }
 
 func (inst *ShortImmInstruction) printSourceCode(writer io.Writer) {
+	// NOTE: A bit of a hack to treat infinite branches as HLT operation
+	if (inst.opcode == BEQ || inst.opcode == BGT) && inst.constant == 0 {
+		printMnemonic(writer, HLT)
+		return
+	}
 	printMnemonic(writer, inst.opcode)
 	printRegisterOperands(writer, inst.regIndicies[0:2])
 	fmt.Fprintf(writer, ", ")

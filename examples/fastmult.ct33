@@ -1,6 +1,7 @@
 loop:
     INP x1
     INP x2
+    CLR x4
 next:
     SHFT x3, x2, -1    // divide by 10 and put remainder in x3
 multiply:
