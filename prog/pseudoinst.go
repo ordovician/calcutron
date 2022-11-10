@@ -110,7 +110,7 @@ func (inst *ClearInstruction) AssignRegisters() {
 }
 
 type CallInstruction struct {
-	JUMPInstruction
+	JumpInstruction
 }
 
 func (inst *CallInstruction) AssignRegisters() {

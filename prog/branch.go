@@ -30,11 +30,11 @@ func (inst *BranchGreaterThanInstruction) Run(comp Machine) bool {
 	return true
 }
 
-type JUMPInstruction struct {
+type JumpInstruction struct {
 	LongImmInstruction
 }
 
-func (inst *JUMPInstruction) Run(comp Machine) bool {
+func (inst *JumpInstruction) Run(comp Machine) bool {
 	// Set return address
 	inst.SetRegValue(comp, Rd, int(comp.PC()+1))
 
