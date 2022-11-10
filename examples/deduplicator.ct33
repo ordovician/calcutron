@@ -1,4 +1,3 @@
-// remove duplicate numbers in input
 loop:
     INP x1
     INP x2

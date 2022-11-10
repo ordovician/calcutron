@@ -1,5 +1,3 @@
-// Adds up all numbers received.
-// First number must specify number of inputs
 loop:
     INP x1
 next:

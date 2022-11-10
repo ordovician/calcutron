@@ -1,6 +1,3 @@
-// faster multiplication using shift operations
-// we caculate x4 = x1 * x2
-
 loop:
     INP x1
     INP x2

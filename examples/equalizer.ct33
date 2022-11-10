@@ -1,4 +1,3 @@
-// only write out number which comes in pairs
 loop:
     INP x1
     INP x2
