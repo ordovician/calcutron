@@ -41,12 +41,14 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 		inst = &ClearInstruction{}
 	case CALL:
 		inst = &CallInstruction{}
-	case RET:
-		inst = &ReturnInstruction{}
 	case NOP:
 		inst = &NoOperationInstruction{}
 	case HALT:
 		inst = &HaltInstruction{}
+	case IN:
+		inst = &InputInstruction{}
+	case OUT:
+		inst = &OutputInstruction{}
 
 	// non-instruction
 	case DAT:

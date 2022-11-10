@@ -154,3 +154,39 @@ func (inst *HaltInstruction) ParseOperands(labels SymbolTable, operands []string
 		inst.err = fmt.Errorf("HALT should not have any operands")
 	}
 }
+
+type InputInstruction struct {
+	LoadInstruction
+}
+
+func (inst *InputInstruction) AssignRegisters() {
+	if inst.err != nil {
+		return
+	}
+	n := len(inst.parsedRegIndicies)
+	if n != 1 {
+		inst.err = fmt.Errorf("IN instructions takes 1 register operand not %d", n)
+	} else {
+		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
+		inst.regIndicies[Ra] = 0
+		inst.constant = -1
+	}
+}
+
+type OutputInstruction struct {
+	StoreInstruction
+}
+
+func (inst *OutputInstruction) AssignRegisters() {
+	if inst.err != nil {
+		return
+	}
+	n := len(inst.parsedRegIndicies)
+	if n != 1 {
+		inst.err = fmt.Errorf("OUT instructions takes 1 register operand not %d", n)
+	} else {
+		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
+		inst.regIndicies[Ra] = 0
+		inst.constant = -1
+	}
+}
