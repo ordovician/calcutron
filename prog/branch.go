@@ -35,7 +35,7 @@ func (inst *BranchEqualInstruction) Run(comp Machine) bool {
 	addr := inst.RegValue(comp, Rb)
 
 	if left == right {
-		comp.SetPC(uint(addr))
+		comp.SetPC(Complement(addr, 1e4))
 	}
 	return true
 }
@@ -50,7 +50,7 @@ func (inst *BranchGreaterThanInstruction) Run(comp Machine) bool {
 	addr := inst.RegValue(comp, Rb)
 
 	if left > right {
-		comp.SetPC(uint(addr))
+		comp.SetPC(Complement(addr, 1e4))
 	}
 	return true
 }
