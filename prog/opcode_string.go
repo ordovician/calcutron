@@ -28,12 +28,14 @@ func _() {
 	_ = x[CALL-17]
 	_ = x[NOP-18]
 	_ = x[HALT-19]
-	_ = x[DAT-20]
+	_ = x[IN-20]
+	_ = x[OUT-21]
+	_ = x[DAT-22]
 }
 
-const _Opcode_name = "JUMPADDADDISUBSHIFTLOADMOVESTOREBEQBGTDECINCSUBIBRABLTCLEARCOPYCALLNOPHALTDAT"
+const _Opcode_name = "JUMPADDADDISUBSHIFTLOADMOVESTOREBEQBGTDECINCSUBIBRABLTCLEARCOPYCALLNOPHALTINOUTDAT"
 
-var _Opcode_index = [...]uint8{0, 4, 7, 11, 14, 19, 23, 27, 32, 35, 38, 41, 44, 48, 51, 54, 59, 63, 67, 70, 74, 77}
+var _Opcode_index = [...]uint8{0, 4, 7, 11, 14, 19, 23, 27, 32, 35, 38, 41, 44, 48, 51, 54, 59, 63, 67, 70, 74, 76, 79, 82}
 
 func (i Opcode) String() string {
 	if i >= Opcode(len(_Opcode_index)-1) {

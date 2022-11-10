@@ -37,13 +37,15 @@ const (
 	CALL  // CALL subroutine
 	NOP   // No Operation
 	HALT  // Halt execution
+	IN    // INput instruction
+	OUT   // OUTput instruction
 
 	// not really instruction
 	DAT
 )
 
 var AllOpcodes = [...]Opcode{JUMP, ADD, ADDI, SUB, SHIFT, LOAD, MOVE, STORE, BEQ, BGT,
-	DEC, INC, SUBI, BRA, BLT, CLEAR, COPY, CALL, NOP, HALT, DAT}
+	DEC, INC, SUBI, BRA, BLT, CLEAR, COPY, CALL, NOP, HALT, IN, OUT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 
 // initialize opcode strings
