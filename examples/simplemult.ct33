@@ -8,7 +8,7 @@ loop:
 multiply:
     ADD   x3, x1
     DEC   x2
-    BGT   x8, x2, x0
+    BGT   x2, x0, x8
     STORE x3, x0, x9
     
     RJUMP x0, loop
