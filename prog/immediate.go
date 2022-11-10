@@ -27,14 +27,15 @@ func (inst *LongImmInstruction) DecodeOperands(operands uint) {
 
 func (inst *LongImmInstruction) MachineCode() uint {
 	regs := inst.regIndicies
-	opcodeEncoding := inst.opcode.MachineCode()
+	machineOpcode := uint(inst.opcode) * 1000
+
 	constant := Complement(inst.constant, 100)
 	destReg := uint(100 * regs[Rd])
-	return opcodeEncoding + destReg + constant
+	return machineOpcode + destReg + constant
 }
 
 func (inst *LongImmInstruction) printSourceCode(writer io.Writer) {
-	printMnemonic(writer, inst.opcode)
+	printMnemonic(writer, inst.pseudoCode)
 	fmt.Fprintf(writer, "x%d, ", inst.regIndicies[Rd])
 	if inst.label == "" {
 		NumberColor.Fprintf(writer, "%d", inst.constant)
@@ -88,7 +89,9 @@ func (inst *ShortImmInstruction) DecodeOperands(operands uint) {
 func (inst *ShortImmInstruction) MachineCode() uint {
 	regs := inst.regIndicies
 	operands := uint(100*regs[Rd] + 10*regs[Ra] + Complement(inst.constant, 10))
-	code := inst.opcode.MachineCode() + operands
+	machineOpcode := uint(inst.opcode) * 1000
+
+	code := machineOpcode + operands
 	return code
 }
 

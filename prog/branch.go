@@ -29,23 +29,3 @@ func (inst *BranchGreaterThanInstruction) Run(comp Machine) bool {
 	}
 	return true
 }
-
-type JumpInstruction struct {
-	LongImmInstruction
-}
-
-func (inst *JumpInstruction) Run(comp Machine) bool {
-	// Set return address
-	inst.SetRegValue(comp, Rd, int(comp.PC()+1))
-
-	// jumping back to same instruction will create an infinite loop
-	// hence this is a terminating instruction
-	if inst.constant == 0 {
-		return false
-	}
-
-	addr := uint(inst.constant)
-
-	comp.SetPC(addr)
-	return true
-}

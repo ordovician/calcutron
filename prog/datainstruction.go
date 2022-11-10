@@ -46,7 +46,7 @@ func (inst *DataInstruction) MachineCode() uint {
 }
 
 func (inst *DataInstruction) printSourceCode(writer io.Writer) {
-	printMnemonic(writer, inst.opcode)
+	printMnemonic(writer, inst.pseudoCode)
 	NumberColor.Fprintf(writer, "%04d", inst.constant)
 }
 

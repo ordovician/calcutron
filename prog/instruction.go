@@ -33,6 +33,8 @@ type Machine interface {
 
 type Instruction interface {
 	setOpcode(opcode Opcode)
+	setPseudoCode(pseudoCode Opcode)
+
 	Opcode() Opcode
 	UniqueRegisters() []uint
 	Run(comp Machine) bool
@@ -47,6 +49,7 @@ type Instruction interface {
 
 type BaseInstruction struct {
 	opcode      Opcode
+	pseudoCode  Opcode  // fake opcode outside the 0 to 9 range
 	regIndicies [3]uint // machine code would set this directly
 	constant    int     // signed constant. How to convert this depends on whether we deal with single of double digit constant
 	label       string
@@ -57,6 +60,10 @@ type BaseInstruction struct {
 
 func (inst *BaseInstruction) setOpcode(opcode Opcode) {
 	inst.opcode = opcode
+}
+
+func (inst *BaseInstruction) setPseudoCode(pseudoCode Opcode) {
+	inst.pseudoCode = pseudoCode
 }
 
 func (inst *BaseInstruction) Opcode() Opcode {
@@ -82,12 +89,14 @@ func (inst *BaseInstruction) SetRegValue(comp Machine, operand OperandIndex, val
 func (inst *BaseInstruction) MachineCode() uint {
 	regs := inst.regIndicies
 	operands := uint(100*regs[Rd] + 10*regs[Ra] + regs[Rb])
-	code := inst.opcode.MachineCode() + operands
+	machineOpcode := uint(inst.opcode) * 1000
+
+	code := machineOpcode + operands
 	return code
 }
 
 func (inst *BaseInstruction) printSourceCode(writer io.Writer) {
-	printMnemonic(writer, inst.opcode)
+	printMnemonic(writer, inst.pseudoCode)
 
 	regs := inst.regIndicies[:]
 	if len(inst.parsedRegIndicies) > 0 {

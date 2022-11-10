@@ -1,7 +1,6 @@
 package prog
 
 import (
-	"log"
 	"strings"
 )
 
@@ -67,57 +66,4 @@ func ParseOpcode(s string) (Opcode, bool) {
 		}
 	}
 	return HALT, false
-}
-
-// Create machine code representation of an instruction with given opcode
-// This method also deals with pseudo opcodes
-func (opcode Opcode) MachineCode() uint {
-	switch opcode {
-	case JUMP, HALT:
-		return 0
-	case ADD:
-		return 1000
-	case ADDI:
-		return 2000
-	case SUB:
-		return 3000
-	case SHIFT:
-		return 4000
-	case LOAD:
-		return 5000
-	case MOVE:
-		return 6000
-	case STORE:
-		return 7000
-	case BEQ:
-		return 8000
-	case BGT:
-		return 9000
-
-	// pseudo instructions
-	case DEC:
-		return 2000
-	case INC:
-		return 2000
-	case SUBI:
-		return 2100 // so we can just subtract offset to get negative number
-	case BRA:
-		return 8000
-	case BLT:
-		return 9000
-	case COPY:
-		return 1000
-	case CLEAR:
-		return 1000
-	case CALL:
-		return 8000
-
-	// non-instuction
-	case DAT:
-		return 0
-	default:
-		break
-	}
-	log.Panicf("unknown opcode %v encountered", opcode)
-	return 0
 }
