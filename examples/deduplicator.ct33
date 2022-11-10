@@ -1,0 +1,10 @@
+// remove duplicate numbers in input
+loop:
+    INP x1
+    INP x2
+    BEQ x1, x2, skip
+    OUT x1
+skip:
+    OUT x2
+    JMP loop
+    HLT

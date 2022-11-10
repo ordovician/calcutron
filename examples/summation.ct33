@@ -1,0 +1,11 @@
+// Adds up all numbers received.
+// First number must specify number of inputs
+loop:
+    INP x1
+next:
+    INP x2
+    ADD x3, x2
+    DEC x1
+    BGT x1, x0, next
+    OUT x3
+    HLT

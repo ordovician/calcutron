@@ -1,0 +1,12 @@
+// only write out number which comes in pairs
+loop:
+    INP x1
+    INP x2
+    BEQ x1, x2, equal
+    JMP loop
+equal:
+    OUT x1
+    JMP loop
+    HLT
+
+ 

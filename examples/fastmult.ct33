@@ -1,0 +1,17 @@
+// faster multiplication using shift operations
+// we caculate x4 = x1 * x2
+
+loop:
+    INP x1
+    INP x2
+next:
+    SHFT x3, x2, -1    // divide by 10 and put remainder in x3
+multiply:
+    ADD  x4, x1
+    DEC  x3            // to keep track of how many times x1 should be added to x4
+    BGT  x3, x0, multiply
+    SHFT x0, x1, 1     // make number we are adding 10x bigger
+    BGT  x2, x0, next  // process next digit 
+    OUT  x4
+    JMP loop           // get next pair of numbers to multiple
+    HLT
