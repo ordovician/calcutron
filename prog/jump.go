@@ -19,12 +19,6 @@ func (inst *JumpInstruction) AssignRegisters() {
 // A JMP Rd, k instruction computes destination addres with Rd + k and
 // stores a return address in Rd. Rd = PC + 1
 func (inst *JumpInstruction) Run(comp Machine) bool {
-	// jumping back to same instruction will create an infinite loop
-	// hence this is a terminating instruction
-	if inst.constant == 0 {
-		return false
-	}
-
 	// calculate destination address
 	addr := uint(inst.RegValue(comp, Rd) + inst.constant)
 

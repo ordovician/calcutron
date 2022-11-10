@@ -15,5 +15,5 @@ func printRegisterOperands(writer io.Writer, regs []uint) {
 }
 
 func printMnemonic(writer io.Writer, opcode Opcode) {
-	MnemonicColor.Fprintf(writer, "%-6v", opcode)
+	MnemonicColor.Fprintf(writer, "%-5v", opcode)
 }

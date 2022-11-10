@@ -110,7 +110,7 @@ func Example_parseLine() {
 	for _, line := range lines {
 		mnemonic, operands := parseLine(line)
 
-		fmt.Printf("%-5s %s\n", mnemonic, strings.Join(operands, ", "))
+		fmt.Printf("%-4s %s\n", mnemonic, strings.Join(operands, ", "))
 	}
 
 	// Output:
