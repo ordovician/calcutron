@@ -30,9 +30,9 @@ type BranchEqualInstruction struct {
 }
 
 func (inst *BranchEqualInstruction) Run(comp Machine) bool {
-	addr := inst.RegValue(comp, Rd)
-	left := inst.RegValue(comp, Ra)
-	right := inst.RegValue(comp, Rb)
+	left := inst.RegValue(comp, Rd)
+	right := inst.RegValue(comp, Ra)
+	addr := inst.RegValue(comp, Rb)
 
 	if left == right {
 		comp.SetPC(uint(addr))
@@ -45,9 +45,9 @@ type BranchGreaterThanInstruction struct {
 }
 
 func (inst *BranchGreaterThanInstruction) Run(comp Machine) bool {
-	addr := inst.RegValue(comp, Rd)
-	left := inst.RegValue(comp, Ra)
-	right := inst.RegValue(comp, Rb)
+	left := inst.RegValue(comp, Rd)
+	right := inst.RegValue(comp, Ra)
+	addr := inst.RegValue(comp, Rb)
 
 	if left > right {
 		comp.SetPC(uint(addr))

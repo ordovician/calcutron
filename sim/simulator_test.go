@@ -69,7 +69,7 @@ func TestCounter(t *testing.T) {
 		MOVE x1, 1
 	loop:
 		ADD   x3, x3, x1
-		BGT   x9, x2, x3
+		BGT   x2, x3, x9
 		RJUMP x0, 0		
 	`
 
