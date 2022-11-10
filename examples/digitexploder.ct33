@@ -1,10 +1,8 @@
-    MOVE  x9, tape
-    MOVE  x8, nextdigit
 loop:
-    LOAD  x1, x9
+    INP  x1
 nextdigit:
-    SHIFT x2, x1, 1
-    STORE x2, x9
-    BGT   x1, x0, x8
-    JUMP x0, loop
+    SHFT x2, x1, 1
+    OUT  x2
+    BGT  x1, x0, nextdigit
+    JUMP loop
     HALT

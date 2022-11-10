@@ -1,6 +1,0 @@
-loop:
-    IN    x1,
-    IN    x2
-    ADD   x3, x1, x2
-    OUT   x3
-    JUMP  x0, loop

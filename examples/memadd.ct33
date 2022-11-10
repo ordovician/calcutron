@@ -1,17 +1,4 @@
-    MOVE  x6, shifted
-    MOVE  x7, first
-    MOVE  x8, second
-    MOVE  x9, added
-
-    LOAD  x1, x7
-    LOAD  x2, x8
-    ADD   x3, x1, x2
-    STORE x3, x0, x9
-    SHIFT x5, x2, 2
-    STORE x2, x6
-    INC   x6
-    STORE x5, x6
-    HALT
+    JUMP start
 
 shifted:
     DAT 0
@@ -22,3 +9,17 @@ second:
     DAT 2325
 added:
     DAT 0
+
+start:
+    LOAD x1, first
+    LOAD x2, second
+    ADD  x3, x1, x2
+    STOR x3, x0, x9
+
+    MOVE x6, shifted
+    SHFT x5, x2, 2
+    STOR x2, x6, 0
+    INC  x6
+    STOR x5, x6, 0
+    HALT
+

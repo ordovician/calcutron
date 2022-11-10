@@ -1,10 +1,8 @@
-    MOVE  x9, tape
-    MOVE  x8, decrement
 loop:
-    LOAD  x1, x9        // load number to count down from
+    INP  x1     // load number to count down from
 decrement:
-    STORE x1, x9        // write out counter to tape
-    DEC   x1            // count down by one
-    BGT   x1, x0, x8    // goto decrement if x1 > x0
-    JUMP x0, loop
+    OUT  x1     // write out counter to tape
+    DEC  x1     // count down by one
+    BGT  x1, x0, decrement
+    JUMP loop
     HALT

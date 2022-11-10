@@ -1,8 +1,7 @@
-    MOVE  x9, tape
 loop:
-    LOAD  x1, x9
-    LOAD  x2, x9
-    ADD   x3, x1, x2
-    STORE x3, x9 
+    INP  x1
+    INP  x2
+    ADD  x3, x1, x2
+    OUT  x3
     JUMP loop
     HALT
