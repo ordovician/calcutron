@@ -32,6 +32,7 @@ type PrintCmd struct{}
 type SetCmd struct{}
 type AsmCmd struct{}
 type ResetCmd struct{}
+type MemoryCmd struct{}
 
 func (cmd *HelpCmd) Name() string {
 	return "help"
@@ -440,6 +441,46 @@ func (cmd *ResetCmd) Action(writer io.Writer, comp *sim.Computer, args []string)
 	return nil
 }
 
+func (cmd *MemoryCmd) Name() string {
+	return "memory"
+}
+
+func (cmd *MemoryCmd) Help(writer io.Writer) {
+	fmt.Fprintln(writer,
+		`NAME
+	memory -- read contents of memory at given location
+SYNOPSIS
+	memory address [value]
+DESCRIPTION
+	print contents of memory at given address`)
+}
+
+func (cmd *MemoryCmd) Action(writer io.Writer, comp *sim.Computer, args []string) error {
+	var addr int
+	var err error
+	if len(args) > 0 {
+		addr, err = strconv.Atoi(args[0])
+		if err != nil {
+			return fmt.Errorf("unable to parse address for memory instruction because %w", err)
+		}
+	}
+
+	switch len(args) {
+	case 1:
+		prog.AddressColor.Fprintf(writer, "%02d ", addr)
+		prog.NumberColor.Fprintf(writer, "%04d\n", comp.Memory(uint(addr)))
+	case 2:
+		value, err := strconv.Atoi(args[0])
+		if err != nil {
+			return fmt.Errorf("unable to parse value for memory instruction because %w", err)
+		}
+		comp.SetMemory(uint(addr), prog.Complement(value, 1e4))
+	default:
+		return fmt.Errorf("you need to provide address of memory cell you want to view or modify. That mean 1 or 2 arguments, not %d", len(args))
+	}
+	return nil
+}
+
 var commands = [...]Command{
 	new(HelpCmd),
 	new(InputCmd),
@@ -453,6 +494,7 @@ var commands = [...]Command{
 	new(SetCmd),
 	new(AsmCmd),
 	new(ResetCmd),
+	new(MemoryCmd),
 }
 
 // Lookup command with given name. Returns nil if command
