@@ -38,17 +38,17 @@ type ShiftInstruction struct {
 }
 
 func (inst *ShiftInstruction) Run(comp Machine) bool {
-	var value int
-	regValue := inst.RegValue(comp, Ra)
-	multiplier := int(math.Pow10(abs(inst.constant)))
+	var value uint
+	regValue := Complement(inst.RegValue(comp, Ra), 1e4)
+	multiplier := uint(math.Pow10(abs(inst.constant)))
 	if inst.constant >= 0 {
 		value = regValue * multiplier
-		inst.SetRegValue(comp, Rd, value/(1e4))
+		inst.SetRegValue(comp, Rd, Signed(value/(1e4), 1e4))
 	} else {
 		value = regValue / multiplier
-		inst.SetRegValue(comp, Rd, regValue%multiplier)
+		inst.SetRegValue(comp, Rd, Signed(regValue%multiplier, 1e4))
 	}
-	inst.SetRegValue(comp, Ra, value%(1e4))
+	inst.SetRegValue(comp, Ra, Signed(value%(1e4), 1e4))
 
 	return true
 }
