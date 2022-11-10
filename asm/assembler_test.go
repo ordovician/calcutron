@@ -16,10 +16,10 @@ func Example_assembleLine() {
 		"ADD   x9, x8, x7",
 		"ADDI  x8, 42",
 		"SUB   x2, x4, x1",
-		"SHIFT x5, x2, 4",
+		"SHFT x5, x2, 4",
 		"LOAD  x1, x2, x3",
 		"MOVE  x1, 24",
-		"STORE x5, x1, x2",
+		"STOR x5, x1, x2",
 		"BEQ   x3, x2, x1",
 		"BGT   x3, x2, x1",
 		"JMP x9, 82",
@@ -40,10 +40,10 @@ func Example_assembleLine() {
 	// 1987 ADD   x9, x8, x7
 	// 2842 ADDI  x8, 42
 	// 3241 SUB   x2, x4, x1
-	// 4524 SHIFT x5, x2, 4
+	// 4524 SHFT x5, x2, 4
 	// 5123 LOAD  x1, x2, x3
 	// 6124 MOVE  x1, 24
-	// 7512 STORE x5, x1, x2
+	// 7512 STOR x5, x1, x2
 	// 8321 BEQ   x3, x2, x1
 	// 9321 BGT   x3, x2, x1
 	// 982 JMP x9, 82
@@ -58,10 +58,10 @@ func ExampleInstruction_SourceCode() {
 		"ADD   x9, x8, x7",
 		"ADDI  x8, 42",
 		"SUB   x2, x4, x1",
-		"SHIFT x5, x2, 4",
+		"SHFT x5, x2, 4",
 		"LOAD  x1, x2, x3",
 		"MOVE  x1, 24",
-		"STORE x5, x1, x2",
+		"STOR x5, x1, x2",
 		"BEQ   x3, x2, x1",
 		"BGT   x3, x2, x1",
 		"JMP x9, 82",
@@ -82,10 +82,10 @@ func ExampleInstruction_SourceCode() {
 	// ADD   x9, x8, x7
 	// ADDI  x8, 42
 	// SUB   x2, x4, x1
-	// SHIFT x5, x2, 4
+	// SHFT x5, x2, 4
 	// LOAD  x1, x2, x3
 	// MOVE  x1, 24
-	// STORE x5, x1, x2
+	// STOR x5, x1, x2
 	// BEQ   x3, x2, x1
 	// BGT   x3, x2, x1
 	// JMP x9, 82
@@ -98,10 +98,10 @@ func Example_parseLine() {
 		"ADD   x9, x8, x7",
 		"ADDI  x8, 42",
 		"SUB   x2, x4, x1",
-		"SHIFT x5, x2, 4",
+		"SHFT x5, x2, 4",
 		"LOAD  x1, x2, x3",
 		"MOVE  x1, 24",
-		"STORE x5, x1, x2",
+		"STOR x5, x1, x2",
 		"BEQ   x3, x2, x1",
 		"BGT   x3, x2, x1",
 		"JMP x9, 82",
@@ -117,10 +117,10 @@ func Example_parseLine() {
 	// ADD   x9, x8, x7
 	// ADDI  x8, 42
 	// SUB   x2, x4, x1
-	// SHIFT x5, x2, 4
+	// SHFT x5, x2, 4
 	// LOAD  x1, x2, x3
 	// MOVE  x1, 24
-	// STORE x5, x1, x2
+	// STOR x5, x1, x2
 	// BEQ   x3, x2, x1
 	// BGT   x3, x2, x1
 	// JMP x9, 82
@@ -140,7 +140,7 @@ func Example_assembleFile() {
 	//     LOAD  x1, x9
 	//     LOAD  x2, x9
 	//     ADD   x1, x2
-	//     STORE x1, x9
+	//     STOR x1, x9
 	//     JMP x0, loop
 }
 

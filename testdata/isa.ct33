@@ -4,12 +4,12 @@ instructions:
     SUB  x9, x8, x7
     SUBI x9, x8, 7
 
-    SHIFT  x9, x8, 4
-    SHIFT  x9, x8, -4
+    SHFT  x9, x8, 4
+    SHFT  x9, x8, -4
 
     MOVE  x9, data
     LOAD  x9, x9
-    STORE x9, x9
+    STOR x9, x9
 
     BEQ  x9, x8, pseudo
     BGT  x9, x8, pseudo
