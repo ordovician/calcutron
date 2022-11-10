@@ -4,5 +4,5 @@ loop:
     LOAD  x2, x9
     ADD   x3, x1, x2
     STORE x3, x9 
-    RJUMP loop
+    JUMP loop
     HALT

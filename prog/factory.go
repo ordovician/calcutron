@@ -21,8 +21,8 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 		inst = &BranchEqualInstruction{}
 	case BGT:
 		inst = &BranchGreaterThanInstruction{}
-	case RJUMP:
-		inst = &RJumpInstruction{}
+	case JUMP:
+		inst = &JUMPInstruction{}
 
 	// pseudo instructions
 	case DEC:

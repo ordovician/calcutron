@@ -8,8 +8,8 @@ loop:
 
 second:
     STORE x2, x9     // write result out to tape
-    RJUMP x0, loop
+    JUMP x0, loop
     
 first:
     STORE x1, x9
-    RJUMP x0, loop
+    JUMP x0, loop

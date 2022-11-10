@@ -8,7 +8,7 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[RJUMP-0]
+	_ = x[JUMP-0]
 	_ = x[ADD-1]
 	_ = x[ADDI-2]
 	_ = x[SUB-3]
@@ -26,15 +26,14 @@ func _() {
 	_ = x[CLEAR-15]
 	_ = x[COPY-16]
 	_ = x[CALL-17]
-	_ = x[RET-18]
-	_ = x[NOP-19]
-	_ = x[HALT-20]
-	_ = x[DAT-21]
+	_ = x[NOP-18]
+	_ = x[HALT-19]
+	_ = x[DAT-20]
 }
 
-const _Opcode_name = "RJUMPADDADDISUBSHIFTLOADMOVESTOREBEQBGTDECINCSUBIBRABLTCLEARCOPYCALLRETNOPHALTDAT"
+const _Opcode_name = "JUMPADDADDISUBSHIFTLOADMOVESTOREBEQBGTDECINCSUBIBRABLTCLEARCOPYCALLNOPHALTDAT"
 
-var _Opcode_index = [...]uint8{0, 5, 8, 12, 15, 20, 24, 28, 33, 36, 39, 42, 45, 49, 52, 55, 60, 64, 68, 71, 74, 78, 81}
+var _Opcode_index = [...]uint8{0, 4, 7, 11, 14, 19, 23, 27, 32, 35, 38, 41, 44, 48, 51, 54, 59, 63, 67, 70, 74, 77}
 
 func (i Opcode) String() string {
 	if i >= Opcode(len(_Opcode_index)-1) {

@@ -3,8 +3,9 @@ package prog
 import "golang.org/x/exp/constraints"
 
 // Convert an unsigned integer to a Signed one using 10s complement
+// Numbers in range 0 to 9 gets converte to range -5 to 4
 func Signed[T constraints.Unsigned](x, max T) int {
-	if x > max/2 {
+	if x >= max/2 {
 		return int(x - max)
 	} else {
 		return int(x)

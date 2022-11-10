@@ -211,7 +211,7 @@ func (cmd *NextCmd) Action(writer io.Writer, comp *sim.Computer, args []string) 
 	comp.Step()
 
 	switch inst.Opcode() {
-	case prog.BRA, prog.BEQ, prog.BGT, prog.BLT, prog.RJUMP:
+	case prog.BRA, prog.BEQ, prog.BGT, prog.BLT, prog.JUMP:
 		comp.PrintPC(writer)
 	case prog.HALT:
 		break

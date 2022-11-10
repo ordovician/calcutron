@@ -11,5 +11,5 @@ multiply:
     BGT   x2, x0, x8
     STORE x3, x0, x9
     
-    RJUMP x0, loop
+    JUMP x0, loop
     HALT

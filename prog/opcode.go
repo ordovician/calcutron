@@ -15,7 +15,7 @@ import (
 type Opcode uint8
 
 const (
-	RJUMP Opcode = iota // HALT execution
+	JUMP  Opcode = iota // HALT execution
 	ADD                 // Add registers
 	ADDI                // Add Immediate
 	SUB                 // Subtract registers
@@ -35,7 +35,6 @@ const (
 	CLEAR // Clear
 	COPY  // COPY from one reg to another
 	CALL  // CALL subroutine
-	RET   // Return from subroutine
 	NOP   // No Operation
 	HALT  // Halt execution
 
@@ -43,8 +42,8 @@ const (
 	DAT
 )
 
-var AllOpcodes = [...]Opcode{RJUMP, ADD, ADDI, SUB, SHIFT, LOAD, MOVE, STORE, BEQ, BGT,
-	DEC, INC, SUBI, BRA, BLT, CLEAR, COPY, CALL, RET, NOP, HALT, DAT}
+var AllOpcodes = [...]Opcode{JUMP, ADD, ADDI, SUB, SHIFT, LOAD, MOVE, STORE, BEQ, BGT,
+	DEC, INC, SUBI, BRA, BLT, CLEAR, COPY, CALL, NOP, HALT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 
 // initialize opcode strings
@@ -72,7 +71,7 @@ func ParseOpcode(s string) (Opcode, bool) {
 // This method also deals with pseudo opcodes
 func (opcode Opcode) MachineCode() uint {
 	switch opcode {
-	case RJUMP, HALT:
+	case JUMP, HALT:
 		return 0
 	case ADD:
 		return 1000

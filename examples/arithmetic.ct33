@@ -5,5 +5,5 @@ SUB   x4, x2, x1
 SUB   x5, x1, x2
 MOVE  x6, 2
 SHIFT x7, x6, 1
-RJUMP x0, 0
+JUMP x0, 0
 
