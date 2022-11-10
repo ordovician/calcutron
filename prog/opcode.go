@@ -14,7 +14,7 @@ import (
 type Opcode uint8
 
 const (
-	JUMP Opcode = iota // Jump to address
+	BEQ  Opcode = iota // Branch if Equal
 	ADD                // Add registers
 	ADDI               // Add Immediate
 	SUB                // Subtract registers
@@ -22,7 +22,7 @@ const (
 	LOAD               // Load
 	MOVE               // Load Immediate
 	STOR               // Store to memory
-	BEQ                // Branch if Equal
+	JUMP               // Jump to address
 	BGT                // Branch if Greater than
 
 	// Pseudo instructions
