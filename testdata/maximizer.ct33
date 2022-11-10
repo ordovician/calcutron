@@ -2,6 +2,9 @@
     MOVE x8, first
     MOVE x7, second
 loop:
+    INP  x1
+    INP  x2
+
     LOAD x1, x9      // read punched tap into x1
     LOAD x2, x9      // load tape input into x2 
     BGT  x8, x1, x2  // goto first if x1 > x2

@@ -9,13 +9,13 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 		inst = &AddImmediateInstruction{}
 	case SUB:
 		inst = &SubInstruction{}
-	case SHIFT:
+	case SHFT:
 		inst = &ShiftInstruction{}
 	case LOAD:
 		inst = &LoadInstruction{}
 	case MOVE:
 		inst = &MoveInstruction{}
-	case STORE:
+	case STOR:
 		inst = &StoreInstruction{}
 	case BEQ:
 		inst = &BranchEqualInstruction{}
@@ -43,7 +43,7 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 	case COPY:
 		inst = &CopyInstruction{}
 		inst.setOpcode(ADD)
-	case CLEAR:
+	case CLR:
 		inst = &ClearInstruction{}
 		inst.setOpcode(ADD)
 	case CALL:
@@ -52,15 +52,15 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 	case NOP:
 		inst = &NoOperationInstruction{}
 		inst.setOpcode(ADD)
-	case HALT:
+	case HLT:
 		inst = &HaltInstruction{}
 		inst.setOpcode(BEQ)
-	case IN:
+	case INP:
 		inst = &InputInstruction{}
 		inst.setOpcode(LOAD)
 	case OUT:
 		inst = &OutputInstruction{}
-		inst.setOpcode(STORE)
+		inst.setOpcode(STOR)
 
 	// non-instruction
 	case DAT:

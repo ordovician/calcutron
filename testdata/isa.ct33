@@ -4,24 +4,25 @@ instructions:
     SUB  x9, x8, x7
     SUBI x9, x8, 7
 
-    LSH  x9, x8, 7
-    RSH  x9, x8, 7
+    SHIFT  x9, x8, 4
+    SHIFT  x9, x8, -4
 
-    BRZ  x9, pseudo
-    BGT  x9, pseudo
+    MOVE  x9, data
+    LOAD  x9, x9
+    STORE x9, x9
 
-    LD x9, data
-    ST x9, data
+    BEQ  x9, x8, pseudo
+    BGT  x9, x8, pseudo
 
-    HLT
+    HALT
 
 pseudo:
-    INP x9
-    OUT x9
-    MOV x9, x8
-    CLR x9
-    DEC x9
-    BRA pseudo
+    IN    x9
+    OUT   x9
+    MOVE  x9, x8
+    CLEAR x9
+    DEC   x9
+    JUMP  pseudo
     
 data:
     DAT 98

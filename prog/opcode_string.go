@@ -12,10 +12,10 @@ func _() {
 	_ = x[ADD-1]
 	_ = x[ADDI-2]
 	_ = x[SUB-3]
-	_ = x[SHIFT-4]
+	_ = x[SHFT-4]
 	_ = x[LOAD-5]
 	_ = x[MOVE-6]
-	_ = x[STORE-7]
+	_ = x[STOR-7]
 	_ = x[BEQ-8]
 	_ = x[BGT-9]
 	_ = x[DEC-10]
@@ -23,19 +23,19 @@ func _() {
 	_ = x[SUBI-12]
 	_ = x[BRA-13]
 	_ = x[BLT-14]
-	_ = x[CLEAR-15]
+	_ = x[CLR-15]
 	_ = x[COPY-16]
 	_ = x[CALL-17]
 	_ = x[NOP-18]
-	_ = x[HALT-19]
-	_ = x[IN-20]
+	_ = x[HLT-19]
+	_ = x[INP-20]
 	_ = x[OUT-21]
 	_ = x[DAT-22]
 }
 
-const _Opcode_name = "JUMPADDADDISUBSHIFTLOADMOVESTOREBEQBGTDECINCSUBIBRABLTCLEARCOPYCALLNOPHALTINOUTDAT"
+const _Opcode_name = "JUMPADDADDISUBSHFTLOADMOVESTORBEQBGTDECINCSUBIBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
 
-var _Opcode_index = [...]uint8{0, 4, 7, 11, 14, 19, 23, 27, 32, 35, 38, 41, 44, 48, 51, 54, 59, 63, 67, 70, 74, 76, 79, 82}
+var _Opcode_index = [...]uint8{0, 4, 7, 11, 14, 18, 22, 26, 30, 33, 36, 39, 42, 46, 49, 52, 55, 59, 63, 66, 69, 72, 75, 78}
 
 func (i Opcode) String() string {
 	if i >= Opcode(len(_Opcode_index)-1) {

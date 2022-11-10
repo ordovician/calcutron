@@ -213,7 +213,7 @@ func (cmd *NextCmd) Action(writer io.Writer, comp *sim.Computer, args []string) 
 	switch inst.Opcode() {
 	case prog.BRA, prog.BEQ, prog.BGT, prog.BLT, prog.JUMP:
 		comp.PrintPC(writer)
-	case prog.HALT:
+	case prog.HLT:
 		break
 	default:
 		comp.PrintRegs(writer, inst.UniqueRegisters()...)

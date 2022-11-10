@@ -14,37 +14,37 @@ import (
 type Opcode uint8
 
 const (
-	JUMP  Opcode = iota // HALT execution
-	ADD                 // Add registers
-	ADDI                // Add Immediate
-	SUB                 // Subtract registers
-	SHIFT               // Shift digits left, or right if k is negative
-	LOAD                // Load
-	MOVE                // Load Immediate
-	STORE               // Store to memory
-	BEQ                 // Branch if Equal
-	BGT                 // Branch if Greater than
+	JUMP Opcode = iota // HALT execution
+	ADD                // Add registers
+	ADDI               // Add Immediate
+	SUB                // Subtract registers
+	SHFT               // Shift digits left, or right if k is negative
+	LOAD               // Load
+	MOVE               // Load Immediate
+	STOR               // Store to memory
+	BEQ                // Branch if Equal
+	BGT                // Branch if Greater than
 
 	// Pseudo instructions
-	DEC   // DECrement
-	INC   // INCrement
-	SUBI  // SUBtract Immediate
-	BRA   // BRAnch
-	BLT   // Branch Less Than
-	CLEAR // Clear
-	COPY  // COPY from one reg to another
-	CALL  // CALL subroutine
-	NOP   // No Operation
-	HALT  // Halt execution
-	IN    // INput instruction
-	OUT   // OUTput instruction
+	DEC  // DECrement
+	INC  // INCrement
+	SUBI // SUBtract Immediate
+	BRA  // BRAnch
+	BLT  // Branch Less Than
+	CLR  // Clear
+	COPY // COPY from one reg to another
+	CALL // CALL subroutine
+	NOP  // No Operation
+	HLT  // Halt execution
+	INP  // INput instruction
+	OUT  // OUTput instruction
 
 	// not really instruction
 	DAT
 )
 
-var AllOpcodes = [...]Opcode{JUMP, ADD, ADDI, SUB, SHIFT, LOAD, MOVE, STORE, BEQ, BGT,
-	DEC, INC, SUBI, BRA, BLT, CLEAR, COPY, CALL, NOP, HALT, IN, OUT, DAT}
+var AllOpcodes = [...]Opcode{JUMP, ADD, ADDI, SUB, SHFT, LOAD, MOVE, STOR, BEQ, BGT,
+	DEC, INC, SUBI, BRA, BLT, CLR, COPY, CALL, NOP, HLT, INP, OUT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 
 // initialize opcode strings
@@ -65,5 +65,5 @@ func ParseOpcode(s string) (Opcode, bool) {
 			return opcode, true
 		}
 	}
-	return HALT, false
+	return HLT, false
 }
