@@ -319,7 +319,7 @@ func (cmd *PrintCmd) Action(writer io.Writer, comp *sim.Computer, args []string)
 	if err != nil {
 		return fmt.Errorf("cannot parse index of register %s because %w", regStr, err)
 	}
-	if regIndex < 1 || regIndex > 9 {
+	if regIndex < 0 || regIndex > 9 {
 		return fmt.Errorf("register index %d is outside of valid range 1 to 9", regIndex)
 	}
 
