@@ -30,3 +30,5 @@ We got all the programs I desired to: assembler, disassembler, simulator and deb
 
 Addition and subtraction deal with negative numbers while shift and  conditional branching operate on numbers as if they were unsigned. Registers work on 4 digit numbers but there are only 100 memory locations numbered from 0 to 99.
 
+Documenting properly the instruction set and their usage is still lacking.
+

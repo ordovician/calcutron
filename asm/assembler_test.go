@@ -55,20 +55,20 @@ func ExampleInstruction_SourceCode() {
 	labels := make(prog.SymbolTable)
 	lines := [...]string{
 		// all the standard instructions
-		"ADD   x9, x8, x7",
-		"ADDI  x8, 42",
-		"SUB   x2, x4, x1",
+		"ADD  x9, x8, x7",
+		"ADDI x8, 42",
+		"SUB  x2, x4, x1",
 		"SHFT x5, x2, 4",
-		"LOAD  x1, x2, x3",
-		"MOVE  x1, 24",
-		"STOR x5, x1, x2",
-		"BEQ   x3, x2, x1",
-		"BGT   x3, x2, x1",
-		"JMP x9, 82",
+		"LOAD x1, x2, 3",
+		"MOVE x1, 24",
+		"STOR x5, x1, 2",
+		"BEQ  x3, x2, 1",
+		"BGT  x3, x2, 1",
+		"JMP  x9, 82",
 
 		// using non standard number of operands
-		"ADD   x3, x7",
-		"SUB   x4, x3",
+		"ADD  x3, x7",
+		"SUB  x4, x3",
 	}
 
 	for _, line := range lines {
@@ -79,32 +79,32 @@ func ExampleInstruction_SourceCode() {
 	}
 
 	// Output:
-	// ADD   x9, x8, x7
-	// ADDI  x8, 42
-	// SUB   x2, x4, x1
+	// ADD  x9, x8, x7
+	// ADDI x8, 42
+	// SUB  x2, x4, x1
 	// SHFT x5, x2, 4
-	// LOAD  x1, x2, x3
-	// MOVE  x1, 24
-	// STOR x5, x1, x2
-	// BEQ   x3, x2, x1
-	// BGT   x3, x2, x1
-	// JMP x9, 82
-	// ADD   x3, x7
-	// SUB   x4, x3
+	// LOAD x1, x2, 3
+	// MOVE x1, 24
+	// STOR x5, x1, 2
+	// BEQ  x3, x2, 1
+	// BGT  x3, x2, 1
+	// JMP  x9, 82
+	// ADD  x3, x7
+	// SUB  x4, x3
 }
 
 func Example_parseLine() {
 	lines := [...]string{
-		"ADD   x9, x8, x7",
-		"ADDI  x8, 42",
-		"SUB   x2, x4, x1",
+		"ADD  x9, x8, x7",
+		"ADDI x8, 42",
+		"SUB  x2, x4, x1",
 		"SHFT x5, x2, 4",
-		"LOAD  x1, x2, x3",
-		"MOVE  x1, 24",
-		"STOR x5, x1, x2",
-		"BEQ   x3, x2, x1",
-		"BGT   x3, x2, x1",
-		"JMP x9, 82",
+		"LOAD x1, x2, 3",
+		"MOVE x1, 24",
+		"STOR x5, x1, 2",
+		"BEQ  x3, x2, 1",
+		"BGT  x3, x2, 1",
+		"JMP  x9, 82",
 	}
 
 	for _, line := range lines {
@@ -114,16 +114,16 @@ func Example_parseLine() {
 	}
 
 	// Output:
-	// ADD   x9, x8, x7
-	// ADDI  x8, 42
-	// SUB   x2, x4, x1
+	// ADD  x9, x8, x7
+	// ADDI x8, 42
+	// SUB  x2, x4, x1
 	// SHFT x5, x2, 4
-	// LOAD  x1, x2, x3
-	// MOVE  x1, 24
-	// STOR x5, x1, x2
-	// BEQ   x3, x2, x1
-	// BGT   x3, x2, x1
-	// JMP x9, 82
+	// LOAD x1, x2, 3
+	// MOVE x1, 24
+	// STOR x5, x1, 2
+	// BEQ  x3, x2, 1
+	// BGT  x3, x2, 1
+	// JMP  x9, 82
 
 }
 

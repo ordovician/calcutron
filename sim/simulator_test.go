@@ -64,13 +64,12 @@ func TestSimpleAdder(t *testing.T) {
 
 func TestCounter(t *testing.T) {
 	sourceCode := `
-		MOVE x9, loop
 		MOVE x2, 4
 		MOVE x1, 1
 	loop:
 		ADD   x3, x3, x1
-		BGT   x2, x3, x9
-		JMP x0, 0		
+		BGT   x2, x3, loop
+		HLT		
 	`
 
 	buffer := bytes.NewReader([]byte(sourceCode))
@@ -109,11 +108,11 @@ func Example_maximizer() {
 	comp.Run(50)
 	comp.Print(os.Stdout)
 	// Output:
-	// PC: 03
+	// PC: 00
 	//
-	// x1: 0008, x4: 0000, x7: 0006
-	// x2: 0004, x5: 0000, x8: 0008
-	// x3: 0000, x6: 0000, x9: 9999
+	// x1: 0008, x4: 0000, x7: 0000
+	// x2: 0004, x5: 0000, x8: 0000
+	// x3: 0000, x6: 0000, x9: 0000
 	//
 	// Inputs:  2, 3, 8, 4
 	// Outputs: 3, 8
@@ -130,11 +129,11 @@ func Example_doubler() {
 	comp.Run(50)
 	comp.Print(os.Stdout)
 	// Output:
-	// PC: 01
+	// PC: 00
 	//
 	// x1: 0004, x4: 0000, x7: 0000
 	// x2: 0000, x5: 0000, x8: 0000
-	// x3: 0008, x6: 0000, x9: 9999
+	// x3: 0008, x6: 0000, x9: 0000
 	//
 	// Inputs:  2, 3, 8, 4
 	// Outputs: 4, 6, 16, 8
@@ -151,11 +150,11 @@ func Example_simpleMult() {
 	comp.Run(50)
 	comp.Print(os.Stdout)
 	// Output:
-	// PC: 02
+	// PC: 00
 	//
 	// x1: 0008, x4: 0000, x7: 0000
-	// x2: 0000, x5: 0000, x8: 0005
-	// x3: 0032, x6: 0000, x9: 9999
+	// x2: 0000, x5: 0000, x8: 0000
+	// x3: 0032, x6: 0000, x9: 0000
 	//
 	// Inputs:  2, 3, 8, 4
 	// Outputs: 6, 32
