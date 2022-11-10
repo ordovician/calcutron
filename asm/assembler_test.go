@@ -13,42 +13,42 @@ func Example_assembleLine() {
 	labels := make(prog.SymbolTable)
 	lines := [...]string{
 		// all the standard instructions
-		"ADD   x9, x8, x7",
-		"ADDI  x8, 42",
-		"SUB   x2, x4, x1",
+		"ADD  x9, x8, x7",
+		"ADDI x8, 42",
+		"SUB  x2, x4, x1",
 		"SHFT x5, x2, 4",
-		"LOAD  x1, x2, x3",
-		"MOVE  x1, 24",
-		"STOR x5, x1, x2",
-		"BEQ   x3, x2, x1",
-		"BGT   x3, x2, x1",
-		"JMP x9, 82",
+		"LOAD x1, x2, 3",
+		"MOVE x1, 24",
+		"STOR x5, x1, 2",
+		"BEQ  x3, x2, 1",
+		"BGT  x3, x2, 1",
+		"JMP  x9, 82",
 
 		// using non standard number of operands
-		"ADD   x3, x7",
-		"SUB   x4, x3",
+		"ADD  x3, x7",
+		"SUB  x4, x3",
 	}
 
 	for _, line := range lines {
 		instruction, _ := AssembleLine(labels, line, 0)
 
 		machinecode := instruction.MachineCode()
-		fmt.Println(machinecode, line)
+		fmt.Printf("%04d %s\n", machinecode, line)
 	}
 
 	// Output:
-	// 1987 ADD   x9, x8, x7
-	// 2842 ADDI  x8, 42
-	// 3241 SUB   x2, x4, x1
+	// 1987 ADD  x9, x8, x7
+	// 2842 ADDI x8, 42
+	// 3241 SUB  x2, x4, x1
 	// 4524 SHFT x5, x2, 4
-	// 5123 LOAD  x1, x2, x3
-	// 6124 MOVE  x1, 24
-	// 7512 STOR x5, x1, x2
-	// 8321 BEQ   x3, x2, x1
-	// 9321 BGT   x3, x2, x1
-	// 982 JMP x9, 82
-	// 1337 ADD   x3, x7
-	// 3443 SUB   x4, x3
+	// 5123 LOAD x1, x2, 3
+	// 6124 MOVE x1, 24
+	// 7512 STOR x5, x1, 2
+	// 0321 BEQ  x3, x2, 1
+	// 9321 BGT  x3, x2, 1
+	// 8982 JMP  x9, 82
+	// 1337 ADD  x3, x7
+	// 3443 SUB  x4, x3
 }
 
 func ExampleInstruction_SourceCode() {
@@ -128,20 +128,20 @@ func Example_parseLine() {
 }
 
 func Example_assembleFile() {
-	program, _ := AssembleFile("../testdata/adder.ct33")
+	program, _ := AssembleFile("../examples/adder.ct33")
 
 	program.PrintWithOptions(os.Stdout, &prog.PrintOptions{
 		SourceCode: true,
 	})
 
 	// Output:
-	//     MOVE  x9, tape
 	// loop:
-	//     LOAD  x1, x9
-	//     LOAD  x2, x9
-	//     ADD   x1, x2
-	//     STOR x1, x9
-	//     JMP x0, loop
+	//     LOAD x1, x0, -1
+	//     LOAD x2, x0, -1
+	//     ADD  x3, x1, x2
+	//     STOR x3, x0, -1
+	//     JMP  x0, loop
+	//     HLT
 }
 
 func TestHaltAsembly(t *testing.T) {
