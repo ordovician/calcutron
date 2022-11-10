@@ -5,10 +5,10 @@ loop:
 
 second:
     OUT  x2
-    JUMP loop
+    JMP loop
     
 first:
     OUT  x1
-    JUMP loop
+    JMP loop
     HLT
 

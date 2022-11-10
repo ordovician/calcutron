@@ -1,4 +1,4 @@
-    JUMP start
+    JMP start
 
 shifted:
     DAT 0

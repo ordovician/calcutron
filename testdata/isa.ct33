@@ -22,7 +22,7 @@ pseudo:
     MOVE  x9, x8
     CLEAR x9
     DEC   x9
-    JUMP  pseudo
+    JMP  pseudo
     
 data:
     DAT 98

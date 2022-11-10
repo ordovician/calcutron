@@ -3,5 +3,5 @@ loop:
     INP  x2
     ADD  x3, x1, x2
     OUT  x3
-    JUMP loop
+    JMP loop
     HLT

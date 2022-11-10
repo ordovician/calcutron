@@ -46,8 +46,8 @@ func parseLine(line string) (mnemonic string, operands []string) {
 }
 
 // When we assemble an instruction the address in the program of the instruction can affect the machine code generated
-// because some instructions such as JUMP use relative jumps. Thus the address part of the JUMP depends on
-// where the JUMP instruction is assembled. If you don't care about the address, just set the address to zero.
+// because some instructions such as JMP use relative jumps. Thus the address part of the JMP depends on
+// where the JMP instruction is assembled. If you don't care about the address, just set the address to zero.
 // Then relative positions will look like absolute positions
 func AssembleLine(labels prog.SymbolTable, line string, address uint) (prog.Instruction, error) {
 	mnemonic, operands := parseLine(line)

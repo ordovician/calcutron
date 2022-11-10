@@ -9,5 +9,5 @@ multiply:
     BGT  x2, x0, multiply
     OUT x3
     
-    JUMP loop
+    JMP loop
     HLT

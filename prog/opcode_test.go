@@ -10,7 +10,7 @@ func testOpcodeEqual(t *testing.T, s string, expect Opcode) {
 }
 
 func TestParseOpcode(t *testing.T) {
-	testOpcodeEqual(t, "JUMP", JUMP)
+	testOpcodeEqual(t, "JMP", JMP)
 	testOpcodeEqual(t, "ADD", ADD)
 	testOpcodeEqual(t, "AddI", ADDI)
 	testOpcodeEqual(t, "sub", SUB)

@@ -4,5 +4,5 @@ nextdigit:
     SHFT x2, x1, 1
     OUT  x2
     BGT  x1, x0, nextdigit
-    JUMP loop
+    JMP loop
     HLT

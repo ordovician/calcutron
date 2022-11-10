@@ -22,7 +22,7 @@ func Example_assembleLine() {
 		"STORE x5, x1, x2",
 		"BEQ   x3, x2, x1",
 		"BGT   x3, x2, x1",
-		"JUMP x9, 82",
+		"JMP x9, 82",
 
 		// using non standard number of operands
 		"ADD   x3, x7",
@@ -46,7 +46,7 @@ func Example_assembleLine() {
 	// 7512 STORE x5, x1, x2
 	// 8321 BEQ   x3, x2, x1
 	// 9321 BGT   x3, x2, x1
-	// 982 JUMP x9, 82
+	// 982 JMP x9, 82
 	// 1337 ADD   x3, x7
 	// 3443 SUB   x4, x3
 }
@@ -64,7 +64,7 @@ func ExampleInstruction_SourceCode() {
 		"STORE x5, x1, x2",
 		"BEQ   x3, x2, x1",
 		"BGT   x3, x2, x1",
-		"JUMP x9, 82",
+		"JMP x9, 82",
 
 		// using non standard number of operands
 		"ADD   x3, x7",
@@ -88,7 +88,7 @@ func ExampleInstruction_SourceCode() {
 	// STORE x5, x1, x2
 	// BEQ   x3, x2, x1
 	// BGT   x3, x2, x1
-	// JUMP x9, 82
+	// JMP x9, 82
 	// ADD   x3, x7
 	// SUB   x4, x3
 }
@@ -104,7 +104,7 @@ func Example_parseLine() {
 		"STORE x5, x1, x2",
 		"BEQ   x3, x2, x1",
 		"BGT   x3, x2, x1",
-		"JUMP x9, 82",
+		"JMP x9, 82",
 	}
 
 	for _, line := range lines {
@@ -123,7 +123,7 @@ func Example_parseLine() {
 	// STORE x5, x1, x2
 	// BEQ   x3, x2, x1
 	// BGT   x3, x2, x1
-	// JUMP x9, 82
+	// JMP x9, 82
 
 }
 
@@ -141,7 +141,7 @@ func Example_assembleFile() {
 	//     LOAD  x2, x9
 	//     ADD   x1, x2
 	//     STORE x1, x9
-	//     JUMP x0, loop
+	//     JMP x0, loop
 }
 
 func TestHaltAsembly(t *testing.T) {

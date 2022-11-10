@@ -28,7 +28,7 @@ func TestSimpleAdder(t *testing.T) {
 		"SHIFT x7, x6, 1",
 		"MOVE  x8, 48",
 		"SHIFT x9, x8, -1",
-		"JUMP x0, 0",
+		"JMP x0, 0",
 	}
 
 	var comp Computer
@@ -70,7 +70,7 @@ func TestCounter(t *testing.T) {
 	loop:
 		ADD   x3, x3, x1
 		BGT   x2, x3, x9
-		JUMP x0, 0		
+		JMP x0, 0		
 	`
 
 	buffer := bytes.NewReader([]byte(sourceCode))

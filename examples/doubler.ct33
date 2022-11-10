@@ -1,6 +1,6 @@
 loop:
     INP  x1
     ADD  x3, x1, x1
-    STOR x3, x9
-    JUMP loop
+    OUT  x3
+    JMP loop
     HLT

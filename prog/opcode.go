@@ -22,7 +22,7 @@ const (
 	LOAD               // Load
 	MOVE               // Load Immediate
 	STOR               // Store to memory
-	JUMP               // Jump to address
+	JMP                // Jump to address
 	BGT                // Branch if Greater than
 
 	// Pseudo instructions
@@ -43,7 +43,7 @@ const (
 	DAT
 )
 
-var AllOpcodes = [...]Opcode{JUMP, ADD, ADDI, SUB, SHFT, LOAD, MOVE, STOR, BEQ, BGT,
+var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, SHFT, LOAD, MOVE, STOR, BEQ, BGT,
 	DEC, INC, SUBI, BRA, BLT, CLR, COPY, CALL, NOP, HLT, INP, OUT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 
