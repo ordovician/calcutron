@@ -5,6 +5,12 @@ type BranchEqualInstruction struct {
 }
 
 func (inst *BranchEqualInstruction) Run(comp Machine) bool {
+	// since jumps are relative using 0 will get us stuck in endless loop
+	// thus we treat endless loop as HLT or termination
+	if inst.constant == 0 {
+		return false
+	}
+
 	left := inst.RegValue(comp, Rd)
 	right := inst.RegValue(comp, Ra)
 	addr := int(comp.PC()) + inst.constant
@@ -22,6 +28,12 @@ type BranchGreaterThanInstruction struct {
 }
 
 func (inst *BranchGreaterThanInstruction) Run(comp Machine) bool {
+	// since jumps are relative using 0 will get us stuck in endless loop
+	// thus we treat endless loop as HLT or termination
+	if inst.constant == 0 {
+		return false
+	}
+
 	left := inst.RegValue(comp, Rd)
 	right := inst.RegValue(comp, Ra)
 	addr := int(comp.PC()) + inst.constant
