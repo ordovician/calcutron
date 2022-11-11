@@ -15,7 +15,7 @@ func (inst *LongImmInstruction) AssignRegisters() {
 	if inst.err != nil {
 		return
 	}
-	n := inst.parsedRegIndicies[0]
+	n := len(inst.parsedRegIndicies)
 	if n == 1 {
 		inst.regIndicies[Rd] = inst.parsedRegIndicies[0]
 	} else {

@@ -125,8 +125,8 @@ func (inst *BaseInstruction) ParseOperands(labels SymbolTable, operands []string
 			inst.constant = int(addr)
 			inst.label = operand
 		} else if constant, err := strconv.Atoi(operand); err == nil {
-			if constant < -99 || constant > 99 {
-				inst.err = fmt.Errorf("constant %d is outside valid range -99 to 99", constant)
+			if constant < -50 || constant > 99 {
+				inst.err = fmt.Errorf("constant %d is outside valid range -50 to 99", constant)
 				return
 			}
 			inst.constant = constant

@@ -18,8 +18,8 @@ func (inst *DataInstruction) ParseOperands(labels SymbolTable, operands []string
 
 	data := operands[0]
 	if constant, err := strconv.Atoi(data); err == nil {
-		if constant < -9999 || constant > 9999 {
-			inst.err = fmt.Errorf("DAT value %d is outside valid range -9999 to 9999", constant)
+		if constant < -5000 || constant > 9999 {
+			inst.err = fmt.Errorf("DAT value %d is outside valid range -5000 to 9999", constant)
 			return
 		}
 		inst.constant = constant
