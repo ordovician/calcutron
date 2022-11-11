@@ -66,6 +66,9 @@ func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length i
 func RunCommand(writer io.Writer, line string, comp *sim.Computer) error {
 	args := strings.Fields(line)
 	cmd := Lookup(args[0])
+	if cmd == nil {
+		return fmt.Errorf("no command named '%s' is supported. write 'help' to get list of supported commands", args[0])
+	}
 	err := cmd.Action(writer, comp, args[1:])
 	if err != nil {
 		return err

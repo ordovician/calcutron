@@ -25,6 +25,7 @@ type Computer struct {
 	inputs    []uint   // Input data to computer 0-99
 	outputs   []uint   // Output from computer    0-99
 	inpos     int      // Current position input stream
+	instCount uint     // Count of number of instructions executed since last reset
 }
 
 // valid registers are in range 0 to 9, but register 0 will always contains 0
@@ -107,6 +108,7 @@ func (comp *Computer) Reset() {
 	comp.pc = 0
 	comp.inpos = 0
 	comp.outputs = make([]uint, 0)
+	comp.instCount = 0
 	for i := range comp.registers {
 		comp.registers[i] = 0
 	}
@@ -212,6 +214,7 @@ func (comp *Computer) StepChannel(out chan<- prog.AddressInstruction) bool {
 	if !inst.Run(comp) {
 		return false
 	}
+	comp.instCount++
 
 	// Make sure we didn't execute a branch instruction before updating Program counter
 	if pc == comp.pc {
@@ -237,6 +240,7 @@ func (comp *Computer) Step() bool {
 	if !inst.Run(comp) {
 		return false
 	}
+	comp.instCount++
 
 	// Make sure we didn't execute a branch instruction before updating Program counter
 	if pc == comp.pc {
@@ -270,10 +274,13 @@ func (comp *Computer) PrintRegs(writer io.Writer, indices ...uint) {
 	fmt.Fprintln(writer)
 }
 
-func (comp *Computer) PrintPC(writer io.Writer) {
+func (comp *Computer) PrintProgramCounterAndSteps(writer io.Writer) {
 	fmt.Fprint(writer, "PC: ")
-	prog.NumberColor.Fprintf(writer, "%02d\n", comp.pc)
+	prog.NumberColor.Fprintf(writer, "%02d    ", comp.pc)
+	fmt.Fprintf(writer, "Steps: ")
+	prog.NumberColor.Fprintf(writer, "%d   \n", comp.instCount)
 }
+
 func (comp *Computer) PrintInputs(writer io.Writer) {
 	numberColor := prog.NumberColor.SprintFunc()
 	grayColor := prog.GrayColor.SprintFunc()
@@ -298,7 +305,7 @@ func (comp *Computer) PrintOutputs(writer io.Writer) {
 
 func (comp *Computer) Print(writer io.Writer) {
 
-	comp.PrintPC(writer)
+	comp.PrintProgramCounterAndSteps(writer)
 	fmt.Fprintln(writer)
 	comp.PrintRegs(writer, 1, 4, 7)
 	comp.PrintRegs(writer, 2, 5, 8)

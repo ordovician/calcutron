@@ -212,7 +212,7 @@ func (cmd *NextCmd) Action(writer io.Writer, comp *sim.Computer, args []string) 
 
 	switch inst.Opcode() {
 	case prog.BRA, prog.BEQ, prog.BGT, prog.BLT, prog.JMP:
-		comp.PrintPC(writer)
+		comp.PrintProgramCounterAndSteps(writer)
 	case prog.HLT:
 		break
 	default:
@@ -277,7 +277,9 @@ func (cmd *RunCmd) Action(writer io.Writer, comp *sim.Computer, args []string) e
 		group.Done()
 	}()
 
-	comp.RunChannel(512, channel)
+	// NOTE: Arbitrary limiting number of instruction we can run to 5000 to avoid
+	// getting hung up
+	comp.RunChannel(5000, channel)
 	close(channel)
 
 	// wait until executed instuctions have been printed out to consol

@@ -61,7 +61,9 @@ func runCode(ctx *cli.Context) error {
 
 	comp.LoadInputs(os.Stdin)
 
-	comp.RunChannel(512, channel)
+	// NOTE: I am arbitrarily restricting program from running more than 5000 instructions
+	// that is just to not end up in some endless loop
+	comp.RunChannel(5000, channel)
 	close(channel)
 
 	// wait until executed instuctions have been printed out to consol
@@ -91,8 +93,8 @@ func debug(ctx *cli.Context) error {
 	for {
 		line, err := rl.Readline()
 		if err != nil { // io.EOF
-			errorColor.Fprintf(os.Stderr, "Error: ")
-			fmt.Fprintf(os.Stderr, "%v\n\n", err)
+			// errorColor.Fprintf(os.Stderr, "Error: ")
+			// fmt.Fprintf(os.Stderr, "%v\n\n", err)
 			break
 		}
 
