@@ -15,11 +15,17 @@ func (labels SymbolTable) AddIOLabels() {
 
 }
 
-// A table containing the memory address of labels in the code
+// Reads source code to determine address of labels.
+// Labels starting with a dot '.' are treated as offsets
+// from a base address. The base address is a non dot based label preceeding
+// dot based addresses. The purpose of this is to be able to load
+// a base address into a register and use immediate value offsets
+// to get to specific addresses
 func ReadSymTable(reader io.Reader) SymbolTable {
 	scanner := bufio.NewScanner(reader)
 	labels := make(SymbolTable)
 	address := 0
+	baseAddress := 0
 	for scanner.Scan() {
 		line := strings.Trim(scanner.Text(), " \t")
 		n := len(line)
@@ -29,6 +35,14 @@ func ReadSymTable(reader io.Reader) SymbolTable {
 		}
 
 		if i := strings.IndexRune(line, ':'); i >= 0 {
+
+			// check if we should record an offset or absolute address
+			if strings.HasPrefix(line, ".") {
+				address -= baseAddress
+			} else {
+				baseAddress = address
+			}
+
 			labels[line[0:i]] = uint(address)
 
 			// is there anything beyond the label?
