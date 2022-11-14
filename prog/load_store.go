@@ -1,9 +1,63 @@
 package prog
 
-import "fmt"
+import (
+	"bytes"
+	"fmt"
+	"io"
+)
 
 type LoadStoreInstruction struct {
-	ShortImmInstruction
+	BaseInstruction
+}
+
+func (inst *LoadStoreInstruction) printSourceCode(writer io.Writer) {
+	printMnemonic(writer, inst.opcode)
+	printRegisterOperands(writer, inst.regIndicies[0:2])
+	fmt.Fprintf(writer, ", ")
+	NumberColor.Fprintf(writer, "%d", inst.constant)
+}
+
+// Will return colorized source code but this can be turned off with
+// color.NoColor = true, or individual colors can be turned of such as with LabelColor.DisableColor() and LabelColor.EnableColor()
+func (inst *LoadStoreInstruction) SourceCode() string {
+	var buffer bytes.Buffer
+	inst.printSourceCode(&buffer)
+	return buffer.String()
+}
+
+func (inst *LoadStoreInstruction) DecodeOperands(operands uint) {
+	addr := operands % 100
+
+	inst.regIndicies[Rd] = uint(operands / 100)
+	inst.regIndicies[Ra] = uint(addr / 10)
+	inst.constant = int(addr % 10) // not using signed offsets for LOAD STORE instructions
+	if inst.constant >= 8 {
+		inst.constant = 10 - inst.constant
+	}
+}
+
+func (inst *LoadStoreInstruction) MachineCode() uint {
+	regs := inst.regIndicies
+	constant := inst.constant
+	if constant < 0 {
+		constant = 10 + constant
+	}
+	operands := uint(100*regs[Rd] + 10*regs[Ra] + uint(constant))
+	machineOpcode := uint(inst.opcode) * 1000
+
+	code := machineOpcode + operands
+	return code
+}
+
+func (inst *LoadStoreInstruction) ParseOperands(labels SymbolTable, operands []string, programCounter uint) {
+	inst.BaseInstruction.ParseOperands(labels, operands, programCounter)
+	if inst.err != nil {
+		return
+	}
+
+	if inst.constant < -2 || inst.constant > 7 {
+		inst.err = fmt.Errorf("offset %d is outside valid range -2 to 7. This can happen if label is too far away from address zero or base address", inst.constant)
+	}
 }
 
 // We want register assignments for  load and store to work as follows:
