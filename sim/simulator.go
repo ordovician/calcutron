@@ -91,6 +91,10 @@ func (comp *Computer) LookupSymbol(sym string) (address uint, found bool) {
 	return
 }
 
+func (comp *Computer) Outputs() []uint {
+	return comp.outputs
+}
+
 func NewComputer(program *prog.Program) *Computer {
 	if len(program.Instructions) > 99 {
 		panic("programs cannot be longer than 99 instructions")

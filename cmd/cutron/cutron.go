@@ -13,6 +13,7 @@ import (
 	"github.com/ordovician/calcutron/disasm"
 	"github.com/ordovician/calcutron/prog"
 	"github.com/ordovician/calcutron/sim"
+	"github.com/ordovician/calcutron/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -44,6 +45,8 @@ func disassemble(ctx *cli.Context) error {
 
 func runCode(ctx *cli.Context) error {
 	filepath := ctx.Args().First()
+	verbose := ctx.Bool("verbose")
+
 	var program *prog.Program
 	var err error
 	if strings.HasSuffix(filepath, ".ct33") {
@@ -56,30 +59,37 @@ func runCode(ctx *cli.Context) error {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return nil
 	}
-	pContext := prog.NewPrintContext(program.Labels, &printOptions)
 
-	var group sync.WaitGroup
-	group.Add(1)
-	channel := make(chan prog.AddressInstruction)
-	go func() {
-		pContext.Print(os.Stdout, channel)
-		group.Done()
-	}()
 	comp := sim.NewComputer(program)
-
 	comp.LoadInputs(os.Stdin)
 
-	// NOTE: I am arbitrarily restricting program from running more than 5000 instructions
-	// that is just to not end up in some endless loop
-	comp.RunChannel(5000, channel)
-	close(channel)
+	if verbose {
+		pContext := prog.NewPrintContext(program.Labels, &printOptions)
 
-	// wait until executed instuctions have been printed out to consol
-	group.Wait()
+		var group sync.WaitGroup
+		group.Add(1)
+		channel := make(chan prog.AddressInstruction)
+		go func() {
+			pContext.Print(os.Stdout, channel)
+			group.Done()
+		}()
 
-	// Print out status of computer
-	fmt.Println()
-	fmt.Println(comp.String())
+		// NOTE: I am arbitrarily restricting program from running more than 5000 instructions
+		// that is just to not end up in some endless loop
+		comp.RunChannel(5000, channel)
+		close(channel)
+
+		// wait until executed instuctions have been printed out to consol
+		group.Wait()
+
+		// Print out status of computer
+		fmt.Println()
+		fmt.Println(comp.String())
+	} else {
+		comp.Run(5000)
+		utils.JoinFunc(os.Stdout, comp.Outputs(), ", ", fmt.Sprint)
+		fmt.Println()
+	}
 
 	return nil
 }
@@ -183,12 +193,19 @@ func main() {
 		Flags:   createFlags(ASSEMBLY),
 	}
 
+	runFlags := createFlags(SIMULATION)
+	verboseFlag := cli.BoolFlag{
+		Name:  "verbose",
+		Usage: "show each instruction executed",
+	}
+	runFlags = append(runFlags, &verboseFlag)
+
 	runCmd := cli.Command{
 		Name:    "run",
 		Aliases: []string{"simulate", "sim"},
 		Usage:   "run a calcutron-33 machine code file",
 		Action:  runCode,
-		Flags:   createFlags(SIMULATION),
+		Flags:   runFlags,
 	}
 
 	dbgCmd := cli.Command{
