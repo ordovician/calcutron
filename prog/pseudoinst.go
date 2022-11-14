@@ -137,7 +137,7 @@ func (inst *NoOperationInstruction) AssignRegisters() {
 	}
 	n := len(inst.parsedRegIndicies)
 	if n != 0 {
-		inst.err = fmt.Errorf("A NOP instructions takes 0 register operands not %d", n)
+		inst.err = fmt.Errorf("a NOP instructions takes 0 register operands not %d", n)
 	} else {
 		inst.regIndicies[Rd] = 0
 		inst.regIndicies[Ra] = 0

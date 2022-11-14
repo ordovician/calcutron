@@ -114,6 +114,10 @@ func (inst *BaseInstruction) SourceCode() string {
 	return buffer.String()
 }
 
+func (inst *BaseInstruction) String() string {
+	return inst.SourceCode()
+}
+
 // Fills in the parsedRegIndicies, constant and label fields
 // operands should not contain uncessesary whitespace. Caller is responsible for cleaning up operands before calling
 // ParseOperands
