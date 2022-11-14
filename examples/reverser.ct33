@@ -1,0 +1,25 @@
+// take in elements n, x1, x3, ... xn and reverse
+    MOVE x3, array     // base address for array
+    INP  x4            // number of values n
+    ADD  x4, x3        // last address for elements
+
+next:
+    INP  x1            // get next number
+    STOR x1, x3        // *array = x1
+    INC  x3            // array++
+    BLT  x3, x4, next  // array < array+n ? 
+
+    MOVE x3, array     // reset x3 to array start
+    SUBI x4, 1         // because we have > and  not >=
+    SUBI x3, 1
+
+reverse:
+    LOAD x1, x4
+    OUT  x1
+    DEC  x4
+    BGT  x4, x3, reverse
+    HLT
+
+array:
+    DAT 0
+
