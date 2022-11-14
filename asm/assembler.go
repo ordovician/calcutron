@@ -16,17 +16,32 @@ func parseLine(line string) (mnemonic string, operands []string) {
 	operands = make([]string, 0)
 
 	code := strings.Trim(line, " \t")
+	// skip commented out lines
+	if strings.HasPrefix(code, "//") {
+		return
+	}
+
+	// Determine lenght of string that marks code
+	// until we hit a comment
 	i := len(code)
 	if j := strings.Index(code, "//"); j >= 0 {
 		i = j
 	}
+	code = code[0:i]
 	n := len(code)
 
+	// skip line if its only a label on it
 	if n == 0 || code[n-1] == ':' {
 		return
 	}
 
-	code = code[0:i]
+	// check if we have a label on the same line as  mnemonic
+	if k := strings.IndexRune(code, ':'); k > 0 {
+		code = code[k:n]
+		i -= k
+	}
+
+	// locate end of mnemonic on line
 	if i = strings.IndexRune(code, ' '); i < 0 {
 		i = n
 	}
@@ -57,7 +72,7 @@ func AssembleLine(labels prog.SymbolTable, line string, address uint) (prog.Inst
 
 	opcode, ok := prog.ParseOpcode(mnemonic)
 	if !ok {
-		return nil, fmt.Errorf("%s is not a legal mnemonic", mnemonic)
+		return nil, fmt.Errorf("'%s' is not a legal mnemonic", mnemonic)
 	}
 
 	inst := prog.NewInstruction(opcode)
@@ -85,7 +100,7 @@ func Assemble(reader io.ReadSeeker) (*prog.Program, error) {
 		line := scanner.Text()
 		instruction, err := AssembleLine(program.Labels, line, addr)
 		if err != nil {
-			return nil, fmt.Errorf("%2d %s: unable to assemble: %w", lineNo, strings.TrimSpace(line), err)
+			return nil, fmt.Errorf("line %d: unable to assemble '%s' because %w", lineNo, strings.TrimSpace(line), err)
 		}
 		if instruction != nil {
 			program.Add(instruction)
