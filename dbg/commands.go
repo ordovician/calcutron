@@ -454,16 +454,21 @@ func (cmd *MemoryCmd) Help(writer io.Writer) {
 SYNOPSIS
 	memory address [value]
 DESCRIPTION
-	print contents of memory at given address`)
+	print contents of memory at given address. Address can be a label`)
 }
 
 func (cmd *MemoryCmd) Action(writer io.Writer, comp *sim.Computer, args []string) error {
-	var addr int
-	var err error
+	var addr uint
 	if len(args) > 0 {
-		addr, err = strconv.Atoi(args[0])
-		if err != nil {
-			return fmt.Errorf("unable to parse address for memory instruction because %w", err)
+		addrStr := args[0]
+		var found bool
+		if addr, found = comp.LookupSymbol(addrStr); !found {
+			var addrSigned int
+			addrSigned, err := strconv.Atoi(addrStr)
+			if err != nil {
+				return fmt.Errorf("unable to parse address %s for memory instruction because %w", addrStr, err)
+			}
+			addr = uint(addrSigned)
 		}
 	}
 

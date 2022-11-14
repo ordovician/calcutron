@@ -29,6 +29,7 @@ type Machine interface {
 	SetMemory(address uint, value uint)
 	PopInput() (int, bool)
 	PushOutput(value int)
+	//LookupSymbol(sym string) (address uint, found bool)
 }
 
 type Instruction interface {

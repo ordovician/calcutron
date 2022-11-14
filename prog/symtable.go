@@ -30,7 +30,7 @@ func ReadSymTable(reader io.Reader) SymbolTable {
 		line := strings.Trim(scanner.Text(), " \t")
 		n := len(line)
 
-		if n == 0 {
+		if n == 0 || strings.HasPrefix(line, "//") {
 			continue
 		}
 
@@ -38,12 +38,11 @@ func ReadSymTable(reader io.Reader) SymbolTable {
 
 			// check if we should record an offset or absolute address
 			if strings.HasPrefix(line, ".") {
-				address -= baseAddress
+				labels[line[0:i]] = uint(address - baseAddress)
 			} else {
+				labels[line[0:i]] = uint(address)
 				baseAddress = address
 			}
-
-			labels[line[0:i]] = uint(address)
 
 			// is there anything beyond the label?
 			if n == i+1 {

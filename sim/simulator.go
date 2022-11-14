@@ -19,13 +19,14 @@ var ErrAllInputRead = errors.New("all inputs read")
 var ErrProgramHalt = errors.New("reach halt instruction")
 
 type Computer struct {
-	pc        uint     // Program counter 0-99
-	registers [10]uint // CPU registers   0-99
-	memory    [99]uint // Computer memory 0-9999
-	inputs    []uint   // Input data to computer 0-99
-	outputs   []uint   // Output from computer    0-99
-	inpos     int      // Current position input stream
-	instCount uint     // Count of number of instructions executed since last reset
+	pc        uint             // Program counter 0-99
+	registers [10]uint         // CPU registers   0-99
+	memory    [99]uint         // Computer memory 0-9999
+	inputs    []uint           // Input data to computer 0-99
+	outputs   []uint           // Output from computer    0-99
+	inpos     int              // Current position input stream
+	instCount uint             // Count of number of instructions executed since last reset
+	labels    prog.SymbolTable // so we can lookup memory locations
 }
 
 // valid registers are in range 0 to 9, but register 0 will always contains 0
@@ -85,6 +86,11 @@ func (comp *Computer) PushOutput(value int) {
 	comp.outputs = append(comp.outputs, prog.Complement(value, 1e4))
 }
 
+func (comp *Computer) LookupSymbol(sym string) (address uint, found bool) {
+	address, found = comp.labels[sym]
+	return
+}
+
 func NewComputer(program *prog.Program) *Computer {
 	if len(program.Instructions) > 99 {
 		panic("programs cannot be longer than 99 instructions")
@@ -115,6 +121,7 @@ func (comp *Computer) Reset() {
 }
 
 func (comp *Computer) LoadProgram(program *prog.Program) {
+	comp.labels = program.Labels
 	memory := comp.memory[:]
 	for i, inst := range program.Instructions {
 		machinecode := inst.MachineCode()

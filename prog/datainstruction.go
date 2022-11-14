@@ -55,3 +55,7 @@ func (inst *DataInstruction) SourceCode() string {
 	inst.printSourceCode(&buffer)
 	return buffer.String()
 }
+
+func (inst *DataInstruction) String() string {
+	return inst.SourceCode()
+}

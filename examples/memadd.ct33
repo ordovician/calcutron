@@ -1,8 +1,11 @@
+// adding and shifting values read from memory
+// where results are stored in memory
     JMP start
 
-shifted:
-    DAT 0
-    DAT 0
+shiftresult:
+.shifted:  DAT 0
+.overflow: DAT 0
+
 first:
     DAT 1234
 second:
@@ -14,12 +17,10 @@ start:
     LOAD x1, first
     LOAD x2, second
     ADD  x3, x1, x2
-    STOR x3, x0, x9
-
-    MOVE x6, shifted
+    STOR x3, added
+    MOVE x6, shiftresult
     SHFT x5, x2, 2
-    STOR x2, x6, 0
-    INC  x6
-    STOR x5, x6, 0
+    STOR x2, x6, .shifted
+    STOR x5, x6, .overflow
     HLT
 

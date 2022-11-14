@@ -108,7 +108,7 @@ func Example_maximizer() {
 	comp.Run(50)
 	comp.Print(os.Stdout)
 	// Output:
-	// PC: 00
+	// PC: 00    Steps: 50
 	//
 	// x1: 0008, x4: 0000, x7: 0000
 	// x2: 0004, x5: 0000, x8: 0000

@@ -145,5 +145,12 @@ func Example_assembleFile() {
 }
 
 func TestHaltAsembly(t *testing.T) {
-	AssembleFile("../Examples/memadd.ct33")
+	program, err := AssembleFile("../Examples/memadd.ct33")
+	if err != nil {
+		t.Errorf("failed to assemble memadd.ct33 because %v", err)
+	}
+
+	for _, inst := range program.Instructions {
+		fmt.Println(inst)
+	}
 }

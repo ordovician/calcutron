@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/fatih/color"
@@ -43,7 +44,14 @@ func disassemble(ctx *cli.Context) error {
 
 func runCode(ctx *cli.Context) error {
 	filepath := ctx.Args().First()
-	program, err := disasm.DisassembleFile(filepath)
+	var program *prog.Program
+	var err error
+	if strings.HasSuffix(filepath, ".ct33") {
+		program, err = asm.AssembleFile(filepath)
+	} else if strings.HasSuffix(filepath, ".machine") {
+		program, err = disasm.DisassembleFile(filepath)
+	}
+
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return nil

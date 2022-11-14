@@ -25,6 +25,10 @@ func (inst *LoadStoreInstruction) SourceCode() string {
 	return buffer.String()
 }
 
+func (inst *LoadStoreInstruction) String() string {
+	return inst.SourceCode()
+}
+
 func (inst *LoadStoreInstruction) DecodeOperands(operands uint) {
 	addr := operands % 100
 

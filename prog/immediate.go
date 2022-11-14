@@ -55,6 +55,10 @@ func (inst *LongImmInstruction) SourceCode() string {
 	return buffer.String()
 }
 
+func (inst *LongImmInstruction) String() string {
+	return inst.SourceCode()
+}
+
 // Instructions of the type INST Rd, Ra, k encoded as ?dak
 type ShortImmInstruction struct {
 	BaseInstruction
@@ -91,6 +95,10 @@ func (inst *ShortImmInstruction) SourceCode() string {
 	var buffer bytes.Buffer
 	inst.printSourceCode(&buffer)
 	return buffer.String()
+}
+
+func (inst *ShortImmInstruction) String() string {
+	return inst.SourceCode()
 }
 
 func (inst *ShortImmInstruction) DecodeOperands(operands uint) {

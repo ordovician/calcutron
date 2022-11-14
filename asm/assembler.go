@@ -15,7 +15,7 @@ import (
 func parseLine(line string) (mnemonic string, operands []string) {
 	operands = make([]string, 0)
 
-	code := strings.Trim(line, " \t")
+	code := strings.TrimSpace(line)
 	// skip commented out lines
 	if strings.HasPrefix(code, "//") {
 		return
@@ -37,8 +37,8 @@ func parseLine(line string) (mnemonic string, operands []string) {
 
 	// check if we have a label on the same line as  mnemonic
 	if k := strings.IndexRune(code, ':'); k > 0 {
-		code = code[k:n]
-		i -= k
+		code = strings.TrimSpace(code[k+1 : n])
+		n = len(code)
 	}
 
 	// locate end of mnemonic on line
