@@ -36,7 +36,7 @@ func (inst *LoadStoreInstruction) DecodeOperands(operands uint) {
 	inst.regIndicies[Ra] = uint(addr / 10)
 	inst.constant = int(addr % 10) // not using signed offsets for LOAD STORE instructions
 	if inst.constant >= 8 {
-		inst.constant = 10 - inst.constant
+		inst.constant = inst.constant - 10
 	}
 }
 

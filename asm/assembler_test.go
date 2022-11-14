@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"testing"
 
 	"github.com/ordovician/calcutron/prog"
 )
@@ -144,13 +143,14 @@ func Example_assembleFile() {
 	//     HLT
 }
 
-func TestHaltAsembly(t *testing.T) {
-	program, err := AssembleFile("../Examples/memadd.ct33")
-	if err != nil {
-		t.Errorf("failed to assemble memadd.ct33 because %v", err)
-	}
+// func TestHaltAsembly(t *testing.T) {
+// 	srcfile := "adder.ct33"
+// 	program, err := AssembleFile("../Examples/" + srcfile)
+// 	if err != nil {
+// 		t.Errorf("failed to assemble %s because %v", srcfile, err)
+// 	}
 
-	for _, inst := range program.Instructions {
-		fmt.Println(inst)
-	}
-}
+// 	for _, inst := range program.Instructions {
+// 		fmt.Println(inst.MachineCode(), inst.SourceCode())
+// 	}
+// }

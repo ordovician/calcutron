@@ -92,12 +92,12 @@ The `maximizer` program looks at pairs of inputs and writes out the larger value
 # Supported Instructions
 All instructions are encoded as 4-digit decimal number where the first number indicates the opcode (the operation to perform) and the rest encode the operands (arguments to instruction). In theory this should give only 10 unique instructions but Calcutron-33 has a number of _pseudo instructions_ which is assembly code mnemonics which translates into one of the base instructions.
 
-In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4. Those with only an `Rd` register operand will take `k` values in the trange -50 to 99.
+In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4 (except for Load and Store instructions which have range -2 to 7). Those with only an `Rd` register operand will take `k` values in the trange -50 to 99.
 
 ## Arithmetic Operations
 Typically you perform an operation with two source registers `Ra` and `Rb` and store the result in `Rd`.
 
-The shift instruction `SHFT` is special in that it affects two registers `Rd` and `Ra`. When `k > 0` it multiplies `Ra` with `10^k`. Digits outside the range 0 to 9999 will be pushed over to `Rd`. For `k < 0` we get divisions instead. 
+The shift instruction `SHFT` is special in that it affects two registers `Rd` and `Ra`. When `k > 0` it multiplies `Ra` with `10^k`. Digits outside the range 0 to 9999 will be pushed over to `Rd`. For `k < 0` we get divisions instead. `k` has valid range from -5 to 4.
 
 - `ADD Rd, Ra, Rb` - ADD registers
 - `ADDI Rd, k` - ADD Immediate
@@ -105,7 +105,7 @@ The shift instruction `SHFT` is special in that it affects two registers `Rd` an
 - `SHFT Rd, Ra, k` - SHiFT digits left, or right if k is negative
 
 ## Load and Store Operations
-The instructions combine a register `Ra` and a constant `k` to form a memory address, which we either read from or write to.
+The instructions combine a register `Ra` and a constant `k` to form a memory address, which we either read from or write to. For load and store instruction the `k` has valid range of  values from -2 to 7. 
 
 - `LOAD Rd, Ra, k` - LOAD
 - `MOVE Rd, k` - MOVE value k to register `Rd`

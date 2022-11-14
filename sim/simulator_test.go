@@ -8,6 +8,7 @@ import (
 
 	"github.com/ordovician/calcutron/asm"
 	"github.com/ordovician/calcutron/prog"
+	"golang.org/x/exp/slices"
 )
 
 // for testing if a given register has given value
@@ -97,7 +98,7 @@ func TestCounter(t *testing.T) {
 
 }
 
-func Example_maximizer() {
+func TestMaximizer(t *testing.T) {
 	comp, err := NewComputerFile("../Examples/maximizer.ct33")
 	comp.inputs = []uint{2, 3, 8, 4}
 	if err != nil {
@@ -106,9 +107,28 @@ func Example_maximizer() {
 	}
 
 	comp.Run(50)
-	comp.Print(os.Stdout)
+
+	if comp.instCount != 10 {
+		t.Errorf("Expected %d got %d", 10, comp.instCount)
+	}
+
+	if comp.Register(1) != 8 {
+		t.Errorf("Expected %d got %d", 8, comp.Register(1))
+	}
+
+	if comp.Register(2) != 4 {
+		t.Errorf("Expected %d got %d", 4, comp.Register(2))
+	}
+
+	if slices.Compare(comp.outputs, []uint{3, 8}) != 0 {
+		t.Errorf("Expected %v got %v", []uint{3, 8}, comp.outputs)
+	}
+
+	// comp.Print(os.Stdout)
+	// Expected output from running
+
 	// Output:
-	// PC: 00    Steps: 50
+	// PC: 00    Steps: 10
 	//
 	// x1: 0008, x4: 0000, x7: 0000
 	// x2: 0004, x5: 0000, x8: 0000
@@ -118,7 +138,7 @@ func Example_maximizer() {
 	// Outputs: 3, 8
 }
 
-func Example_doubler() {
+func TestDoubler(t *testing.T) {
 	comp, err := NewComputerFile("../Examples/doubler.ct33")
 	comp.inputs = []uint{2, 3, 8, 4}
 	if err != nil {
@@ -127,7 +147,27 @@ func Example_doubler() {
 	}
 
 	comp.Run(50)
-	comp.Print(os.Stdout)
+
+	if comp.instCount != 16 {
+		t.Errorf("Expected %d got %d", 16, comp.instCount)
+	}
+
+	if comp.Register(1) != 4 {
+		t.Errorf("Expected %d got %d", 4, comp.Register(1))
+	}
+
+	if comp.Register(3) != 8 {
+		t.Errorf("Expected %d got %d", 8, comp.Register(2))
+	}
+
+	// check if our inputs actuall got doubled
+	for i, v := range comp.inputs {
+		if comp.outputs[i] != 2*v {
+			t.Errorf("Expected %d got %d", 2*v, comp.outputs[i])
+		}
+	}
+
+	// comp.Print(os.Stdout)
 	// Output:
 	// PC: 00
 	//
@@ -139,7 +179,7 @@ func Example_doubler() {
 	// Outputs: 4, 6, 16, 8
 }
 
-func Example_simpleMult() {
+func TestSimpleMult(t *testing.T) {
 	comp, err := NewComputerFile("../Examples/simplemult.ct33")
 	comp.inputs = []uint{2, 3, 8, 4}
 	if err != nil {
@@ -148,7 +188,18 @@ func Example_simpleMult() {
 	}
 
 	comp.Run(50)
-	comp.Print(os.Stdout)
+	// check if numbers actually got multiplied
+	for i := 0; i < len(comp.outputs); i++ {
+		a := comp.inputs[2*i]
+		b := comp.inputs[2*i+1]
+		expected := a * b
+		got := comp.outputs[i]
+		if got != expected {
+			t.Errorf("Expected %d got %d", expected, got)
+		}
+	}
+
+	// comp.Print(os.Stdout)
 	// Output:
 	// PC: 00
 	//
