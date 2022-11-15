@@ -1,0 +1,33 @@
+// take in elements n, x1, x3, ... xn and sort
+// a - x1 first element
+// b - x2 second
+// n - x3 count inner 
+// m - x4 count outer
+// i - x5 inner index
+// j - x6 outer index
+// p - x7 base address
+
+    MOVE x7, array     // base address for array
+    INP  x3            // number of values n
+    COPY x5, x3        // start counter
+
+getnumbers:
+    INP  x1
+    STOR x1, x7
+    INC  x7
+    DEC  x5
+    BGT  x5, x0, getnumbers
+    CALL outnext
+    HLT
+
+outnext:
+    LOAD x1, x7
+    OUT  x1
+    INC  x7
+    DEC  x5
+    BGT  x5, x0, outnext
+    JMP  x9
+
+array:
+    DAT 0
+
