@@ -20,10 +20,10 @@ var ErrProgramHalt = errors.New("reach halt instruction")
 
 type Computer struct {
 	pc        uint             // Program counter 0-99
-	registers [10]uint         // CPU registers   0-99
-	memory    [99]uint         // Computer memory 0-9999
-	inputs    []uint           // Input data to computer 0-99
-	outputs   []uint           // Output from computer    0-99
+	registers [10]uint         // CPU registers   0-9
+	memory    [9999]uint       // Computer memory 0-9999
+	inputs    []uint           // Input data to computer -5000-9999
+	outputs   []uint           // Output from computer   -5000-9999
 	inpos     int              // Current position input stream
 	instCount uint             // Count of number of instructions executed since last reset
 	labels    prog.SymbolTable // so we can lookup memory locations
