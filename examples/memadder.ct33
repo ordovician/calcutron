@@ -1,0 +1,15 @@
+// add two numbers
+LOAD x1, first
+LOAD x2, second
+ADD  x3, x1, x2
+STOR x3, result
+HLT
+
+first:
+    DAT 42
+    
+second:
+    DAT 23
+    
+result:
+    DAT 0
