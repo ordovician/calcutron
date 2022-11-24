@@ -13,7 +13,7 @@ import (
 	"github.com/ordovician/calcutron/disasm"
 	"github.com/ordovician/calcutron/prog"
 	"github.com/ordovician/calcutron/sim"
-	"github.com/ordovician/calcutron/utils"
+	// "github.com/ordovician/calcutron/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -87,8 +87,9 @@ func runCode(ctx *cli.Context) error {
 		fmt.Println(comp.String())
 	} else {
 		comp.Run(5000)
-		utils.JoinFunc(os.Stdout, comp.Outputs(), ", ", fmt.Sprint)
-		fmt.Println()
+		for _, n := range comp.Outputs() {
+			fmt.Println(n)
+		}
 	}
 
 	return nil
