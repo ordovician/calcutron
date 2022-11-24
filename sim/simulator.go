@@ -1,6 +1,7 @@
 package sim
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -184,19 +185,30 @@ func (comp *Computer) LoadInputsFile(filepath string) error {
 
 // Load data input to program from reader
 func (comp *Computer) LoadInputs(reader io.Reader) error {
-	bytes, err := io.ReadAll(reader)
-	if err != nil {
-		return fmt.Errorf("unable to read input data because %w", err)
+
+	scanner := bufio.NewScanner(reader)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		line = strings.TrimSpace(line)
+
+		// blank line means we are done
+		if len(line) == 0 {
+			break
+		}
+		for _, word := range strings.Fields(line) {
+			input, err := strconv.Atoi(word)
+			if err != nil {
+				return fmt.Errorf("failed to parse machine code because %w", err)
+			}
+			comp.inputs = append(comp.inputs, uint(input))
+		}
 	}
 
-	strings.Fields(string(bytes))
-	for _, word := range strings.Fields(string(bytes)) {
-		input, err := strconv.Atoi(word)
-		if err != nil {
-			return fmt.Errorf("failed to parse machine code because %w", err)
-		}
-		comp.inputs = append(comp.inputs, uint(input))
+	if scanner.Err() != nil {
+		return fmt.Errorf("unable to parse input: %w", scanner.Err())
 	}
+
 	return nil
 }
 
