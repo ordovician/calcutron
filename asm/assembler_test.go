@@ -57,7 +57,7 @@ func ExampleInstruction_SourceCode() {
 		"ADD  x9, x8, x7",
 		"ADDI x8, 42",
 		"SUB  x2, x4, x1",
-		"LSH x5, x2, 4",
+		"LSH  x5, x2, 4",
 		"LOAD x1, x2, 3",
 		"MOVE x1, 24",
 		"STOR x5, x1, 2",
@@ -81,7 +81,7 @@ func ExampleInstruction_SourceCode() {
 	// ADD  x9, x8, x7
 	// ADDI x8, 42
 	// SUB  x2, x4, x1
-	// LSH x5, x2, 4
+	// LSH  x5, x2, 4
 	// LOAD x1, x2, 3
 	// MOVE x1, 24
 	// STOR x5, x1, 2
@@ -97,7 +97,7 @@ func Example_parseLine() {
 		"ADD  x9, x8, x7",
 		"ADDI x8, 42",
 		"SUB  x2, x4, x1",
-		"LSH x5, x2, 4",
+		"LSH  x5, x2, 4",
 		"LOAD x1, x2, 3",
 		"MOVE x1, 24",
 		"STOR x5, x1, 2",
@@ -116,7 +116,7 @@ func Example_parseLine() {
 	// ADD  x9, x8, x7
 	// ADDI x8, 42
 	// SUB  x2, x4, x1
-	// LSH x5, x2, 4
+	// LSH  x5, x2, 4
 	// LOAD x1, x2, 3
 	// MOVE x1, 24
 	// STOR x5, x1, 2

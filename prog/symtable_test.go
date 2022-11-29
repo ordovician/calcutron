@@ -25,7 +25,7 @@ func Example_readSymTable() {
 }
 
 func TestReadMemAddSymbols(t *testing.T) {
-	file, _ := os.Open("../examples/memadd.ct33")
+	file, _ := os.Open("../examples/memcalc.ct33")
 	defer file.Close()
 
 	labels := ReadSymTable(file)
