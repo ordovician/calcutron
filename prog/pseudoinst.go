@@ -39,6 +39,15 @@ func (inst *SubImmediateInstruction) AssignRegisters() {
 	inst.constant = -inst.constant
 }
 
+type RightShiftInstruction struct {
+	ShiftInstruction
+}
+
+func (inst *RightShiftInstruction) AssignRegisters() {
+	inst.ShiftInstruction.AssignRegisters()
+	inst.constant = -inst.constant
+}
+
 type BranchLessThanInstruction struct {
 	BranchGreaterThanInstruction
 }

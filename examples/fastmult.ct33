@@ -3,10 +3,10 @@ loop:
     INP x2
     CLR x4
 next:
-    LSH x3, x2, -1    // divide by 10 and put remainder in x3
+    RSH  x3, x2        // divide by 10 and put remainder in x3
     CLR  x9            // x9 is added to form jump address
     JMP  x9, multiply
-    LSH x0, x1, 1     // make number we are adding 10x bigger
+    LSH  x0, x1        // make number we are adding 10x bigger
     BGT  x2, x0, next  // process next digit 
     OUT  x4
     JMP loop           // get next pair of numbers to multiple

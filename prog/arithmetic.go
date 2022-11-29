@@ -37,6 +37,18 @@ type ShiftInstruction struct {
 	ShortImmInstruction
 }
 
+func (inst *ShiftInstruction) ParseOperands(labels SymbolTable, operands []string, programCounter uint) {
+	inst.ShortImmInstruction.ParseOperands(labels, operands, programCounter)
+	if inst.err != nil {
+		return
+	}
+
+	// if shift isn't given, use 1 as the shift
+	if inst.constant == 0 {
+		inst.constant = 1
+	}
+}
+
 func (inst *ShiftInstruction) Run(comp Machine) bool {
 	var value uint
 	regValue := Complement(inst.RegValue(comp, Ra), 1e4)

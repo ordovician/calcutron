@@ -21,21 +21,22 @@ func _() {
 	_ = x[DEC-10]
 	_ = x[INC-11]
 	_ = x[SUBI-12]
-	_ = x[BRA-13]
-	_ = x[BLT-14]
-	_ = x[CLR-15]
-	_ = x[COPY-16]
-	_ = x[CALL-17]
-	_ = x[NOP-18]
-	_ = x[HLT-19]
-	_ = x[INP-20]
-	_ = x[OUT-21]
-	_ = x[DAT-22]
+	_ = x[RSH-13]
+	_ = x[BRA-14]
+	_ = x[BLT-15]
+	_ = x[CLR-16]
+	_ = x[COPY-17]
+	_ = x[CALL-18]
+	_ = x[NOP-19]
+	_ = x[HLT-20]
+	_ = x[INP-21]
+	_ = x[OUT-22]
+	_ = x[DAT-23]
 }
 
-const _Opcode_name = "BEQADDADDISUBLSHLOADMOVESTORJMPBGTDECINCSUBIBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
+const _Opcode_name = "BEQADDADDISUBLSHLOADMOVESTORJMPBGTDECINCSUBIRSHBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
 
-var _Opcode_index = [...]uint8{0, 3, 6, 10, 13, 16, 20, 24, 28, 31, 34, 37, 40, 44, 47, 50, 53, 57, 61, 64, 67, 70, 73, 76}
+var _Opcode_index = [...]uint8{0, 3, 6, 10, 13, 16, 20, 24, 28, 31, 34, 37, 40, 44, 47, 50, 53, 56, 60, 64, 67, 70, 73, 76, 79}
 
 func (i Opcode) String() string {
 	if i >= Opcode(len(_Opcode_index)-1) {

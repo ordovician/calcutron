@@ -34,6 +34,9 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 	case SUBI:
 		inst = &SubImmediateInstruction{} // so we can just subtract offset to get negative number
 		inst.setOpcode(ADDI)
+	case RSH:
+		inst = &RightShiftInstruction{} // so we can just subtract offset to get negative number
+		inst.setOpcode(LSH)
 	case BRA:
 		inst = &UnconditionalBranchInstruction{}
 		inst.setOpcode(BEQ)
