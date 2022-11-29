@@ -18,7 +18,7 @@ const (
 	ADD                // Add registers
 	ADDI               // Add Immediate
 	SUB                // Subtract registers
-	SHFT               // Shift digits left, or right if k is negative
+	LSH                // Shift digits left, or right if k is negative
 	LOAD               // Load
 	MOVE               // Load Immediate
 	STOR               // Store to memory
@@ -43,7 +43,7 @@ const (
 	DAT
 )
 
-var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, SHFT, LOAD, MOVE, STOR, BEQ, BGT,
+var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, LSH, LOAD, MOVE, STOR, BEQ, BGT,
 	DEC, INC, SUBI, BRA, BLT, CLR, COPY, CALL, NOP, HLT, INP, OUT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 

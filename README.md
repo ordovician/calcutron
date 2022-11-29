@@ -97,12 +97,12 @@ In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a r
 ## Arithmetic Operations
 Typically you perform an operation with two source registers `Ra` and `Rb` and store the result in `Rd`.
 
-The shift instruction `SHFT` is special in that it affects two registers `Rd` and `Ra`. When `k > 0` it multiplies `Ra` with `10^k`. Digits outside the range 0 to 9999 will be pushed over to `Rd`. For `k < 0` we get divisions instead. `k` has valid range from -5 to 4.
+The shift instruction `LSH` is special in that it affects two registers `Rd` and `Ra`. When `k > 0` it multiplies `Ra` with `10^k`. Digits outside the range 0 to 9999 will be pushed over to `Rd`. For `k < 0` we get divisions instead. `k` has valid range from -5 to 4.
 
 - `ADD Rd, Ra, Rb` - ADD registers
 - `ADDI Rd, k` - ADD Immediate
 - `SUB Rd, Ra, Rb` - SUBtract registers
-- `SHFT Rd, Ra, k` - SHiFT digits left, or right if k is negative
+- `LSH Rd, Ra, k` - SHiFT digits left, or right if k is negative
 
 ## Load and Store Operations
 The instructions combine a register `Ra` and a constant `k` to form a memory address, which we either read from or write to. For load and store instruction the `k` has valid range of  values from -2 to 7. 

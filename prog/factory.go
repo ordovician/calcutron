@@ -9,7 +9,7 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 		inst = &AddImmediateInstruction{}
 	case SUB:
 		inst = &SubInstruction{}
-	case SHFT:
+	case LSH:
 		inst = &ShiftInstruction{}
 	case LOAD:
 		inst = &LoadInstruction{}

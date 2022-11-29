@@ -1,7 +1,7 @@
 loop:
     INP  x1
 nextdigit:
-    SHFT x2, x1, 1
+    LSH x2, x1, 1
     OUT  x2
     BGT  x1, x0, nextdigit
     JMP loop

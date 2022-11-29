@@ -4,8 +4,8 @@ instructions:
     SUB  x9, x8, x7
     SUBI x9, x8, 7
 
-    SHFT  x9, x8, 4
-    SHFT  x9, x8, -4
+    LSH  x9, x8, 4
+    LSH  x9, x8, -4
 
     MOVE  x9, data
     LOAD  x9, x9

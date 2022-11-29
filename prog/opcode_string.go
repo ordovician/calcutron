@@ -12,7 +12,7 @@ func _() {
 	_ = x[ADD-1]
 	_ = x[ADDI-2]
 	_ = x[SUB-3]
-	_ = x[SHFT-4]
+	_ = x[LSH-4]
 	_ = x[LOAD-5]
 	_ = x[MOVE-6]
 	_ = x[STOR-7]
@@ -33,9 +33,9 @@ func _() {
 	_ = x[DAT-22]
 }
 
-const _Opcode_name = "BEQADDADDISUBSHFTLOADMOVESTORJMPBGTDECINCSUBIBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
+const _Opcode_name = "BEQADDADDISUBLSHLOADMOVESTORJMPBGTDECINCSUBIBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
 
-var _Opcode_index = [...]uint8{0, 3, 6, 10, 13, 17, 21, 25, 29, 32, 35, 38, 41, 45, 48, 51, 54, 58, 62, 65, 68, 71, 74, 77}
+var _Opcode_index = [...]uint8{0, 3, 6, 10, 13, 16, 20, 24, 28, 31, 34, 37, 40, 44, 47, 50, 53, 57, 61, 64, 67, 70, 73, 76}
 
 func (i Opcode) String() string {
 	if i >= Opcode(len(_Opcode_index)-1) {

@@ -26,9 +26,9 @@ func TestSimpleAdder(t *testing.T) {
 		"SUB   x4, x2, x1",
 		"SUB   x5, x1, x2",
 		"MOVE  x6, 2",
-		"SHFT x7, x6, 1",
+		"LSH x7, x6, 1",
 		"MOVE  x8, 48",
-		"SHFT x9, x8, -1",
+		"LSH x9, x8, -1",
 		"JMP x0, 0",
 	}
 
