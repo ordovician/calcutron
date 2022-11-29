@@ -13,6 +13,7 @@ import (
 	"github.com/ordovician/calcutron/disasm"
 	"github.com/ordovician/calcutron/prog"
 	"github.com/ordovician/calcutron/sim"
+
 	// "github.com/ordovician/calcutron/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -61,7 +62,7 @@ func runCode(ctx *cli.Context) error {
 	}
 
 	comp := sim.NewComputer(program)
-	comp.LoadInputs(os.Stdin)
+	// comp.LoadInputs(os.Stdin)
 
 	if verbose {
 		pContext := prog.NewPrintContext(program.Labels, &printOptions)

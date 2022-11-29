@@ -28,6 +28,7 @@ type Computer struct {
 	inpos     int              // Current position input stream
 	instCount uint             // Count of number of instructions executed since last reset
 	labels    prog.SymbolTable // so we can lookup memory locations
+	err       error            // last error
 }
 
 // valid registers are in range 0 to 9, but register 0 will always contains 0
@@ -74,8 +75,12 @@ func (comp *Computer) SetMemory(address uint, value uint) {
 	comp.memory[address] = value
 }
 
+// will pop input set earlier or read input from Stdin if never set
 func (comp *Computer) PopInput() (int, bool) {
-	if comp.inpos >= len(comp.inputs) {
+	// if inputs are exhaused we will try to read from stdin
+	if len(comp.inputs) == 0 {
+		comp.LoadInputs(os.Stdin)
+	} else if comp.inpos >= len(comp.inputs) {
 		return 0, false
 	}
 	input := prog.Signed(comp.inputs[comp.inpos], 1e4)
@@ -199,7 +204,7 @@ func (comp *Computer) LoadInputs(reader io.Reader) error {
 		for _, word := range strings.Fields(line) {
 			input, err := strconv.Atoi(word)
 			if err != nil {
-				return fmt.Errorf("failed to parse machine code because %w", err)
+				return fmt.Errorf("failed to parse number code because %w", err)
 			}
 			comp.inputs = append(comp.inputs, uint(input))
 		}

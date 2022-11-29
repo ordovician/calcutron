@@ -1,0 +1,6 @@
+    MOVE x4, 10
+decrement:
+    OUT  x4
+    DEC  x4
+    BGT  x4, x0, decrement
+    HLT
