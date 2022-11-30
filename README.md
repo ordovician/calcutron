@@ -92,7 +92,7 @@ The `maximizer` program looks at pairs of inputs and writes out the larger value
 # Supported Instructions
 All instructions are encoded as 4-digit decimal number where the first number indicates the opcode (the operation to perform) and the rest encode the operands (arguments to instruction). In theory this should give only 10 unique instructions but Calcutron-33 has a number of _pseudo instructions_ which is assembly code mnemonics which translates into one of the base instructions.
 
-In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4 (except for Load and Store instructions which have range -2 to 7). Those with only an `Rd` register operand will take `k` values in the trange -50 to 99.
+In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4 (except for Load and Store instructions which have range -2 to 7). Those with only an `Rd` register operand will take `k` values in the trange -50 to 49.
 
 ## Arithmetic Operations
 Typically you perform an operation with two source registers `Ra` and `Rb` and store the result in `Rd`.

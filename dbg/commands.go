@@ -96,7 +96,9 @@ func (cmd *InputCmd) Action(writer io.Writer, comp *sim.Computer, args []string)
 		elements[i] = prog.Complement(x, 1e4)
 	}
 	comp.SetInputs(elements)
-	return nil
+	err := comp.Err
+	comp.Err = nil
+	return err
 }
 
 func (cmd *OutputCmd) Name() string {
@@ -115,7 +117,9 @@ DESCRIPTION
 
 func (cmd *OutputCmd) Action(writer io.Writer, comp *sim.Computer, args []string) error {
 	comp.PrintOutputs(writer)
-	return nil
+	err := comp.Err
+	comp.Err = nil
+	return err
 }
 
 func (cmd *LoadCmd) Name() string {
@@ -165,7 +169,9 @@ func (cmd *ListCmd) Action(writer io.Writer, comp *sim.Computer, args []string) 
 		MachineCode: true,
 		SourceCode:  true,
 	})
-	return nil
+	err = comp.Err
+	comp.Err = nil
+	return err
 }
 
 func (cmd *StatusCmd) Name() string {
@@ -184,7 +190,9 @@ DESCRIPTION
 
 func (cmd *StatusCmd) Action(writer io.Writer, comp *sim.Computer, args []string) error {
 	comp.Print(writer)
-	return nil
+	err := comp.Err
+	comp.Err = nil
+	return err
 }
 
 func (cmd *NextCmd) Name() string {
@@ -219,7 +227,9 @@ func (cmd *NextCmd) Action(writer io.Writer, comp *sim.Computer, args []string) 
 		comp.PrintRegs(writer, inst.UniqueRegisters()...)
 	}
 
-	return nil
+	err := comp.Err
+	comp.Err = nil
+	return err
 }
 
 func (cmd *RunCmd) Name() string {
@@ -376,7 +386,7 @@ func (cmd *SetCmd) Action(writer io.Writer, comp *sim.Computer, args []string) e
 		return fmt.Errorf("register index %d is outside of valid range 1 to 9", regIndex)
 	}
 
-	if value < -9999 || value > 9999 {
+	if value < -5000 || value > 4999 {
 		return fmt.Errorf("value %d is more than four digits. Registers can only hold four digit values", value)
 	}
 

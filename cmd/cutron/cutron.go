@@ -21,10 +21,12 @@ import (
 var printOptions prog.PrintOptions
 
 func assemble(ctx *cli.Context) error {
+	errorColor := color.New(color.FgRed)
 	filepath := ctx.Args().First()
 	program, err := asm.AssembleFile(filepath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		errorColor.Fprintf(os.Stderr, "Error: ")
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return nil
 	}
 
@@ -33,10 +35,12 @@ func assemble(ctx *cli.Context) error {
 }
 
 func disassemble(ctx *cli.Context) error {
+	errorColor := color.New(color.FgRed)
 	filepath := ctx.Args().First()
 	program, err := disasm.DisassembleFile(filepath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		errorColor.Fprintf(os.Stderr, "Error: ")
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return nil
 	}
 
@@ -45,8 +49,10 @@ func disassemble(ctx *cli.Context) error {
 }
 
 func runCode(ctx *cli.Context) error {
+	errorColor := color.New(color.FgRed)
 	filepath := ctx.Args().First()
 	verbose := ctx.Bool("verbose")
+	useTextOutput := ctx.Bool("text")
 
 	var program *prog.Program
 	var err error
@@ -57,7 +63,8 @@ func runCode(ctx *cli.Context) error {
 	}
 
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		errorColor.Fprintf(os.Stderr, "Error: ")
+		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return nil
 	}
 
@@ -86,11 +93,22 @@ func runCode(ctx *cli.Context) error {
 		// Print out status of computer
 		fmt.Println()
 		fmt.Println(comp.String())
+
+		// check if there was any errors
+		if comp.Err != nil {
+			errorColor.Fprintf(os.Stderr, "Error: ")
+			fmt.Fprintf(os.Stderr, "program execution terminated early because %v\n", comp.Err)
+		}
 	} else {
 		comp.Run(5000)
 		for _, n := range comp.Outputs() {
-			fmt.Println(n)
+			if useTextOutput {
+				fmt.Printf("%c", n)
+			} else {
+				fmt.Println(n)
+			}
 		}
+		fmt.Println()
 	}
 
 	return nil
@@ -102,7 +120,11 @@ func debug(ctx *cli.Context) error {
 	var comp sim.Computer
 	args := ctx.Args()
 	if args.Len() > 0 {
-		comp.LoadFile(args.First())
+		err := comp.LoadFile(args.First())
+		if err != nil {
+			errorColor.Fprintf(os.Stderr, "Error: ")
+			fmt.Fprintf(os.Stderr, "%v\n\n", err)
+		}
 	}
 
 	rl, err := dbg.CreateReadLine()
@@ -200,7 +222,12 @@ func main() {
 		Name:  "verbose",
 		Usage: "show each instruction executed",
 	}
+	textFlag := cli.BoolFlag{
+		Name:  "text",
+		Usage: "display output as ASCII text instead of numbers",
+	}
 	runFlags = append(runFlags, &verboseFlag)
+	runFlags = append(runFlags, &textFlag)
 
 	runCmd := cli.Command{
 		Name:    "run",

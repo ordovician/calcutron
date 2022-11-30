@@ -1,0 +1,5 @@
+loop:
+    INP  x1
+    OUT  x1
+    JMP loop
+

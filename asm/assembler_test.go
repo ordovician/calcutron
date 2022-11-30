@@ -71,7 +71,10 @@ func ExampleInstruction_SourceCode() {
 	}
 
 	for _, line := range lines {
-		instruction, _ := AssembleLine(labels, line, 0)
+		instruction, err := AssembleLine(labels, line, 0)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+		}
 
 		sourcecode := instruction.SourceCode()
 		fmt.Println(sourcecode)

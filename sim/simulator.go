@@ -9,6 +9,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"unicode"
+	"unicode/utf8"
 
 	"github.com/ordovician/calcutron/asm"
 	"github.com/ordovician/calcutron/disasm"
@@ -23,12 +25,12 @@ type Computer struct {
 	pc        uint             // Program counter 0-99
 	registers [10]uint         // CPU registers   0-9
 	memory    [9999]uint       // Computer memory 0-9999
-	inputs    []uint           // Input data to computer -5000-9999
-	outputs   []uint           // Output from computer   -5000-9999
+	inputs    []uint           // Input data to computer -5000-4999
+	outputs   []uint           // Output from computer   -5000-4999
 	inpos     int              // Current position input stream
 	instCount uint             // Count of number of instructions executed since last reset
 	labels    prog.SymbolTable // so we can lookup memory locations
-	err       error            // last error
+	Err       error            // last error
 }
 
 // valid registers are in range 0 to 9, but register 0 will always contains 0
@@ -79,7 +81,10 @@ func (comp *Computer) SetMemory(address uint, value uint) {
 func (comp *Computer) PopInput() (int, bool) {
 	// if inputs are exhaused we will try to read from stdin
 	if len(comp.inputs) == 0 {
-		comp.LoadInputs(os.Stdin)
+		err := comp.LoadInputs(os.Stdin)
+		if err != nil {
+			return 0, false
+		}
 	} else if comp.inpos >= len(comp.inputs) {
 		return 0, false
 	}
@@ -201,6 +206,23 @@ func (comp *Computer) LoadInputs(reader io.Reader) error {
 		if len(line) == 0 {
 			break
 		}
+
+		// get first rune to later check if letter
+		firstRune, _ := utf8.DecodeRuneInString(line)
+
+		// check if user input string or number
+		if strings.HasPrefix(line, "\"") && strings.HasSuffix(line, "\"") || unicode.IsLetter(firstRune) {
+			line = strings.Trim(line, "\"")
+			for _, r := range line {
+				if r >= 1e4 || r < 0 {
+					return fmt.Errorf("character %c cannot be converted to number because it has a unicode codepoint with higher value than 9999", r)
+				}
+				comp.inputs = append(comp.inputs, uint(r))
+			}
+
+			break
+		}
+
 		for _, word := range strings.Fields(line) {
 			input, err := strconv.Atoi(word)
 			if err != nil {

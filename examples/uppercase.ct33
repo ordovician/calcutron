@@ -1,0 +1,8 @@
+    MOVE x2, 91
+loop:
+    INP  x1
+    BLT  x1, x2, noupper
+    SUBI x1, 32
+noupper:
+    OUT  x1
+    JMP loop

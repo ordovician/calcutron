@@ -115,6 +115,16 @@ func (inst *MoveInstruction) Run(comp Machine) bool {
 	return true
 }
 
+func (inst *MoveInstruction) ParseOperands(labels SymbolTable, operands []string, address uint) {
+	inst.BaseInstruction.ParseOperands(labels, operands, address)
+	if inst.err != nil {
+		return
+	}
+	if inst.constant > 49 {
+		inst.err = fmt.Errorf("constant %d is outside valid range -50 to 49", inst.constant)
+	}
+}
+
 type StoreInstruction struct {
 	LoadStoreInstruction
 }
