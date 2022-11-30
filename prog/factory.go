@@ -68,6 +68,9 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 	// non-instruction
 	case DAT:
 		inst = &DataInstruction{}
+	// cannot make this as an instruction as will produce many entries
+	case STR:
+		panic("STR is not an instruction. Bug in software. Circumvent by not using STR directive.")
 	default:
 		break
 	}

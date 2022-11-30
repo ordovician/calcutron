@@ -47,8 +47,16 @@ func parseLine(line string) (mnemonic string, operands []string) {
 	}
 	mnemonic = code[0:i]
 
-	if len(code[i:]) > 0 {
-		operands = strings.SplitN(code[i:], ",", 3)
+	operStr := code[i:]
+	if len(operStr) == 0 {
+		return
+	}
+
+	if strings.HasPrefix(operStr, "\"") && strings.HasSuffix(operStr, "\"") {
+		operStr = strings.Trim(operStr, "\"")
+		operands = append(operands, operStr)
+	} else {
+		operands = strings.SplitN(operStr, ",", 3)
 
 		// Cleanup white space around operands so function further
 		// down the chain don't have to deal with thm
@@ -56,7 +64,6 @@ func parseLine(line string) (mnemonic string, operands []string) {
 			operands[i] = strings.TrimSpace(oper)
 		}
 	}
-
 	return
 }
 

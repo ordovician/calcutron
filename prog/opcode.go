@@ -42,6 +42,7 @@ const (
 
 	// not really instruction
 	DAT
+	STR
 )
 
 var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, LSH, LOAD, MOVE, STOR, BEQ, BGT,
