@@ -1,5 +1,7 @@
 package prog
 
+import "fmt"
+
 type JumpInstruction struct {
 	LongImmInstruction
 }
@@ -27,4 +29,14 @@ func (inst *JumpInstruction) Run(comp Machine) bool {
 
 	comp.SetPC(addr)
 	return true
+}
+
+func (inst *JumpInstruction) ParseOperands(labels SymbolTable, operands []string, address uint) {
+	inst.BaseInstruction.ParseOperands(labels, operands, address)
+	if inst.err != nil {
+		return
+	}
+	if inst.constant > 99 || inst.constant < 0 {
+		inst.err = fmt.Errorf("constant %d is outside valid range 0 to 99", inst.constant)
+	}
 }

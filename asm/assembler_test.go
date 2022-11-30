@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"testing"
 
 	"github.com/ordovician/calcutron/prog"
 )
@@ -157,3 +158,47 @@ func Example_assembleFile() {
 // 		fmt.Println(inst.MachineCode(), inst.SourceCode())
 // 	}
 // }
+
+func TestImmediateRange(t *testing.T) {
+	labels := make(prog.SymbolTable)
+	var err error
+
+	// Here we use the range 0-99 which is legal for JMP
+	_, err = AssembleLine(labels, "JMP  x9, 82", 0)
+	if err != nil {
+		t.Errorf("failed to assemble 'JMP x9, 82' becase %v", err)
+	}
+
+	_, err = AssembleLine(labels, "JMP  x9, -20", 0)
+	if err == nil {
+		t.Errorf("A 'JMP  x9, -20' should fail to assemble as jump is negative")
+	}
+
+	_, err = AssembleLine(labels, "MOVE x5, 52", 0)
+	if err == nil {
+		t.Errorf("A 'MOVE x5, 52' should fail to assemble as immediate value is outside range -50 to 49")
+	}
+
+	_, err = AssembleLine(labels, "MOVE x5, 48", 0)
+	if err != nil {
+		t.Errorf("A 'MOVE x5, 49' didn't assemble because %v", err)
+	}
+
+	// negative immediate values should be allowed
+	_, err = AssembleLine(labels, "MOVE x5, -20", 0)
+	if err != nil {
+		t.Errorf("A 'MOVE x5, -20' didn't assemble because %v", err)
+	}
+
+	// negative immediate values should be allowed
+	_, err = AssembleLine(labels, "ADDI x5, -20", 0)
+	if err != nil {
+		t.Errorf("A 'ADDI x5, -20' didn't assemble because %v", err)
+	}
+
+	_, err = AssembleLine(labels, "ADDI x5, 52", 0)
+	if err == nil {
+		t.Errorf("A 'ADDI x5, 52' should fail to assemble as immediate value is outside range -50 to 49")
+	}
+
+}

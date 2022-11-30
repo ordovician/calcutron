@@ -120,7 +120,7 @@ func (inst *MoveInstruction) ParseOperands(labels SymbolTable, operands []string
 	if inst.err != nil {
 		return
 	}
-	if inst.constant > 49 {
+	if inst.constant > 49 || inst.constant < -50 {
 		inst.err = fmt.Errorf("constant %d is outside valid range -50 to 49", inst.constant)
 	}
 }

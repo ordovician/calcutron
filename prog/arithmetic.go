@@ -1,6 +1,7 @@
 package prog
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -22,6 +23,17 @@ func (inst *AddImmediateInstruction) Run(comp Machine) bool {
 	value := inst.RegValue(comp, Rd)
 	inst.SetRegValue(comp, Rd, value+inst.constant)
 	return true
+}
+
+// Base implementation is setup for unsigned numbers such as JMP
+func (inst *AddImmediateInstruction) ParseOperands(labels SymbolTable, operands []string, address uint) {
+	inst.BaseInstruction.ParseOperands(labels, operands, address)
+	if inst.err != nil {
+		return
+	}
+	if inst.constant > 49 || inst.constant < -50 {
+		inst.err = fmt.Errorf("constant %d is outside valid range -50 to 49", inst.constant)
+	}
 }
 
 type SubInstruction struct {
