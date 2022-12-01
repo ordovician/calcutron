@@ -23,22 +23,20 @@ func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length i
 	n := len(line)
 	var matches [][]rune = make([][]rune, 0, 5)
 
-	if strings.HasPrefix(str, "load") && len(str) > len("load") {
+	if strings.HasPrefix(str, "load") {
 		filearg := strings.TrimSpace(str[len("load"):])
 		if len(filearg) == 0 {
 			for _, file := range completer.files {
-				matches = append(matches, []rune(file))
+				matches = append(matches, []rune(" "+file))
+			}
+		} else {
+			for _, file := range completer.files {
+				if strings.HasPrefix(file, filearg) {
+					match := file[n-len("load")-1:]
+					matches = append(matches, []rune(match))
+				}
 			}
 		}
-
-		for _, file := range completer.files {
-			if strings.HasPrefix(file, filearg) {
-				match := file[n-len("load")-1:]
-				matches = append(matches, []rune(match))
-			}
-		}
-	} else if strings.HasPrefix("load", str) {
-		matches = append(matches, []rune("load"[n:]))
 	}
 
 	for _, cmd := range commands {
@@ -48,15 +46,19 @@ func (completer *Completer) Do(line []rune, pos int) (newLine [][]rune, length i
 		}
 	}
 
-	for _, opstr := range prog.AllOpcodeStrings {
-		if strings.HasPrefix(opstr, str) {
-			matches = append(matches, []rune(opstr[n:]))
-		}
-
-		// Allow askin for help on a command
-		helpStr := "?" + opstr
-		if strings.HasPrefix(helpStr, str) {
-			matches = append(matches, []rune(helpStr[n:]))
+	if strings.HasPrefix(str, "asm") {
+		assembly := strings.TrimSpace(str[len("asm"):])
+		if len(assembly) == 0 {
+			for _, opstr := range prog.AllOpcodeStrings {
+				matches = append(matches, []rune(" "+opstr))
+			}
+		} else {
+			for _, opstr := range prog.AllOpcodeStrings {
+				if strings.HasPrefix(opstr, assembly) {
+					match := opstr[n-len("asm")-1:]
+					matches = append(matches, []rune(match))
+				}
+			}
 		}
 	}
 

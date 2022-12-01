@@ -92,7 +92,14 @@ The `maximizer` program looks at pairs of inputs and writes out the larger value
 # Supported Instructions
 All instructions are encoded as 4-digit decimal number where the first number indicates the opcode (the operation to perform) and the rest encode the operands (arguments to instruction). In theory this should give only 10 unique instructions but Calcutron-33 has a number of _pseudo instructions_ which is assembly code mnemonics which translates into one of the base instructions.
 
-In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4 (except for Load and Store instructions which have range -2 to 7). Those with only an `Rd` register operand will take `k` values in the trange -50 to 49.
+In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4 (except for Load and Store instructions which have range -2 to 7). Those with only an `Rd` register operand will take `k` values in the trange -50 to 49, except the JMP instruction which takes values in range 0-99.
+
+Consequently if you want to load say 90 into the x1 register you cannot do that with a single MOVE instruction. You instead you would have to write:
+
+    MOVE x1, 45
+    ADDI x1, 45
+    
+An alterantive is to store the value 90 in a memory location and load it with the LOAD instruction.
 
 ## Arithmetic Operations
 Typically you perform an operation with two source registers `Ra` and `Rb` and store the result in `Rd`.
@@ -102,7 +109,7 @@ The shift instruction `LSH` is special in that it affects two registers `Rd` and
 - `ADD Rd, Ra, Rb` - ADD registers
 - `ADDI Rd, k` - ADD Immediate
 - `SUB Rd, Ra, Rb` - SUBtract registers
-- `LSH Rd, Ra, k` - SHiFT digits left, or right if k is negative
+- `LSH Rd, Ra, k` - Left SHift digits k places. Can only shift 4 digits.
 
 ## Load and Store Operations
 The instructions combine a register `Ra` and a constant `k` to form a memory address, which we either read from or write to. For load and store instruction the `k` has valid range of  values from -2 to 7. 
@@ -126,6 +133,7 @@ These instructions are all just shorthands for other instructions. For instance 
 - `DEC  Rd` - DECrement
 - `INC  Rd` - INCrement
 - `SUBI Rd, k`  - SUBtract Immediate
+- `RSH Rd, Ra, k` – Right SHift digits k places. 
 
 - `BLT  Ra, Rb, k` - Branch if Less Than
 - `CLR  Rd` - CLeaR register
@@ -144,9 +152,7 @@ The original article served as a based for an early prototype written in the Jul
 Remaking the whole thing in Go is both to get a sense of how Go compares with Zig but also because I believe Go is very well suited for this kind of project. I want to be able to easily distribute binaries that can run any macOS, Linux and Windows and that is possible with the good Go cross-compile support.
 
 # Current Status
-We got all the programs I desired to: assembler, disassembler, simulator and debugger. All the core stuff I would want to test and teach about assembly programming works. Yet one could say all of these programs are still a bit buggy or unpolished.
+We got all the programs I desired to: assembler, disassembler, simulator and debugger.
 
-Addition and subtraction deal with negative numbers while shift and  conditional branching operate on numbers as if they were unsigned. Registers work on 4 digit numbers but there are only 100 memory locations numbered from 0 to 99.
-
-Documenting properly the instruction set and their usage is still lacking.
+Addition and subtraction deal with negative numbers while shift and  conditional branching operate on numbers as if they were unsigned. Registers work on 4 digit numbers but you should only write programs as if only memory locations 0-99 exists. It is possible to address memory locations from 0-9999 in current implementation but that is currently not recommended as I have not tested it much.
 
