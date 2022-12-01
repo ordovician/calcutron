@@ -1,0 +1,32 @@
+    INP  x1
+    COPY x2, x1
+    DEC  x2
+loop:
+    CLR  x8                // will hold return address
+    JMP  x8, multiply      // performs: x1 = x1 * x2
+    DEC  x2
+    BGT  x2, x0, loop      // keep multiplying while x2 > 0
+    OUT  x1
+    HLT
+    
+multiply:
+    CLR  x4                 // accumulates result
+    COPY x7, x2             // backup x2
+nextdigit:
+    RSH  x3, x2             // divide by 10 and put remainder in x3
+    CLR  x9                 // x9 is added to form jump address
+    JMP  x9, multdigit
+    LSH  x0, x1             // make number we are adding 10x bigger
+    BGT  x2, x0, nextdigit  // process next digit 
+    COPY x1, x4             // return result
+    COPY x2, x7             // restor x2
+    JMP  x8
+    HLT
+
+multdigit:
+    BEQ  x3, x0, skip
+    ADD  x4, x1
+    DEC  x3                  // to keep track of how many times x1 should be added to x4
+    BGT  x3, x0, multdigit
+skip:
+    JMP x9                   // return from subroutine
