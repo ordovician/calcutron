@@ -11,4 +11,3 @@ first:
     OUT  x1
     JMP loop
     HLT
-

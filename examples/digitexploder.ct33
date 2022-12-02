@@ -1,8 +1,8 @@
 loop:
-    INP  x1
+    INP x1
 nextdigit:
     LSH x2, x1, 1
-    OUT  x2
-    BGT  x1, x0, nextdigit
+    OUT x2
+    BGT x1, x0, nextdigit
     JMP loop
     HLT
