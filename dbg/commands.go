@@ -487,7 +487,7 @@ func (cmd *MemoryCmd) Action(writer io.Writer, comp *sim.Computer, args []string
 		prog.AddressColor.Fprintf(writer, "%02d ", addr)
 		prog.NumberColor.Fprintf(writer, "%04d\n", comp.Memory(uint(addr)))
 	case 2:
-		value, err := strconv.Atoi(args[0])
+		value, err := strconv.Atoi(args[1])
 		if err != nil {
 			return fmt.Errorf("unable to parse value for memory instruction because %w", err)
 		}
