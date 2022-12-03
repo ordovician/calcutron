@@ -1,6 +1,12 @@
-# Calcutron-33 The Decimal RISC CPU, Now in Go!
+# Calcutron-33 The Decimal RISC CPU
 
 Calcutron-33 is the name of a made-up computer with a RISC-like microprocessor which operates with decimal numbers rather than binary numbers. While this may sound crazy it would not be entirely impossible to build such as computer. For instance the legendary Analytical Engine designed by Charles Babbage in the 1800s was a mechanical computer operating on decimal numbers rather than binary numbers.
+
+I have written illustrated articles explaining Calcutron-33 in more detail:
+
+- [The Calcutron-33 Decimal-Based Computer](https://erikexplores.substack.com/p/the-calcutron-33-decimal-based-computer) – An introduction and overview of Calcutron-33
+- [The Calcutron-33 Instruction-Set](https://erikexplores.substack.com/p/the-calcutron-33-instruction-set) – Explanation of the whole Calcutron-33 instruction-set
+- [Writing Calcutron-33 Assembly Code](https://erikexplores.substack.com/p/writing-calcutron-33-assembly-code) – A practical guide to using the tools found in this repository
 
 This project contains a simulator which lets you run machine code programs on this imaginary computer. It also comes bundled with an assembler to turn assembly code into machine code which will run on this virtual machine.
 
@@ -145,9 +151,7 @@ These instructions are all just shorthands for other instructions. For instance 
 - `OUT Rd` - OUTput instruction. Writes number to output.
 
 # History and Other Implementations
-An early version of the idea of this decimal RISC based computer was described in this old article [this medium article](https://medium.com/@Jernfrost/decimal-risc-cpu-a13968922812). The instruction-set described in this article is now outdated.
-
-The original article served as a based for an early prototype written in the Julia programming language. To explore the Zig language by implementing something of moderate complexity I made a variant called Zacktron-33 in Zig.
+The first version of Calcutron-33 was implemented in Julia and later in the Zig programming language. However both those versions are now outdated. The Go version is currently the official version.
 
 Remaking the whole thing in Go is both to get a sense of how Go compares with Zig but also because I believe Go is very well suited for this kind of project. I want to be able to easily distribute binaries that can run any macOS, Linux and Windows and that is possible with the good Go cross-compile support.
 
