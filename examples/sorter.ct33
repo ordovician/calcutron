@@ -9,7 +9,7 @@
 
     LODI x7, array     // base address for array
     INP  x3            // number of values n
-    COPY x5, x3        // start counter
+    MOVE x5, x3        // start counter
 
 getnumbers:
     INP  x1

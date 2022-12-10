@@ -134,7 +134,7 @@ The `BGT` and `BEQ` instructions compare registers `Ra` and `Rb` and depending o
 - `BEQ  Ra, Rb, k` - Branch if EQual
 
 ## Pseudo Instructions
-These instructions are all just shorthands for other instructions. For instance `INC Rd` is just short for `ADDI Rd, 1` and `COPY Rd, Ra` is short for `ADD Rd, x0, Ra`. Remember register `x0` is always zero.
+These instructions are all just shorthands for other instructions. For instance `INC Rd` is just short for `ADDI Rd, 1` and `MOVE Rd, Ra` is short for `ADD Rd, x0, Ra`. Remember register `x0` is always zero.
 
 - `DEC  Rd` - DECrement
 - `INC  Rd` - INCrement
@@ -143,7 +143,7 @@ These instructions are all just shorthands for other instructions. For instance 
 
 - `BLT  Ra, Rb, k` - Branch if Less Than
 - `CLR  Rd` - CLeaR register
-- `COPY Rd, Ra`  - COPY from one register to another
+- `MOVE Rd, Ra`  - MOVE from one register to another
 
 - `NOP` - No Operation
 - `HLT` - HaLT execution

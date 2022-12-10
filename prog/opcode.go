@@ -33,7 +33,7 @@ const (
 	BRA  // BRAnch
 	BLT  // Branch Less Than
 	CLR  // Clear
-	COPY // COPY from one reg to another
+	MOVE // MOVE from one reg to another
 	CALL // CALL subroutine
 	NOP  // No Operation
 	HLT  // Halt execution
@@ -46,7 +46,7 @@ const (
 )
 
 var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, LSH, LOAD, LODI, STOR, BEQ, BGT,
-	DEC, INC, SUBI, RSH, BRA, BLT, CLR, COPY, CALL, NOP, HLT, INP, OUT, DAT}
+	DEC, INC, SUBI, RSH, BRA, BLT, CLR, MOVE, CALL, NOP, HLT, INP, OUT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 
 // initialize opcode strings

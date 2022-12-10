@@ -43,7 +43,7 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 	case BLT:
 		inst = &BranchLessThanInstruction{}
 		inst.setOpcode(BGT)
-	case COPY:
+	case MOVE:
 		inst = &CopyInstruction{}
 		inst.setOpcode(ADD)
 	case CLR:
