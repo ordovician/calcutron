@@ -20,7 +20,7 @@ const (
 	SUB                // Subtract registers
 	LSH                // Shift digits left, or right if k is negative
 	LOAD               // Load
-	MOVE               // Load Immediate
+	LODI               // Load Immediate
 	STOR               // Store to memory
 	JMP                // Jump to address
 	BGT                // Branch if Greater than
@@ -45,7 +45,7 @@ const (
 	STR
 )
 
-var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, LSH, LOAD, MOVE, STOR, BEQ, BGT,
+var AllOpcodes = [...]Opcode{JMP, ADD, ADDI, SUB, LSH, LOAD, LODI, STOR, BEQ, BGT,
 	DEC, INC, SUBI, RSH, BRA, BLT, CLR, COPY, CALL, NOP, HLT, INP, OUT, DAT}
 var AllOpcodeStrings []string = make([]string, len(AllOpcodes))
 

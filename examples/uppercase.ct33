@@ -1,6 +1,6 @@
 // Turns input characters into uppcase
 // run this with the -text switch to see effect
-    MOVE x2, 45
+    LODI x2, 45
     ADDI x2, 46 // We cannot load 90 directly as valid range is -50 to 49
 loop:
     INP  x1

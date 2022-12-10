@@ -18,7 +18,7 @@ start:
     LOAD x2, second
     ADD  x3, x1, x2
     STOR x3, added
-    MOVE x6, shiftresult
+    LODI x6, shiftresult
     LSH x5, x2, 2
     STOR x2, x6, .shifted
     STOR x5, x6, .overflow

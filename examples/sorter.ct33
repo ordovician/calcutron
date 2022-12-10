@@ -7,7 +7,7 @@
 // j - x6 outer index
 // p - x7 base address
 
-    MOVE x7, array     // base address for array
+    LODI x7, array     // base address for array
     INP  x3            // number of values n
     COPY x5, x3        // start counter
 

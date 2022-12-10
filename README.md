@@ -100,9 +100,9 @@ All instructions are encoded as 4-digit decimal number where the first number in
 
 In the description whenever you read `Rd`, `Ra` or `Rb` then that  refers to a register from `x0`, `x1` to `x9`. Whenever you see a `k` that refers to a constant value. Instructions which have two register arguments in addition to the constant will only allow small constant values in the range -5 to 4 (except for Load and Store instructions which have range -2 to 7). Those with only an `Rd` register operand will take `k` values in the trange -50 to 49, except the JMP instruction which takes values in range 0-99.
 
-Consequently if you want to load say 90 into the x1 register you cannot do that with a single MOVE instruction. You instead you would have to write:
+Consequently if you want to load say 90 into the x1 register you cannot do that with a single LODI instruction. You instead you would have to write:
 
-    MOVE x1, 45
+    LODI x1, 45
     ADDI x1, 45
     
 An alterantive is to store the value 90 in a memory location and load it with the LOAD instruction.
@@ -121,7 +121,7 @@ The shift instruction `LSH` is special in that it affects two registers `Rd` and
 The instructions combine a register `Ra` and a constant `k` to form a memory address, which we either read from or write to. For load and store instruction the `k` has valid range of  values from -2 to 7. 
 
 - `LOAD Rd, Ra, k` - LOAD
-- `MOVE Rd, k` - MOVE value k to register `Rd`
+- `LODI Rd, k` - LODI value k to register `Rd`
 - `STOR Rd, Ra, k` - Store to memory
 
 ## Jumping and Branching

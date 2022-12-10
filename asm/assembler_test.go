@@ -18,7 +18,7 @@ func Example_assembleLine() {
 		"SUB  x2, x4, x1",
 		"LSH x5, x2, 4",
 		"LOAD x1, x2, 3",
-		"MOVE x1, 24",
+		"LODI x1, 24",
 		"STOR x5, x1, 2",
 		"BEQ  x3, x2, 1",
 		"BGT  x3, x2, 1",
@@ -42,7 +42,7 @@ func Example_assembleLine() {
 	// 3241 SUB  x2, x4, x1
 	// 4524 LSH x5, x2, 4
 	// 5123 LOAD x1, x2, 3
-	// 6124 MOVE x1, 24
+	// 6124 LODI x1, 24
 	// 7512 STOR x5, x1, 2
 	// 0321 BEQ  x3, x2, 1
 	// 9321 BGT  x3, x2, 1
@@ -60,7 +60,7 @@ func ExampleInstruction_SourceCode() {
 		"SUB  x2, x4, x1",
 		"LSH  x5, x2, 4",
 		"LOAD x1, x2, 3",
-		"MOVE x1, 24",
+		"LODI x1, 24",
 		"STOR x5, x1, 2",
 		"BEQ  x3, x2, 1",
 		"BGT  x3, x2, 1",
@@ -87,7 +87,7 @@ func ExampleInstruction_SourceCode() {
 	// SUB  x2, x4, x1
 	// LSH  x5, x2, 4
 	// LOAD x1, x2, 3
-	// MOVE x1, 24
+	// LODI x1, 24
 	// STOR x5, x1, 2
 	// BEQ  x3, x2, 1
 	// BGT  x3, x2, 1
@@ -103,7 +103,7 @@ func Example_parseLine() {
 		"SUB  x2, x4, x1",
 		"LSH  x5, x2, 4",
 		"LOAD x1, x2, 3",
-		"MOVE x1, 24",
+		"LODI x1, 24",
 		"STOR x5, x1, 2",
 		"BEQ  x3, x2, 1",
 		"BGT  x3, x2, 1",
@@ -122,7 +122,7 @@ func Example_parseLine() {
 	// SUB  x2, x4, x1
 	// LSH  x5, x2, 4
 	// LOAD x1, x2, 3
-	// MOVE x1, 24
+	// LODI x1, 24
 	// STOR x5, x1, 2
 	// BEQ  x3, x2, 1
 	// BGT  x3, x2, 1
@@ -174,20 +174,20 @@ func TestImmediateRange(t *testing.T) {
 		t.Errorf("A 'JMP  x9, -20' should fail to assemble as jump is negative")
 	}
 
-	_, err = AssembleLine(labels, "MOVE x5, 52", 0)
+	_, err = AssembleLine(labels, "LODI x5, 52", 0)
 	if err == nil {
-		t.Errorf("A 'MOVE x5, 52' should fail to assemble as immediate value is outside range -50 to 49")
+		t.Errorf("A 'LODI x5, 52' should fail to assemble as immediate value is outside range -50 to 49")
 	}
 
-	_, err = AssembleLine(labels, "MOVE x5, 48", 0)
+	_, err = AssembleLine(labels, "LODI x5, 48", 0)
 	if err != nil {
-		t.Errorf("A 'MOVE x5, 49' didn't assemble because %v", err)
+		t.Errorf("A 'LODI x5, 49' didn't assemble because %v", err)
 	}
 
 	// negative immediate values should be allowed
-	_, err = AssembleLine(labels, "MOVE x5, -20", 0)
+	_, err = AssembleLine(labels, "LODI x5, -20", 0)
 	if err != nil {
-		t.Errorf("A 'MOVE x5, -20' didn't assemble because %v", err)
+		t.Errorf("A 'LODI x5, -20' didn't assemble because %v", err)
 	}
 
 	// negative immediate values should be allowed

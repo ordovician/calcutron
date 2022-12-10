@@ -7,7 +7,7 @@ instructions:
     LSH  x9, x8, 4
     LSH  x9, x8, -4
 
-    MOVE  x9, data
+    LODI  x9, data
     LOAD  x9, x9
     STOR x9, x9
 
@@ -19,7 +19,7 @@ instructions:
 pseudo:
     IN    x9
     OUT   x9
-    MOVE  x9, x8
+    LODI  x9, x8
     CLEAR x9
     DEC   x9
     JMP  pseudo

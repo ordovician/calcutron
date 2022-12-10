@@ -1,4 +1,4 @@
-    MOVE x4, 10
+    LODI x4, 10
 decrement:
     OUT  x4
     DEC  x4

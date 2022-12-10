@@ -20,14 +20,14 @@ type RegisterValues struct {
 func TestSimpleAdder(t *testing.T) {
 	var labels prog.SymbolTable
 	lines := []string{
-		"MOVE  x1, 3",
-		"MOVE  x2, 4",
+		"LODI  x1, 3",
+		"LODI  x2, 4",
 		"ADD   x3, x1, x2",
 		"SUB   x4, x2, x1",
 		"SUB   x5, x1, x2",
-		"MOVE  x6, 2",
+		"LODI  x6, 2",
 		"LSH x7, x6, 1",
-		"MOVE  x8, 48",
+		"LODI  x8, 48",
 		"LSH x9, x8, -1",
 		"JMP x0, 0",
 	}
@@ -65,8 +65,8 @@ func TestSimpleAdder(t *testing.T) {
 
 func TestCounter(t *testing.T) {
 	sourceCode := `
-		MOVE x2, 4
-		MOVE x1, 1
+		LODI x2, 4
+		LODI x1, 1
 	loop:
 		ADD   x3, x3, x1
 		BGT   x2, x3, loop

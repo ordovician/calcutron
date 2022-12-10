@@ -1,5 +1,5 @@
 // add two numbers
-MOVE x9, data
+LODI x9, data
 LOAD x1, x9, .first
 LOAD x2, x9, .second
 ADD  x3, x1, x2

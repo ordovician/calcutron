@@ -13,7 +13,7 @@ func NewInstruction(opcode Opcode) (inst Instruction) {
 		inst = &ShiftInstruction{}
 	case LOAD:
 		inst = &LoadInstruction{}
-	case MOVE:
+	case LODI:
 		inst = &MoveInstruction{}
 	case STOR:
 		inst = &StoreInstruction{}

@@ -14,7 +14,7 @@ func _() {
 	_ = x[SUB-3]
 	_ = x[LSH-4]
 	_ = x[LOAD-5]
-	_ = x[MOVE-6]
+	_ = x[LODI-6]
 	_ = x[STOR-7]
 	_ = x[JMP-8]
 	_ = x[BGT-9]
@@ -34,7 +34,7 @@ func _() {
 	_ = x[DAT-23]
 }
 
-const _Opcode_name = "BEQADDADDISUBLSHLOADMOVESTORJMPBGTDECINCSUBIRSHBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
+const _Opcode_name = "BEQADDADDISUBLSHLOADLODISTORJMPBGTDECINCSUBIRSHBRABLTCLRCOPYCALLNOPHLTINPOUTDAT"
 
 var _Opcode_index = [...]uint8{0, 3, 6, 10, 13, 16, 20, 24, 28, 31, 34, 37, 40, 44, 47, 50, 53, 56, 60, 64, 67, 70, 73, 76, 79}
 
